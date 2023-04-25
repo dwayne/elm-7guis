@@ -5,6 +5,7 @@ import Browser
 import Counter
 import Html as H
 import Html.Attributes as HA
+import TemperatureConverter
 
 
 main : Program () Model Msg
@@ -22,12 +23,14 @@ main =
 
 type alias Model =
     { counter : Counter.Model
+    , temperatureConverter : TemperatureConverter.Model
     }
 
 
 init : () -> ( Model, Cmd msg )
 init _ =
     ( { counter = Counter.init
+      , temperatureConverter = TemperatureConverter.init
       }
     , Cmd.none
     )
@@ -38,6 +41,7 @@ init _ =
 
 type Msg
     = ChangedCounter Counter.Msg
+    | ChangedTemperatureConverter TemperatureConverter.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
@@ -45,6 +49,11 @@ update msg model =
     case msg of
         ChangedCounter counterMsg ->
             ( { model | counter = Counter.update counterMsg model.counter }
+            , Cmd.none
+            )
+
+        ChangedTemperatureConverter temperatureConverterMsg ->
+            ( { model | temperatureConverter = TemperatureConverter.update temperatureConverterMsg model.temperatureConverter }
             , Cmd.none
             )
 
@@ -78,6 +87,7 @@ view model =
             , H.text "."
             ]
         , viewCounter model.counter
+        , viewTemperatureConverter model.temperatureConverter
         ]
 
 
@@ -87,4 +97,13 @@ viewCounter counter =
         [ H.h2 [] [ H.text "Counter" ]
         , Counter.view counter
             |> H.map ChangedCounter
+        ]
+
+
+viewTemperatureConverter : TemperatureConverter.Model -> H.Html Msg
+viewTemperatureConverter temperatureConverter =
+    H.div []
+        [ H.h2 [] [ H.text "Temperature Converter" ]
+        , TemperatureConverter.view temperatureConverter
+            |> H.map ChangedTemperatureConverter
         ]
