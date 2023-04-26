@@ -3,6 +3,7 @@ module Main exposing (main)
 
 import Browser
 import Counter
+import FlightBooker
 import Html as H
 import Html.Attributes as HA
 import TemperatureConverter
@@ -24,15 +25,21 @@ main =
 type alias Model =
     { counter : Counter.Model
     , temperatureConverter : TemperatureConverter.Model
+    , flightBooker : FlightBooker.Model
     }
 
 
-init : () -> ( Model, Cmd msg )
+init : () -> ( Model, Cmd Msg )
 init _ =
+    let
+        ( flightBooker, flightBookerCmd ) =
+            FlightBooker.init
+    in
     ( { counter = Counter.init
       , temperatureConverter = TemperatureConverter.init
+      , flightBooker = flightBooker
       }
-    , Cmd.none
+    , Cmd.map ChangedFlightBooker flightBookerCmd
     )
 
 
@@ -42,9 +49,10 @@ init _ =
 type Msg
     = ChangedCounter Counter.Msg
     | ChangedTemperatureConverter TemperatureConverter.Msg
+    | ChangedFlightBooker FlightBooker.Msg
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ChangedCounter counterMsg ->
@@ -55,6 +63,15 @@ update msg model =
         ChangedTemperatureConverter temperatureConverterMsg ->
             ( { model | temperatureConverter = TemperatureConverter.update temperatureConverterMsg model.temperatureConverter }
             , Cmd.none
+            )
+
+        ChangedFlightBooker flightBookerMsg ->
+            let
+                ( flightBooker, flightBookerCmd ) =
+                    FlightBooker.update flightBookerMsg model.flightBooker
+            in
+            ( { model | flightBooker = flightBooker }
+            , Cmd.map ChangedFlightBooker flightBookerCmd
             )
 
 
@@ -88,6 +105,7 @@ view model =
             ]
         , viewCounter model.counter
         , viewTemperatureConverter model.temperatureConverter
+        , viewFlightBooker model.flightBooker
         ]
 
 
@@ -106,4 +124,13 @@ viewTemperatureConverter temperatureConverter =
         [ H.h2 [] [ H.text "Temperature Converter" ]
         , TemperatureConverter.view temperatureConverter
             |> H.map ChangedTemperatureConverter
+        ]
+
+
+viewFlightBooker : FlightBooker.Model -> H.Html Msg
+viewFlightBooker flightBooker =
+    H.div []
+        [ H.h2 [] [ H.text "Flight Booker" ]
+        , FlightBooker.view flightBooker
+            |> H.map ChangedFlightBooker
         ]
