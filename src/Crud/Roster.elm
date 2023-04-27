@@ -1,4 +1,4 @@
-module Crud.Roster exposing (Roster, empty, add, filter)
+module Crud.Roster exposing (Roster, empty, fromList, add, filter)
 
 
 import Crud.Person as Person exposing (Person)
@@ -19,17 +19,26 @@ empty =
         }
 
 
-add : String -> String -> Roster -> Roster
-add rawFirstName rawLastName (Roster { nextId, people } as roster) =
-    case Person.create nextId rawFirstName rawLastName of
-        Just person ->
-            Roster
-                { nextId = nextId + 1
-                , people = person :: people
-                }
+fromList : List (String, String) -> Roster
+fromList =
+    List.foldl
+        (\(rawFirstName, rawLastName) roster ->
+            add rawFirstName rawLastName roster
+                |> Maybe.withDefault roster
+        )
+        empty
 
-        Nothing ->
-            roster
+
+add : String -> String -> Roster -> Maybe Roster
+add rawFirstName rawLastName (Roster { nextId, people } as roster) =
+    Person.create nextId rawFirstName rawLastName
+        |> Maybe.map
+            (\person ->
+                Roster
+                    { nextId = nextId + 1
+                    , people = person :: people
+                    }
+            )
 
 
 filter : String -> Roster -> List Person

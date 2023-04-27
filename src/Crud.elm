@@ -14,6 +14,8 @@ import Html.Events as HE
 type alias Model =
     { prefix : String
     , roster : Roster
+    , firstName : String
+    , lastName : String
     }
 
 
@@ -21,10 +23,13 @@ init : Model
 init =
     { prefix = ""
     , roster =
-        Roster.empty
-            |> Roster.add "Hans" "Emil"
-            |> Roster.add "Max" "Mustermann"
-            |> Roster.add "Roman" "Tisch"
+        Roster.fromList
+            [ ("Hans", "Emil")
+            , ("Max", "Mustermann")
+            , ("Roman", "Tisch")
+            ]
+    , firstName = ""
+    , lastName = ""
     }
 
 
@@ -33,6 +38,9 @@ init =
 
 type Msg
     = InputPrefix String
+    | InputFirstName String
+    | InputLastName String
+    | ClickedCreate
 
 
 update : Msg -> Model -> Model
@@ -41,12 +49,31 @@ update msg model =
         InputPrefix prefix ->
             { model | prefix = prefix }
 
+        InputFirstName firstName ->
+            { model | firstName = firstName }
+
+        InputLastName lastName ->
+            { model | lastName = lastName }
+
+        ClickedCreate ->
+            model.roster
+                |> Roster.add model.firstName model.lastName
+                |> Maybe.map
+                    (\roster ->
+                        { model
+                        | roster = roster
+                        , firstName = ""
+                        , lastName = ""
+                        }
+                    )
+                |> Maybe.withDefault model
+
 
 -- VIEW
 
 
 view : Model -> H.Html Msg
-view { prefix, roster } =
+view { prefix, roster, firstName, lastName } =
     H.div []
         [ H.div []
             [ H.text "Filter prefix: "
@@ -63,19 +90,29 @@ view { prefix, roster } =
                 [ H.div []
                     [ H.label [] [ H.text "Name: " ]
                     , H.input
-                        [ HA.type_ "text" ]
+                        [ HA.type_ "text"
+                        , HA.value firstName
+                        , HE.onInput InputFirstName
+                        ]
                         []
                     ]
                 , H.div []
                     [ H.label [] [ H.text "Surname: " ]
                     , H.input
-                        [ HA.type_ "text" ]
+                        [ HA.type_ "text"
+                        , HA.value lastName
+                        , HE.onInput InputLastName
+                        ]
                         []
                     ]
                 ]
             ]
         , H.div []
-            [ H.button [ HA.type_ "button" ] [ H.text "Create" ]
+            [ H.button
+                [ HA.type_ "button"
+                , HE.onClick ClickedCreate
+                ]
+                [ H.text "Create" ]
             , H.button [ HA.type_ "button" ] [ H.text "Update" ]
             , H.button [ HA.type_ "button" ] [ H.text "Delete" ]
             ]
