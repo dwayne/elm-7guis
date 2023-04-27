@@ -3,6 +3,7 @@ module Main exposing (main)
 
 import Browser
 import Counter
+import Crud
 import FlightBooker
 import Html as H
 import Html.Attributes as HA
@@ -137,6 +138,8 @@ view model =
             |> Timer.view
             |> H.map ChangedTimer
             |> viewTask "Timer"
+        , Crud.view
+            |> viewTask "CRUD"
         ]
 
 
