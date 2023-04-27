@@ -43,6 +43,7 @@ init =
 type Msg
     = InputDuration String
     | NewDelta Float
+    | ClickedReset
 
 
 update : Msg -> Model -> Model
@@ -66,6 +67,9 @@ update msg model =
                     Duration.toFloat model.duration
             in
             { model | elapsedTime = elapsedTime }
+
+        ClickedReset ->
+            { model | elapsedTime = 0 }
 
 
 -- SUBSCRIPTIONS
@@ -114,6 +118,7 @@ view { duration, elapsedTime } =
         , H.div []
             [ H.button
                 [ HA.type_ "button"
+                , HE.onClick ClickedReset
                 ]
                 [ H.text "Reset" ]
             ]
