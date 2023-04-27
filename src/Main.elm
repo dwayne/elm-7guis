@@ -16,7 +16,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
 
 
@@ -82,6 +82,15 @@ update msg model =
             ( { model | timer = Timer.update timerMsg model.timer }
             , Cmd.none
             )
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions { timer } =
+    Timer.subscriptions timer
+        |> Sub.map ChangedTimer
 
 
 -- VIEW

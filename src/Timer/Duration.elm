@@ -1,6 +1,6 @@
 module Timer.Duration exposing
     ( Duration, fromInt, fromString
-    , toInt, toString
+    , toInt, toFloat, toString
     )
 
 
@@ -21,6 +21,11 @@ fromString =
 toInt : Duration -> Int
 toInt (Duration n) =
     n
+
+
+toFloat : Duration -> Float
+toFloat (Duration n) =
+    Basics.toFloat n
 
 
 toString : Duration -> String
