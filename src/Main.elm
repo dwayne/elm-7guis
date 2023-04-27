@@ -7,6 +7,7 @@ import FlightBooker
 import Html as H
 import Html.Attributes as HA
 import TemperatureConverter
+import Timer
 
 
 main : Program () Model Msg
@@ -106,6 +107,7 @@ view model =
         , viewCounter model.counter
         , viewTemperatureConverter model.temperatureConverter
         , viewFlightBooker model.flightBooker
+        , viewTimer
         ]
 
 
@@ -133,4 +135,12 @@ viewFlightBooker flightBooker =
         [ H.h2 [] [ H.text "Flight Booker" ]
         , FlightBooker.view flightBooker
             |> H.map ChangedFlightBooker
+        ]
+
+
+viewTimer : H.Html msg
+viewTimer =
+    H.div []
+        [ H.h2 [] [ H.text "Timer" ]
+        , Timer.view
         ]
