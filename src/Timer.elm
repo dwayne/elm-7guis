@@ -89,21 +89,17 @@ subscriptions { duration, elapsedTime } =
 
 view : Model -> H.Html Msg
 view { duration, elapsedTime } =
-    let
-        elapsedTimeAsString =
-            String.fromFloat elapsedTime
-    in
     H.div []
         [ H.div []
             [ H.text "Elapsed Time: "
             , H.meter
                 [ HA.min "0"
                 , HA.max <| Duration.toString duration
-                , HA.value elapsedTimeAsString
+                , HA.value <| String.fromFloat elapsedTime
                 ]
                 []
             ]
-        , H.div [] [ H.text elapsedTimeAsString ]
+        , viewElapsedTime elapsedTime
         , H.div []
             [ H.text "Duration: "
             , H.input
@@ -123,3 +119,26 @@ view { duration, elapsedTime } =
                 [ H.text "Reset" ]
             ]
         ]
+
+
+viewElapsedTime : Float -> H.Html msg
+viewElapsedTime elapsedTime =
+    let
+        wholePart =
+            elapsedTime / 1000
+                |> floor
+
+        decimalPart =
+            elapsedTime / 100
+                |> floor
+                |> modBy 10
+
+        seconds =
+            String.join ""
+                [ String.fromInt wholePart
+                , "."
+                , String.fromInt decimalPart
+                , "s"
+                ]
+    in
+    H.div [] [ H.text seconds ]
