@@ -1,29 +1,59 @@
-module Crud exposing (view)
+module Crud exposing (Model, init, Msg, update, view)
 
 
 import Crud.Person as Person exposing (Person)
 import Crud.Roster as Roster exposing (Roster)
 import Html as H
 import Html.Attributes as HA
+import Html.Events as HE
 
 
-view : H.Html msg
-view =
-    let
-        prefix =
-            "i"
+-- MODEL
 
-        roster =
-            Roster.empty
-                |> Roster.add "Hans" "Emil"
-                |> Roster.add "Max" "Mustermann"
-                |> Roster.add "Roman" "Tisch"
-    in
+
+type alias Model =
+    { prefix : String
+    , roster : Roster
+    }
+
+
+init : Model
+init =
+    { prefix = ""
+    , roster =
+        Roster.empty
+            |> Roster.add "Hans" "Emil"
+            |> Roster.add "Max" "Mustermann"
+            |> Roster.add "Roman" "Tisch"
+    }
+
+
+-- UPDATE
+
+
+type Msg
+    = InputPrefix String
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        InputPrefix prefix ->
+            { model | prefix = prefix }
+
+
+-- VIEW
+
+
+view : Model -> H.Html Msg
+view { prefix, roster } =
     H.div []
         [ H.div []
             [ H.text "Filter prefix: "
             , H.input
                 [ HA.type_ "text"
+                , HA.value prefix
+                , HE.onInput InputPrefix
                 ]
                 []
             ]

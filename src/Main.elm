@@ -29,6 +29,7 @@ type alias Model =
     , temperatureConverter : TemperatureConverter.Model
     , flightBooker : FlightBooker.Model
     , timer : Timer.Model
+    , crud : Crud.Model
     }
 
 
@@ -42,6 +43,7 @@ init _ =
       , temperatureConverter = TemperatureConverter.init
       , flightBooker = flightBooker
       , timer = Timer.init
+      , crud = Crud.init
       }
     , Cmd.map ChangedFlightBooker flightBookerCmd
     )
@@ -55,6 +57,7 @@ type Msg
     | ChangedTemperatureConverter TemperatureConverter.Msg
     | ChangedFlightBooker FlightBooker.Msg
     | ChangedTimer Timer.Msg
+    | ChangedCrud Crud.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -81,6 +84,11 @@ update msg model =
 
         ChangedTimer timerMsg ->
             ( { model | timer = Timer.update timerMsg model.timer }
+            , Cmd.none
+            )
+
+        ChangedCrud crudMsg ->
+            ( { model | crud = Crud.update crudMsg model.crud }
             , Cmd.none
             )
 
@@ -138,7 +146,9 @@ view model =
             |> Timer.view
             |> H.map ChangedTimer
             |> viewTask "Timer"
-        , Crud.view
+        , model.crud
+            |> Crud.view
+            |> H.map ChangedCrud
             |> viewTask "CRUD"
         ]
 
