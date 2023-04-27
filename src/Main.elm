@@ -27,6 +27,7 @@ type alias Model =
     { counter : Counter.Model
     , temperatureConverter : TemperatureConverter.Model
     , flightBooker : FlightBooker.Model
+    , timer : Timer.Model
     }
 
 
@@ -39,6 +40,7 @@ init _ =
     ( { counter = Counter.init
       , temperatureConverter = TemperatureConverter.init
       , flightBooker = flightBooker
+      , timer = Timer.init
       }
     , Cmd.map ChangedFlightBooker flightBookerCmd
     )
@@ -51,6 +53,7 @@ type Msg
     = ChangedCounter Counter.Msg
     | ChangedTemperatureConverter TemperatureConverter.Msg
     | ChangedFlightBooker FlightBooker.Msg
+    | ChangedTimer Timer.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -73,6 +76,11 @@ update msg model =
             in
             ( { model | flightBooker = flightBooker }
             , Cmd.map ChangedFlightBooker flightBookerCmd
+            )
+
+        ChangedTimer timerMsg ->
+            ( { model | timer = Timer.update timerMsg model.timer }
+            , Cmd.none
             )
 
 
@@ -107,7 +115,7 @@ view model =
         , viewCounter model.counter
         , viewTemperatureConverter model.temperatureConverter
         , viewFlightBooker model.flightBooker
-        , viewTimer
+        , viewTimer model.timer
         ]
 
 
@@ -138,9 +146,10 @@ viewFlightBooker flightBooker =
         ]
 
 
-viewTimer : H.Html msg
-viewTimer =
+viewTimer : Timer.Model -> H.Html Msg
+viewTimer timer =
     H.div []
         [ H.h2 [] [ H.text "Timer" ]
-        , Timer.view
+        , Timer.view timer
+            |> H.map ChangedTimer
         ]
