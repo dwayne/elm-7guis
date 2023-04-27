@@ -121,44 +121,28 @@ view model =
                 [ H.text "Elm" ]
             , H.text "."
             ]
-        , viewCounter model.counter
-        , viewTemperatureConverter model.temperatureConverter
-        , viewFlightBooker model.flightBooker
-        , viewTimer model.timer
-        ]
-
-
-viewCounter : Counter.Model -> H.Html Msg
-viewCounter counter =
-    H.div []
-        [ H.h2 [] [ H.text "Counter" ]
-        , Counter.view counter
+        , model.counter
+            |> Counter.view
             |> H.map ChangedCounter
-        ]
-
-
-viewTemperatureConverter : TemperatureConverter.Model -> H.Html Msg
-viewTemperatureConverter temperatureConverter =
-    H.div []
-        [ H.h2 [] [ H.text "Temperature Converter" ]
-        , TemperatureConverter.view temperatureConverter
+            |> viewTask "Counter"
+        , model.temperatureConverter
+            |> TemperatureConverter.view
             |> H.map ChangedTemperatureConverter
-        ]
-
-
-viewFlightBooker : FlightBooker.Model -> H.Html Msg
-viewFlightBooker flightBooker =
-    H.div []
-        [ H.h2 [] [ H.text "Flight Booker" ]
-        , FlightBooker.view flightBooker
+            |> viewTask "Temperature Converter"
+        , model.flightBooker
+            |> FlightBooker.view
             |> H.map ChangedFlightBooker
+            |> viewTask "Flight Booker"
+        , model.timer
+            |> Timer.view
+            |> H.map ChangedTimer
+            |> viewTask "Timer"
         ]
 
 
-viewTimer : Timer.Model -> H.Html Msg
-viewTimer timer =
+viewTask : String -> H.Html msg -> H.Html msg
+viewTask name html =
     H.div []
-        [ H.h2 [] [ H.text "Timer" ]
-        , Timer.view timer
-            |> H.map ChangedTimer
+        [ H.h2 [] [ H.text name ]
+        , html
         ]
