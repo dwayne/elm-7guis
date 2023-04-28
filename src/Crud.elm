@@ -42,6 +42,7 @@ type Msg
     | InputFirstName String
     | InputLastName String
     | ClickedCreate
+    | ClickedUpdate
 
 
 update : Msg -> Model -> Model
@@ -96,6 +97,15 @@ update msg model =
                     )
                 |> Maybe.withDefault model
 
+        ClickedUpdate ->
+            { model
+            | roster =
+                Roster.updateSelected
+                    model.firstName
+                    model.lastName
+                    model.roster
+            }
+
 
 -- VIEW
 
@@ -141,7 +151,11 @@ view { prefix, roster, firstName, lastName } =
                 , HE.onClick ClickedCreate
                 ]
                 [ H.text "Create" ]
-            , H.button [ HA.type_ "button" ] [ H.text "Update" ]
+            , H.button
+                [ HA.type_ "button"
+                , HE.onClick ClickedUpdate
+                ]
+                [ H.text "Update" ]
             , H.button [ HA.type_ "button" ] [ H.text "Delete" ]
             ]
         ]

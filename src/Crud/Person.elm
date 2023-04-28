@@ -1,5 +1,6 @@
 module Crud.Person exposing
     ( Person, create
+    , update
     , toId, toFirstName, toLastName
     , toFullName, toString
     )
@@ -32,6 +33,11 @@ create id rawFirstName rawLastName =
                 , firstName = firstName
                 , lastName = lastName
                 }
+
+
+update : String -> String -> Person -> Maybe Person
+update rawFirstName rawLastName (Person { id }) =
+    create id rawFirstName rawLastName
 
 
 toId : Person -> Int

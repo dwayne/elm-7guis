@@ -3,6 +3,7 @@ module Crud.Roster exposing
     , add
     , filter
     , select, selected
+    , updateSelected
     )
 
 
@@ -73,3 +74,23 @@ select id (Roster state) =
 selected : Roster -> Maybe Person
 selected (Roster { people }) =
     Selection.selected people
+
+
+updateSelected : String -> String -> Roster -> Roster
+updateSelected rawFirstName rawLastName (Roster state as roster) =
+    Roster
+        { state
+        | people =
+            Selection.mapSelected
+                { selected =
+                    \person ->
+                        case Person.update rawFirstName rawLastName person of
+                            Just updatedPerson ->
+                                updatedPerson
+
+                            Nothing ->
+                                person
+                , rest = identity
+                }
+                state.people
+        }
