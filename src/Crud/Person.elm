@@ -1,4 +1,8 @@
-module Crud.Person exposing (Person, create, toId, toFullName, toString)
+module Crud.Person exposing
+    ( Person, create
+    , toId, toFirstName, toLastName
+    , toFullName, toString
+    )
 
 
 type Person
@@ -33,6 +37,16 @@ create id rawFirstName rawLastName =
 toId : Person -> Int
 toId (Person { id }) =
     id
+
+
+toFirstName : Person -> String
+toFirstName (Person { firstName }) =
+    firstName
+
+
+toLastName : Person -> String
+toLastName (Person { lastName }) =
+    lastName
 
 
 toFullName : Person -> String

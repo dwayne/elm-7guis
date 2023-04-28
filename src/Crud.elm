@@ -38,6 +38,7 @@ init =
 
 type Msg
     = InputPrefix String
+    | InputId String
     | InputFirstName String
     | InputLastName String
     | ClickedCreate
@@ -48,6 +49,33 @@ update msg model =
     case msg of
         InputPrefix prefix ->
             { model | prefix = prefix }
+
+        InputId idAsString ->
+            case String.toInt idAsString of
+                Just id ->
+                    let
+                        roster =
+                            Roster.select id model.roster
+                    in
+                    case Roster.selected roster of
+                        Just person ->
+                            let
+                                ( firstName, lastName ) =
+                                    ( Person.toFirstName person
+                                    , Person.toLastName person
+                                    )
+                            in
+                            { model
+                            | roster = roster
+                            , firstName = firstName
+                            , lastName = lastName
+                            }
+
+                        Nothing ->
+                            model
+
+                Nothing ->
+                    model
 
         InputFirstName firstName ->
             { model | firstName = firstName }
@@ -119,7 +147,7 @@ view { prefix, roster, firstName, lastName } =
         ]
 
 
-viewRoster : String -> Roster -> H.Html msg
+viewRoster : String -> Roster -> H.Html Msg
 viewRoster prefix roster =
     let
         people =
@@ -130,5 +158,5 @@ viewRoster prefix roster =
                 [ HA.value <| String.fromInt <| Person.toId person ]
                 [ H.text <| Person.toString person ]
     in
-    H.select [ HA.size 2 ] <|
+    H.select [ HA.size 2, HE.onInput InputId ] <|
         List.map viewPerson people
