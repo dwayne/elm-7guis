@@ -4,6 +4,7 @@ module Crud.Roster exposing
     , filter
     , select, selected
     , updateSelected
+    , deleteSelected
     )
 
 
@@ -87,7 +88,7 @@ selected (Roster { people }) =
 
 
 updateSelected : String -> String -> Roster -> Roster
-updateSelected rawFirstName rawLastName (Roster state as roster) =
+updateSelected rawFirstName rawLastName (Roster state) =
     Roster
         { state
         | people =
@@ -103,4 +104,20 @@ updateSelected rawFirstName rawLastName (Roster state as roster) =
                 , rest = identity
                 }
                 state.people
+        }
+
+
+deleteSelected : Roster -> Roster
+deleteSelected (Roster state) =
+    Roster
+        { state
+        | people =
+            state.people
+                |> Selection.mapSelected
+                    { selected = always Nothing
+                    , rest = Just
+                    }
+                |> Selection.toList
+                |> List.filterMap identity
+                |> Selection.fromList
         }

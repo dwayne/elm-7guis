@@ -43,6 +43,7 @@ type Msg
     | InputLastName String
     | ClickedCreate
     | ClickedUpdate
+    | ClickedDelete
 
 
 update : Msg -> Model -> Model
@@ -106,6 +107,13 @@ update msg model =
                     model.roster
             }
 
+        ClickedDelete ->
+            { model
+            | roster = Roster.deleteSelected model.roster
+            , firstName = ""
+            , lastName = ""
+            }
+
 
 -- VIEW
 
@@ -145,19 +153,29 @@ view { prefix, roster, firstName, lastName } =
                     ]
                 ]
             ]
-        , H.div []
-            [ H.button
-                [ HA.type_ "button"
-                , HE.onClick ClickedCreate
+        , let
+            isDisabled =
+                Roster.selected roster == Nothing
+          in
+            H.div []
+                [ H.button
+                    [ HA.type_ "button"
+                    , HE.onClick ClickedCreate
+                    ]
+                    [ H.text "Create" ]
+                , H.button
+                    [ HA.type_ "button"
+                    , HA.disabled isDisabled
+                    , HE.onClick ClickedUpdate
+                    ]
+                    [ H.text "Update" ]
+                , H.button
+                    [ HA.type_ "button"
+                    , HA.disabled isDisabled
+                    , HE.onClick ClickedDelete
+                    ]
+                    [ H.text "Delete" ]
                 ]
-                [ H.text "Create" ]
-            , H.button
-                [ HA.type_ "button"
-                , HE.onClick ClickedUpdate
-                ]
-                [ H.text "Update" ]
-            , H.button [ HA.type_ "button" ] [ H.text "Delete" ]
-            ]
         ]
 
 

@@ -1,5 +1,6 @@
 module Crud.Selection exposing
-    ( Selection, empty, cons
+    ( Selection, empty, fromList
+    , cons
     , selectBy, selected
     , mapSelected
     , toList
@@ -13,6 +14,11 @@ type Selection a
 empty : Selection a
 empty =
     Selection [] Nothing []
+
+
+fromList : List a -> Selection a
+fromList list =
+    Selection list Nothing []
 
 
 cons : a -> Selection a -> Selection a
