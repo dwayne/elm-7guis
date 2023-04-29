@@ -38,12 +38,17 @@ fromList =
 add : String -> String -> Roster -> Maybe Roster
 add rawFirstName rawLastName (Roster { nextId, people } as roster) =
     Person.create nextId rawFirstName rawLastName
-        |> Maybe.map
+        |> Maybe.andThen
             (\person ->
-                Roster
-                    { nextId = nextId + 1
-                    , people = Selection.cons person people
-                    }
+                if isMember person people then
+                    Nothing
+
+                else
+                    Just <|
+                        Roster
+                            { nextId = nextId + 1
+                            , people = Selection.cons person people
+                            }
             )
 
 
@@ -57,7 +62,11 @@ update rawFirstName rawLastName (Roster state) =
                     \person ->
                         case Person.update rawFirstName rawLastName person of
                             Just updatedPerson ->
-                                updatedPerson
+                                if isMember updatedPerson state.people then
+                                    person
+
+                                else
+                                    updatedPerson
 
                             Nothing ->
                                 person
@@ -65,6 +74,20 @@ update rawFirstName rawLastName (Roster state) =
                 }
                 state.people
         }
+
+
+isMember : Person -> Selection Person -> Bool
+isMember person people =
+    let
+        newFirstAndLastName =
+            Person.toFirstAndLastName person
+
+        firstAndLastNames =
+            people
+                |> Selection.toList
+                |> List.map Person.toFirstAndLastName
+    in
+    List.member newFirstAndLastName firstAndLastNames
 
 
 delete : Roster -> Roster
