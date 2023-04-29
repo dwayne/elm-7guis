@@ -53,28 +53,27 @@ add rawFirstName rawLastName (Roster { nextId, people } as roster) =
             )
 
 
-update : String -> String -> Roster -> Roster
+update : String -> String -> Roster -> Maybe Roster
 update rawFirstName rawLastName (Roster state) =
-    Roster
-        { state
-        | people =
-            Selection.mapSelected
-                { selected =
-                    \person ->
-                        case Person.update rawFirstName rawLastName person of
-                            Just updatedPerson ->
-                                if isMember updatedPerson state.people then
-                                    person
+    Selection.selected state.people
+        |> Maybe.andThen (Person.update rawFirstName rawLastName)
+        |> Maybe.andThen
+            (\updatedPerson ->
+                if isMember updatedPerson state.people then
+                    Nothing
 
-                                else
-                                    updatedPerson
-
-                            Nothing ->
-                                person
-                , rest = identity
-                }
-                state.people
-        }
+                else
+                    Just <|
+                        Roster
+                            { state
+                            | people =
+                                Selection.mapSelected
+                                    { selected = always updatedPerson
+                                    , rest = identity
+                                    }
+                                    state.people
+                            }
+            )
 
 
 isMember : Person -> Selection Person -> Bool

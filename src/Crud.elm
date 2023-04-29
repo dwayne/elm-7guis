@@ -96,10 +96,16 @@ update msg model =
                     model
 
         ClickedUpdate ->
-            { model
-            | roster =
-                Roster.update model.firstName model.lastName model.roster
-            }
+            case Roster.update model.firstName model.lastName model.roster of
+                Just roster ->
+                    { model
+                    | roster = Roster.deselect roster
+                    , firstName = ""
+                    , lastName = ""
+                    }
+
+                Nothing ->
+                    model
 
         ClickedDelete ->
             { model
