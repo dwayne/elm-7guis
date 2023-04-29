@@ -2,6 +2,7 @@ module Crud.Roster exposing
     ( Roster, empty, fromList
     , add, update, delete
     , select, selected
+    , deselect
     , filter
     )
 
@@ -118,6 +119,11 @@ select id (Roster state) =
 selected : Roster -> Maybe Person
 selected (Roster { people }) =
     Selection.selected people
+
+
+deselect : Roster -> Roster
+deselect (Roster state) =
+    Roster { state | people = Selection.deselect state.people }
 
 
 filter : String -> Roster -> List (Bool, Person)

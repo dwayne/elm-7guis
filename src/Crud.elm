@@ -86,7 +86,11 @@ update msg model =
         ClickedCreate ->
             case Roster.add model.firstName model.lastName model.roster of
                 Just roster ->
-                    { model | roster = roster, firstName = "", lastName = "" }
+                    { model
+                    | roster = Roster.deselect roster
+                    , firstName = ""
+                    , lastName = ""
+                    }
 
                 Nothing ->
                     model

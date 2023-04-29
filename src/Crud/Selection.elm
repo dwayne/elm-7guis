@@ -2,6 +2,7 @@ module Crud.Selection exposing
     ( Selection, empty, fromList
     , cons
     , selectBy, selected
+    , deselect
     , mapSelected
     , toList
     )
@@ -48,6 +49,16 @@ selectHelper front satisfiesCondition list =
 selected : Selection a -> Maybe a
 selected (Selection _ maybeSel _) =
     maybeSel
+
+
+deselect : Selection a -> Selection a
+deselect (Selection front maybeSel back as selection) =
+    case maybeSel of
+        Just a ->
+            Selection front Nothing (a :: back)
+
+        Nothing ->
+            selection
 
 
 mapSelected : { selected : a -> b, rest : a -> b } -> Selection a -> Selection b
