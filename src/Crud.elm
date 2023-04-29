@@ -123,24 +123,31 @@ view { prefix, roster, firstName, lastName } =
                 ]
             ]
         , let
-            isDisabled =
+            isCreateDisabled =
+                String.isEmpty <| String.trim firstName
+
+            isUpdateDisabled =
                 Roster.selected roster == Nothing
+
+            isDeleteDisabled =
+                isUpdateDisabled
           in
             H.div []
                 [ H.button
                     [ HA.type_ "button"
+                    , HA.disabled isCreateDisabled
                     , HE.onClick ClickedCreate
                     ]
                     [ H.text "Create" ]
                 , H.button
                     [ HA.type_ "button"
-                    , HA.disabled isDisabled
+                    , HA.disabled isUpdateDisabled
                     , HE.onClick ClickedUpdate
                     ]
                     [ H.text "Update" ]
                 , H.button
                     [ HA.type_ "button"
-                    , HA.disabled isDisabled
+                    , HA.disabled isDeleteDisabled
                     , HE.onClick ClickedDelete
                     ]
                     [ H.text "Delete" ]
