@@ -27,7 +27,7 @@ empty =
 
 fromList : List (String, String) -> Roster
 fromList =
-    List.foldl
+    List.foldr
         (\(rawFirstName, rawLastName) roster ->
             add rawFirstName rawLastName roster
                 |> Maybe.withDefault roster
@@ -141,4 +141,3 @@ filter rawPrefix (Roster { people }) =
                     |> String.toLower
                     |> String.contains prefix
             )
-        |> List.reverse
