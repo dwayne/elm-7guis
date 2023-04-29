@@ -48,7 +48,7 @@ add rawFirstName rawLastName (Roster { nextId, people } as roster) =
             )
 
 
-filter : String -> Roster -> List Person
+filter : String -> Roster -> List (Bool, Person)
 filter rawPrefix (Roster { people }) =
     let
         prefix =
@@ -57,8 +57,18 @@ filter rawPrefix (Roster { people }) =
                 |> String.toLower
     in
     people
+        |> Selection.mapSelected
+            { selected = Tuple.pair True
+            , rest = Tuple.pair False
+            }
         |> Selection.toList
-        |> List.filter (Person.toFullName >> String.toLower >> String.contains prefix)
+        |> List.filter
+            (\(_, person) ->
+                person
+                    |> Person.toFullName
+                    |> String.toLower
+                    |> String.contains prefix
+            )
         |> List.reverse
 
 

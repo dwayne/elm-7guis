@@ -167,9 +167,11 @@ viewRoster prefix roster =
         people =
             Roster.filter prefix roster
 
-        viewPerson person =
+        viewPerson (isSelected, person) =
             H.option
-                [ HA.value <| String.fromInt <| Person.toId person ]
+                [ HA.value <| String.fromInt <| Person.toId person
+                , HA.selected isSelected
+                ]
                 [ H.text <| Person.toString person ]
     in
     H.select [ HA.size 2, HE.onInput InputId ] <|
