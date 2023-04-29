@@ -37,7 +37,7 @@ fromList =
 
 
 add : String -> String -> Roster -> Maybe Roster
-add rawFirstName rawLastName (Roster { nextId, people } as roster) =
+add rawFirstName rawLastName (Roster { nextId, people }) =
     Person.create nextId rawFirstName rawLastName
         |> Maybe.andThen
             (\person ->

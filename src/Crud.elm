@@ -1,7 +1,7 @@
 module Crud exposing (Model, init, Msg, update, view)
 
 
-import Crud.Person as Person exposing (Person)
+import Crud.Person as Person
 import Crud.Roster as Roster exposing (Roster)
 import Html as H
 import Html.Attributes as HA
