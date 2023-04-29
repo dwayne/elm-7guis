@@ -98,7 +98,11 @@ update msg model =
             }
 
         ClickedDelete ->
-            { model | roster = Roster.delete model.roster }
+            { model
+            | roster = Roster.delete model.roster
+            , firstName = ""
+            , lastName = ""
+            }
 
 
 -- VIEW
