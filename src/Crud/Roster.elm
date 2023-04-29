@@ -144,7 +144,7 @@ filter rawPrefix (Roster { people }) =
         |> List.filter
             (\(_, person) ->
                 person
-                    |> Person.toFullName
+                    |> Person.toLastName
                     |> String.toLower
-                    |> String.contains prefix
+                    |> String.startsWith prefix
             )

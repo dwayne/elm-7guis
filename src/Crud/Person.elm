@@ -1,8 +1,8 @@
 module Crud.Person exposing
     ( Person, create
     , update
-    , toId, toFirstAndLastName
-    , toFullName, toString
+    , toId, toFirstAndLastName, toLastName
+    , toString
     )
 
 
@@ -52,13 +52,9 @@ toFirstAndLastName (Person { firstName, lastName }) =
     }
 
 
-toFullName : Person -> String
-toFullName (Person { firstName, lastName }) =
-    if String.isEmpty lastName then
-        firstName
-
-    else
-        firstName ++ " " ++ lastName
+toLastName : Person -> String
+toLastName (Person { lastName }) =
+    lastName
 
 toString : Person -> String
 toString (Person { firstName, lastName }) =
