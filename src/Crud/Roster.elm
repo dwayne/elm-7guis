@@ -106,13 +106,15 @@ delete (Roster state) =
         }
 
 
-select : Int -> Roster -> Roster
+select : Int -> Roster -> Maybe (Person, Roster)
 select id (Roster state) =
-    Roster
-        { state
-        | people =
+    let
+        people =
             Selection.selectBy (Person.toId >> ((==) id)) state.people
-        }
+    in
+    people
+        |> Selection.selected
+        |> Maybe.map (\person -> (person, Roster { state | people = people }))
 
 
 selected : Roster -> Maybe Person

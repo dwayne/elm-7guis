@@ -53,29 +53,21 @@ update msg model =
             { model | prefix = prefix }
 
         InputId idAsString ->
-            case String.toInt idAsString of
-                Just id ->
-                    let
-                        roster =
-                            Roster.select id model.roster
-                    in
-                    case Roster.selected roster of
-                        Just person ->
-                            let
-                                { firstName, lastName } =
-                                    Person.toFirstAndLastName person
-                            in
-                            { model
-                            | roster = roster
-                            , firstName = firstName
-                            , lastName = lastName
-                            }
-
-                        Nothing ->
-                            model
-
-                Nothing ->
-                    model
+            String.toInt idAsString
+                |> Maybe.andThen (\id -> Roster.select id model.roster)
+                |> Maybe.map
+                    (\(person, roster) ->
+                        let
+                            { firstName, lastName } =
+                                Person.toFirstAndLastName person
+                        in
+                        { model
+                        | roster = roster
+                        , firstName = firstName
+                        , lastName = lastName
+                        }
+                    )
+                |> Maybe.withDefault model
 
         InputFirstName firstName ->
             { model | firstName = firstName }
