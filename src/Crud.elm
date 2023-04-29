@@ -55,26 +55,7 @@ update msg model =
         InputId idAsString ->
             case String.toInt idAsString of
                 Just id ->
-                    let
-                        roster =
-                            Roster.select id model.roster
-                    in
-                    case Roster.selected roster of
-                        Just person ->
-                            let
-                                ( firstName, lastName ) =
-                                    ( Person.toFirstName person
-                                    , Person.toLastName person
-                                    )
-                            in
-                            { model
-                            | roster = roster
-                            , firstName = firstName
-                            , lastName = lastName
-                            }
-
-                        Nothing ->
-                            model
+                    { model | roster = Roster.select id model.roster }
 
                 Nothing ->
                     model
@@ -86,33 +67,21 @@ update msg model =
             { model | lastName = lastName }
 
         ClickedCreate ->
-            model.roster
-                |> Roster.add model.firstName model.lastName
-                |> Maybe.map
-                    (\roster ->
-                        { model
-                        | roster = roster
-                        , firstName = ""
-                        , lastName = ""
-                        }
-                    )
-                |> Maybe.withDefault model
+            case Roster.add model.firstName model.lastName model.roster of
+                Just roster ->
+                    { model | roster = roster }
+
+                Nothing ->
+                    model
 
         ClickedUpdate ->
             { model
             | roster =
-                Roster.updateSelected
-                    model.firstName
-                    model.lastName
-                    model.roster
+                Roster.update model.firstName model.lastName model.roster
             }
 
         ClickedDelete ->
-            { model
-            | roster = Roster.deleteSelected model.roster
-            , firstName = ""
-            , lastName = ""
-            }
+            { model | roster = Roster.delete model.roster }
 
 
 -- VIEW
