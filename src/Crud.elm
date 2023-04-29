@@ -55,7 +55,24 @@ update msg model =
         InputId idAsString ->
             case String.toInt idAsString of
                 Just id ->
-                    { model | roster = Roster.select id model.roster }
+                    let
+                        roster =
+                            Roster.select id model.roster
+                    in
+                    case Roster.selected roster of
+                        Just person ->
+                            let
+                                { firstName, lastName } =
+                                    Person.toFirstAndLastName person
+                            in
+                            { model
+                            | roster = roster
+                            , firstName = firstName
+                            , lastName = lastName
+                            }
+
+                        Nothing ->
+                            model
 
                 Nothing ->
                     model
