@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>7GUIs in Elm</title>
+
+    <style>
+      .canvas {
+        box-sizing: border-box;
+
+        width: 408px;
+        height: 220px;
+
+        border: 1px solid #000;
+
+        background-color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="/app.js"></script>
+    <script>
+      Elm.Main.init({
+        node: document.getElementById("app")
+      });
+    </script>
+  </body>
+</html>

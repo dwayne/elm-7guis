@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cd "$project" && elm make src/Main.elm --debug --output app.js

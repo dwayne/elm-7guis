@@ -2,6 +2,7 @@ module Main exposing (main)
 
 
 import Browser
+import CircleDrawer
 import Counter
 import Crud
 import FlightBooker
@@ -150,6 +151,8 @@ view model =
             |> Crud.view
             |> H.map ChangedCrud
             |> viewTask "CRUD"
+        , CircleDrawer.view
+            |> viewTask "Circle Drawer"
         ]
 
 
