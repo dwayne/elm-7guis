@@ -31,6 +31,7 @@ type alias Model =
     , flightBooker : FlightBooker.Model
     , timer : Timer.Model
     , crud : Crud.Model
+    , circleDrawer : CircleDrawer.Model
     }
 
 
@@ -45,6 +46,7 @@ init _ =
       , flightBooker = flightBooker
       , timer = Timer.init
       , crud = Crud.init
+      , circleDrawer = CircleDrawer.init
       }
     , Cmd.map ChangedFlightBooker flightBookerCmd
     )
@@ -59,6 +61,7 @@ type Msg
     | ChangedFlightBooker FlightBooker.Msg
     | ChangedTimer Timer.Msg
     | ChangedCrud Crud.Msg
+    | ChangedCircleDrawer CircleDrawer.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -90,6 +93,14 @@ update msg model =
 
         ChangedCrud crudMsg ->
             ( { model | crud = Crud.update crudMsg model.crud }
+            , Cmd.none
+            )
+
+        ChangedCircleDrawer circleDrawerMsg ->
+            ( { model
+              | circleDrawer =
+                  CircleDrawer.update circleDrawerMsg model.circleDrawer
+              }
             , Cmd.none
             )
 
@@ -151,7 +162,9 @@ view model =
             |> Crud.view
             |> H.map ChangedCrud
             |> viewTask "CRUD"
-        , CircleDrawer.view
+        , model.circleDrawer
+            |> CircleDrawer.view
+            |> H.map ChangedCircleDrawer
             |> viewTask "Circle Drawer"
         ]
 
