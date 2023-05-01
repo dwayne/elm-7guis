@@ -7,16 +7,41 @@ import Html.Events as HE
 import Json.Decode as JD
 
 
+-- CONSTANTS
+
+
+defaultDiameter : Int
+defaultDiameter =
+    30
+
+
 -- MODEL
 
 
 type alias Model =
-    ()
+    { id : Int
+    , circles : List Circle
+    }
+
+
+type alias Circle =
+    { id : Int
+    , position : Position
+    , diameter : Int
+    }
+
+
+type alias Position =
+    { x : Int
+    , y : Int
+    }
 
 
 init : Model
 init =
-    ()
+    { id = 0
+    , circles = []
+    }
 
 
 -- UPDATE
@@ -26,25 +51,22 @@ type Msg
     = ClickedCanvas Position
 
 
-type alias Position =
-    { x : Int
-    , y : Int
-    }
-
-
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        ClickedCanvas { x, y } ->
-            model
-                |> Debug.log ("x = " ++ Debug.toString x ++ ", y = " ++ Debug.toString y)
+        ClickedCanvas position ->
+            let
+                circle =
+                    Circle model.id position defaultDiameter
+            in
+            { model | id = model.id + 1, circles = circle :: model.circles }
 
 
 -- VIEW
 
 
 view : Model -> H.Html Msg
-view _ =
+view { circles } =
     H.div []
         [ H.div []
             [ H.button [ HA.type_ "button" ] [ H.text "Undo" ]
@@ -54,7 +76,30 @@ view _ =
             [ HA.class "canvas"
             , onClick ClickedCanvas
             ]
+            <| List.map viewCircle circles
+        ]
+
+
+viewCircle : Circle -> H.Html msg
+viewCircle { id, position, diameter } =
+    let
+        modifier =
+            "circle--" ++ String.fromInt id
+    in
+    H.div
+        [ HA.class <| "circle " ++ modifier
+        ]
+        [ H.node "style"
             []
+            [ [ "." ++ modifier ++ " {"
+              , "  --circle-x: " ++ String.fromInt position.x ++ "px;"
+              , "  --circle-y: " ++ String.fromInt position.y ++ "px;"
+              , "  --circle-diameter: " ++ String.fromInt diameter ++ "px;"
+              , "}"
+              ]
+                |> String.join "\n"
+                |> H.text
+            ]
         ]
 
 

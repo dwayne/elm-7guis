@@ -8,6 +8,8 @@
 
     <style>
       .canvas {
+        position: relative;
+
         box-sizing: border-box;
 
         width: 408px;
@@ -16,6 +18,23 @@
         border: 1px solid #000;
 
         background-color: #fff;
+      }
+
+      .circle {
+        --circle-x: 0;
+        --circle-y: 0;
+        --circle-diameter: 30px;
+
+        position: absolute;
+        left: var(--circle-x);
+        top: var(--circle-y);
+        transform: translate(-50%, -50%);
+
+        inline-size: var(--circle-diameter);
+        aspect-ratio: 1;
+        border-radius: 50%;
+
+        border: 1px solid #000;
       }
     </style>
   </head>
