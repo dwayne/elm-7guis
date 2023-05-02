@@ -81,26 +81,23 @@ view { circles } =
 
 
 viewCircle : Circle -> H.Html msg
-viewCircle { id, position, diameter } =
-    let
-        modifier =
-            "circle--" ++ String.fromInt id
-    in
+viewCircle { position, diameter } =
     H.div
-        [ HA.class <| "circle " ++ modifier
-        ]
-        [ H.node "style"
-            []
-            [ [ "." ++ modifier ++ " {"
-              , "  --circle-x: " ++ String.fromInt position.x ++ "px;"
-              , "  --circle-y: " ++ String.fromInt position.y ++ "px;"
-              , "  --circle-diameter: " ++ String.fromInt diameter ++ "px;"
-              , "}"
-              ]
-                |> String.join "\n"
-                |> H.text
+        [ HA.class "circle"
+        , customProperties
+            [ ( "circle-x", String.fromInt position.x ++ "px" )
+            , ( "circle-y", String.fromInt position.y ++ "px" )
+            , ( "circle-diameter", String.fromInt diameter ++ "px" )
             ]
         ]
+        []
+
+
+customProperties : List (String, String) -> H.Attribute msg
+customProperties =
+    HA.attribute "style"
+        << String.join "; "
+        << List.map (\(name, value) -> "--" ++ name ++ ": " ++ value)
 
 
 onClick : (Position -> msg) -> H.Attribute msg
