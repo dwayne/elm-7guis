@@ -21,6 +21,7 @@ defaultDiameter =
 type alias Model =
     { id : Int
     , circles : List Circle
+    , selectedId : Maybe Int
     }
 
 
@@ -41,6 +42,7 @@ init : Model
 init =
     { id = 0
     , circles = []
+    , selectedId = Nothing
     }
 
 
@@ -59,14 +61,18 @@ update msg model =
                 circle =
                     Circle model.id position defaultDiameter
             in
-            { model | id = model.id + 1, circles = circle :: model.circles }
+            { model
+            | id = model.id + 1
+            , circles = circle :: model.circles
+            , selectedId = Just model.id
+            }
 
 
 -- VIEW
 
 
 view : Model -> H.Html Msg
-view { circles } =
+view { circles, selectedId } =
     H.div []
         [ H.div []
             [ H.button [ HA.type_ "button" ] [ H.text "Undo" ]
@@ -76,14 +82,17 @@ view { circles } =
             [ HA.class "canvas"
             , onClick ClickedCanvas
             ]
-            <| List.map viewCircle circles
+            <| List.map (viewCircle selectedId) circles
         ]
 
 
-viewCircle : Circle -> H.Html msg
-viewCircle { position, diameter } =
+viewCircle : Maybe Int -> Circle -> H.Html msg
+viewCircle selectedId { id, position, diameter } =
     H.div
-        [ HA.class "circle"
+        [ HA.classList
+            [ ( "circle", True )
+            , ( "circle--selected", Just id == selectedId )
+            ]
         , customProperties
             [ ( "circle-x", String.fromInt position.x ++ "px" )
             , ( "circle-y", String.fromInt position.y ++ "px" )
