@@ -51,6 +51,7 @@ init =
 
 type Msg
     = ClickedCanvas Position
+    | MovedMouse Position
 
 
 update : Msg -> Model -> Model
@@ -67,6 +68,57 @@ update msg model =
             , selectedId = Just model.id
             }
 
+        MovedMouse position ->
+            { model | selectedId = findClosestCircle position model.circles }
+
+
+findClosestCircle : Position -> List Circle -> Maybe Int
+findClosestCircle position circles =
+    findClosestCircleHelper Nothing position circles
+
+
+findClosestCircleHelper : Maybe (Int, Float) -> Position -> List Circle -> Maybe Int
+findClosestCircleHelper closest position circles =
+    case circles of
+        [] ->
+            Maybe.map Tuple.first closest
+
+        circle :: restCircles ->
+            let
+                d =
+                    distanceBetween position circle
+
+                r =
+                    toFloat circle.diameter / 2
+
+                newClosest =
+                    if d > r then
+                        closest
+
+                    else
+                        case closest of
+                            Nothing ->
+                                Just (circle.id, d)
+
+                            Just (minId, minD) ->
+                                if d < minD then
+                                    Just (circle.id, d)
+
+                                else
+                                    closest
+            in
+            findClosestCircleHelper newClosest position restCircles
+
+
+distanceBetween : Position -> Circle -> Float
+distanceBetween { x, y } { position } =
+    sqrt <| sqr (x - position.x) + sqr (y - position.y)
+
+
+sqr : Int -> Float
+sqr n =
+    toFloat <| n * n
+
 
 -- VIEW
 
@@ -78,11 +130,14 @@ view { circles, selectedId } =
             [ H.button [ HA.type_ "button" ] [ H.text "Undo" ]
             , H.button [ HA.type_ "button" ] [ H.text "Redo" ]
             ]
-        , H.div
-            [ HA.class "canvas"
-            , onClick ClickedCanvas
-            ]
-            <| List.map (viewCircle selectedId) circles
+        , circles
+            |> List.reverse
+            |> List.map (viewCircle selectedId)
+            |> H.div
+                [ HA.class "canvas"
+                , onClick ClickedCanvas
+                , onMouseMove MovedMouse
+                ]
         ]
 
 
@@ -111,22 +166,28 @@ customProperties =
 
 onClick : (Position -> msg) -> H.Attribute msg
 onClick toMsg =
-    let
-        positionDecoder =
-            JD.map4
-                (\pageX pageY offsetLeft offsetTop ->
-                    let
-                        x =
-                            pageX - offsetLeft
-
-                        y =
-                            pageY - offsetTop
-                    in
-                    Position x y
-                )
-                (JD.field "pageX" JD.int)
-                (JD.field "pageY" JD.int)
-                (JD.at [ "target", "offsetLeft" ] JD.int)
-                (JD.at [ "target", "offsetTop" ] JD.int)
-    in
     HE.on "click" (JD.map toMsg positionDecoder)
+
+
+onMouseMove : (Position -> msg) -> H.Attribute msg
+onMouseMove toMsg =
+    HE.on "mousemove" (JD.map toMsg positionDecoder)
+
+
+positionDecoder : JD.Decoder Position
+positionDecoder =
+    JD.map4
+        (\pageX pageY offsetLeft offsetTop ->
+            let
+                x =
+                    pageX - offsetLeft
+
+                y =
+                    pageY - offsetTop
+            in
+            Position x y
+        )
+        (JD.field "pageX" JD.int)
+        (JD.field "pageY" JD.int)
+        (JD.at [ "currentTarget", "offsetLeft" ] JD.int)
+        (JD.at [ "currentTarget", "offsetTop" ] JD.int)
