@@ -5,6 +5,7 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
+import CircleDrawer.UndoManager as UndoManager exposing (UndoManager)
 
 
 -- CONSTANTS
@@ -22,6 +23,7 @@ type alias Model =
     { id : Int
     , circles : List Circle
     , selectedId : Maybe Int
+    , undoManager : UndoManager Undo Redo
     }
 
 
@@ -38,11 +40,20 @@ type alias Position =
     }
 
 
+type Undo
+    = RemoveCircle
+
+
+type Redo
+    = AddCircle Circle
+
+
 init : Model
 init =
     { id = 0
     , circles = []
     , selectedId = Nothing
+    , undoManager = UndoManager.empty
     }
 
 
@@ -52,6 +63,8 @@ init =
 type Msg
     = ClickedCanvas Position
     | MovedMouse Position
+    | ClickedUndo
+    | ClickedRedo
 
 
 update : Msg -> Model -> Model
@@ -66,10 +79,44 @@ update msg model =
             | id = model.id + 1
             , circles = circle :: model.circles
             , selectedId = Just model.id
+            , undoManager =
+                UndoManager.add
+                    { undo = RemoveCircle
+                    , redo = AddCircle circle
+                    }
+                    model.undoManager
             }
 
         MovedMouse position ->
             { model | selectedId = findClosestCircle position model.circles }
+
+        ClickedUndo ->
+            model.undoManager
+                |> UndoManager.undo
+                |> Maybe.map
+                    (\(undo, undoManager) ->
+                        case undo of
+                            RemoveCircle ->
+                                { model
+                                | circles = List.drop 1 model.circles
+                                , undoManager = undoManager
+                                }
+                    )
+                |> Maybe.withDefault model
+
+        ClickedRedo ->
+            model.undoManager
+                |> UndoManager.redo
+                |> Maybe.map
+                    (\(redo, undoManager) ->
+                        case redo of
+                            AddCircle circle ->
+                                { model
+                                | circles = circle :: model.circles
+                                , undoManager = undoManager
+                                }
+                    )
+                |> Maybe.withDefault model
 
 
 findClosestCircle : Position -> List Circle -> Maybe Int
@@ -124,11 +171,39 @@ sqr n =
 
 
 view : Model -> H.Html Msg
-view { circles, selectedId } =
+view { circles, selectedId, undoManager } =
     H.div []
         [ H.div []
-            [ H.button [ HA.type_ "button" ] [ H.text "Undo" ]
-            , H.button [ HA.type_ "button" ] [ H.text "Redo" ]
+            [ let
+                isEnabled =
+                    UndoManager.canUndo undoManager
+
+                isDisabled =
+                    not isEnabled
+
+                attrs =
+                    attrList
+                        [ ( HA.type_ "button", True )
+                        , ( HA.disabled isDisabled, True )
+                        , ( HE.onClick ClickedUndo, isEnabled )
+                        ]
+              in
+              H.button attrs [ H.text "Undo" ]
+            , let
+                isEnabled =
+                    UndoManager.canRedo undoManager
+
+                isDisabled =
+                    not isEnabled
+
+                attrs =
+                    attrList
+                        [ ( HA.type_ "button", True )
+                        , ( HA.disabled isDisabled, True )
+                        , ( HE.onClick ClickedRedo, isEnabled )
+                        ]
+              in
+              H.button attrs [ H.text "Redo" ]
             ]
         , circles
             |> List.reverse
@@ -139,6 +214,18 @@ view { circles, selectedId } =
                 , onMouseMove MovedMouse
                 ]
         ]
+
+
+attrList : List (H.Attribute msg, Bool) -> List (H.Attribute msg)
+attrList =
+    List.filterMap
+        (\(attr, keep) ->
+            if keep then
+                Just attr
+
+            else
+                Nothing
+        )
 
 
 viewCircle : Maybe Int -> Circle -> H.Html msg
