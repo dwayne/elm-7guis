@@ -63,6 +63,7 @@ init =
 type Msg
     = ClickedCanvas Position
     | MovedMouse Position
+    | MouseLeftCanvas
     | ClickedUndo
     | ClickedRedo
 
@@ -89,6 +90,9 @@ update msg model =
 
         MovedMouse position ->
             { model | selectedId = findClosestCircle position model.circles }
+
+        MouseLeftCanvas ->
+            { model | selectedId = Nothing }
 
         ClickedUndo ->
             model.undoManager
@@ -212,6 +216,7 @@ view { circles, selectedId, undoManager } =
                 [ HA.class "canvas"
                 , onClick ClickedCanvas
                 , onMouseMove MovedMouse
+                , HE.onMouseLeave MouseLeftCanvas
                 ]
         ]
 
