@@ -41,11 +41,11 @@ type alias Position =
 
 
 type Undo
-    = RemoveCircle
+    = RemoveCircle (List Circle)
 
 
 type Redo
-    = AddCircle Circle
+    = AddCircle (List Circle)
 
 
 init : Model
@@ -75,15 +75,18 @@ update msg model =
             let
                 circle =
                     Circle model.id position defaultDiameter
+
+                circles =
+                    circle :: model.circles
             in
             { model
             | id = model.id + 1
-            , circles = circle :: model.circles
+            , circles = circles
             , selectedId = Just model.id
             , undoManager =
                 UndoManager.add
-                    { undo = RemoveCircle
-                    , redo = AddCircle circle
+                    { undo = RemoveCircle model.circles
+                    , redo = AddCircle circles
                     }
                     model.undoManager
             }
@@ -100,9 +103,9 @@ update msg model =
                 |> Maybe.map
                     (\(undo, undoManager) ->
                         case undo of
-                            RemoveCircle ->
+                            RemoveCircle circles ->
                                 { model
-                                | circles = List.drop 1 model.circles
+                                | circles = circles
                                 , undoManager = undoManager
                                 }
                     )
@@ -114,9 +117,9 @@ update msg model =
                 |> Maybe.map
                     (\(redo, undoManager) ->
                         case redo of
-                            AddCircle circle ->
+                            AddCircle circles ->
                                 { model
-                                | circles = circle :: model.circles
+                                | circles = circles
                                 , undoManager = undoManager
                                 }
                     )
