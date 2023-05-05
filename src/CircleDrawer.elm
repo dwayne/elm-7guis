@@ -76,24 +76,27 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         ClickedCanvas position ->
-            let
-                circle =
-                    Circle model.id position defaultDiameter
+            if model.selectedId == Nothing then
+                let
+                    circle =
+                        Circle model.id position defaultDiameter
 
-                circles =
-                    circle :: model.circles
-            in
-            { model
-            | id = model.id + 1
-            , circles = circles
-            , selectedId = Just model.id
-            , undoManager =
-                UndoManager.add
-                    { undo = RemoveCircle model.circles
-                    , redo = AddCircle circles
-                    }
-                    model.undoManager
-            }
+                    circles =
+                        circle :: model.circles
+                in
+                { model
+                | id = model.id + 1
+                , circles = circles
+                , selectedId = Just model.id
+                , undoManager =
+                    UndoManager.add
+                        { undo = RemoveCircle model.circles
+                        , redo = AddCircle circles
+                        }
+                        model.undoManager
+                }
+            else
+                model
 
         MovedMouse position ->
             { model | selectedId = findClosestCircle position model.circles }
