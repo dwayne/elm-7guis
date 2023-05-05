@@ -5,7 +5,7 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
-import CircleDrawer.UndoManager as UndoManager exposing (UndoManager)
+import CircleDrawer.UndoManager as UndoManager
 
 
 -- CONSTANTS
@@ -23,7 +23,7 @@ type alias Model =
     { id : Int
     , circles : List Circle
     , selectedId : Maybe Int
-    , undoManager : UndoManager Undo Redo
+    , undoManager : UndoManager
     }
 
 
@@ -38,6 +38,10 @@ type alias Position =
     { x : Int
     , y : Int
     }
+
+
+type alias UndoManager =
+    UndoManager.UndoManager Undo Redo
 
 
 type Undo
@@ -180,47 +184,44 @@ sqr n =
 view : Model -> H.Html Msg
 view { circles, selectedId, undoManager } =
     H.div []
-        [ H.div []
-            [ let
-                isEnabled =
-                    UndoManager.canUndo undoManager
+        [ viewUndoRedo undoManager
+        , viewCanvas selectedId circles
+        ]
 
-                isDisabled =
-                    not isEnabled
 
-                attrs =
-                    attrList
-                        [ ( HA.type_ "button", True )
-                        , ( HA.disabled isDisabled, True )
-                        , ( HE.onClick ClickedUndo, isEnabled )
-                        ]
-              in
-              H.button attrs [ H.text "Undo" ]
-            , let
-                isEnabled =
-                    UndoManager.canRedo undoManager
+viewUndoRedo : UndoManager -> H.Html Msg
+viewUndoRedo undoManager =
+    H.div []
+        [ let
+            isEnabled =
+                UndoManager.canUndo undoManager
 
-                isDisabled =
-                    not isEnabled
+            isDisabled =
+                not isEnabled
 
-                attrs =
-                    attrList
-                        [ ( HA.type_ "button", True )
-                        , ( HA.disabled isDisabled, True )
-                        , ( HE.onClick ClickedRedo, isEnabled )
-                        ]
-              in
-              H.button attrs [ H.text "Redo" ]
-            ]
-        , circles
-            |> List.reverse
-            |> List.map (viewCircle selectedId)
-            |> H.div
-                [ HA.class "canvas"
-                , onClick ClickedCanvas
-                , onMouseMove MovedMouse
-                , HE.onMouseLeave MouseLeftCanvas
-                ]
+            attrs =
+                attrList
+                    [ ( HA.type_ "button", True )
+                    , ( HA.disabled isDisabled, True )
+                    , ( HE.onClick ClickedUndo, isEnabled )
+                    ]
+          in
+          H.button attrs [ H.text "Undo" ]
+        , let
+            isEnabled =
+                UndoManager.canRedo undoManager
+
+            isDisabled =
+                not isEnabled
+
+            attrs =
+                attrList
+                    [ ( HA.type_ "button", True )
+                    , ( HA.disabled isDisabled, True )
+                    , ( HE.onClick ClickedRedo, isEnabled )
+                    ]
+          in
+          H.button attrs [ H.text "Redo" ]
         ]
 
 
@@ -234,6 +235,18 @@ attrList =
             else
                 Nothing
         )
+
+
+viewCanvas : Maybe Int -> List Circle -> H.Html Msg
+viewCanvas selectedId =
+    List.reverse
+        >> List.map (viewCircle selectedId)
+        >> H.div
+            [ HA.class "canvas"
+            , onClick ClickedCanvas
+            , onMouseMove MovedMouse
+            , HE.onMouseLeave MouseLeftCanvas
+            ]
 
 
 viewCircle : Maybe Int -> Circle -> H.Html msg
