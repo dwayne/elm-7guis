@@ -267,9 +267,9 @@ viewCircle selectedId { id, position, diameter } =
 
 customProperties : List (String, String) -> H.Attribute msg
 customProperties =
-    HA.attribute "style"
-        << String.join "; "
-        << List.map (\(name, value) -> "--" ++ name ++ ": " ++ value)
+    List.map (\(name, value) -> "--" ++ name ++ ": " ++ value)
+        >> String.join "; "
+        >> HA.attribute "style"
 
 
 onClick : (Position -> msg) -> H.Attribute msg
