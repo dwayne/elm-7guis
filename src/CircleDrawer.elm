@@ -22,7 +22,7 @@ defaultDiameter =
 type alias Model =
     { id : Int
     , circles : List Circle
-    , selectedId : Maybe Int
+    , selection : Selection
     , undoManager : UndoManager
     }
 
@@ -38,6 +38,68 @@ type alias Position =
     { x : Int
     , y : Int
     }
+
+
+type Selection
+    = None
+    | Hovered Int
+    | Selected Int Position
+
+
+selectionToId : Selection -> Maybe Int
+selectionToId selection =
+    case selection of
+        None ->
+            Nothing
+
+        Hovered id ->
+            Just id
+
+        Selected id _ ->
+            Just id
+
+
+isSelected : Selection -> Bool
+isSelected selection =
+    case selection of
+        Selected _ _ ->
+            True
+
+        _ ->
+            False
+
+
+mapSelection
+    : { none : a
+      , hovered : Int -> a
+      , selected : Int -> Position -> a
+      }
+    -> Selection
+    -> a
+mapSelection { none, hovered, selected } selection =
+    case selection of
+        None ->
+            none
+
+        Hovered id ->
+            hovered id
+
+        Selected id position ->
+            selected id position
+
+
+mapSelected
+    : { selected : Int -> Position -> a
+      , other : a
+      }
+    -> Selection
+    -> a
+mapSelected { selected, other } =
+    mapSelection
+        { none = other
+        , hovered = always other
+        , selected = selected
+        }
 
 
 type alias UndoManager =
@@ -56,7 +118,7 @@ init : Model
 init =
     { id = 0
     , circles = []
-    , selectedId = Nothing
+    , selection = None
     , undoManager = UndoManager.empty
     }
 
@@ -76,33 +138,52 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         ClickedCanvas position ->
-            if model.selectedId == Nothing then
-                let
-                    circle =
-                        Circle model.id position defaultDiameter
+            mapSelection
+                { none =
+                    let
+                        circle =
+                            Circle model.id position defaultDiameter
 
-                    circles =
-                        circle :: model.circles
-                in
-                { model
-                | id = model.id + 1
-                , circles = circles
-                , selectedId = Just model.id
-                , undoManager =
-                    UndoManager.add
-                        { undo = RemoveCircle model.circles
-                        , redo = AddCircle circles
-                        }
-                        model.undoManager
+                        circles =
+                            circle :: model.circles
+                    in
+                    { model
+                    | id = model.id + 1
+                    , circles = circles
+                    , selection = Hovered model.id
+                    , undoManager =
+                        UndoManager.add
+                            { undo = RemoveCircle model.circles
+                            , redo = AddCircle circles
+                            }
+                            model.undoManager
+                    }
+                , hovered =
+                    \id -> { model | selection = Selected id position }
+                , selected =
+                    \id _ -> { model | selection = Selected id position }
                 }
-            else
-                model
+                model.selection
+
 
         MovedMouse position ->
-            { model | selectedId = findClosestCircle position model.circles }
+            if isSelected model.selection then
+                model
+
+            else
+                case findClosestCircle position model.circles of
+                    Just id ->
+                        { model | selection = Hovered id }
+
+                    Nothing ->
+                        { model | selection = None }
 
         MouseLeftCanvas ->
-            { model | selectedId = Nothing }
+            if isSelected model.selection then
+                model
+
+            else
+                { model | selection = None }
 
         ClickedUndo ->
             model.undoManager
@@ -185,10 +266,24 @@ sqr n =
 
 
 view : Model -> H.Html Msg
-view { circles, selectedId, undoManager } =
+view { circles, selection, undoManager } =
     H.div []
         [ viewUndoRedo undoManager
-        , viewCanvas selectedId circles
+        , viewWithDialog
+            { viewport = viewCanvas (selectionToId selection) circles
+            , maybeDialog =
+                mapSelected
+                    { selected =
+                        \_ position ->
+                            Just
+                                { block =
+                                    H.button [] [ H.text "Adjust Diameter" ]
+                                , position = position
+                                }
+                    , other = Nothing
+                    }
+                    selection
+            }
         ]
 
 
@@ -241,9 +336,9 @@ attrList =
 
 
 viewCanvas : Maybe Int -> List Circle -> H.Html Msg
-viewCanvas selectedId =
+viewCanvas activeId =
     List.reverse
-        >> List.map (viewCircle selectedId)
+        >> List.map (viewCircle activeId)
         >> H.div
             [ HA.class "canvas"
             , onClick ClickedCanvas
@@ -253,11 +348,11 @@ viewCanvas selectedId =
 
 
 viewCircle : Maybe Int -> Circle -> H.Html msg
-viewCircle selectedId { id, position, diameter } =
+viewCircle activeId { id, position, diameter } =
     H.div
         [ HA.classList
             [ ( "circle", True )
-            , ( "circle--selected", Just id == selectedId )
+            , ( "circle--selected", Just id == activeId )
             ]
         , customProperties
             [ ( "circle-x", String.fromInt position.x ++ "px" )
@@ -266,13 +361,6 @@ viewCircle selectedId { id, position, diameter } =
             ]
         ]
         []
-
-
-customProperties : List (String, String) -> H.Attribute msg
-customProperties =
-    List.map (\(name, value) -> "--" ++ name ++ ": " ++ value)
-        >> String.join "; "
-        >> HA.attribute "style"
 
 
 onClick : (Position -> msg) -> H.Attribute msg
@@ -302,3 +390,44 @@ positionDecoder =
         (JD.field "pageY" JD.int)
         (JD.at [ "currentTarget", "offsetLeft" ] JD.int)
         (JD.at [ "currentTarget", "offsetTop" ] JD.int)
+
+
+type alias Dialog msg =
+    { block : H.Html msg
+    , position : Position
+    }
+
+
+viewWithDialog
+    : { viewport : H.Html msg
+      , maybeDialog : Maybe (Dialog msg)
+      }
+    -> H.Html msg
+viewWithDialog { viewport, maybeDialog } =
+    case maybeDialog of
+        Just { block, position } ->
+            H.div
+                [ HA.class "dialog-wrapper" ]
+                [ viewport
+                , H.div
+                    [ HA.class "dialog-background" ]
+                    [ H.div
+                        [ HA.class "dialog"
+                        , customProperties
+                            [ ( "dialog-x", String.fromInt position.x ++ "px" )
+                            , ( "dialog-y", String.fromInt position.y ++ "px" )
+                            ]
+                        ]
+                        [ block ]
+                    ]
+                ]
+
+        Nothing ->
+            viewport
+
+
+customProperties : List (String, String) -> H.Attribute msg
+customProperties =
+    List.map (\(name, value) -> "--" ++ name ++ ": " ++ value)
+        >> String.join "; "
+        >> HA.attribute "style"

@@ -42,6 +42,30 @@
       .circle--selected {
         background-color: #eee;
       }
+
+      .dialog-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dialog-background {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        background-color: transparent;
+      }
+
+      .dialog {
+        --dialog-x: 0;
+        --dialog-y: 0;
+
+        position: absolute;
+        left: var(--dialog-x);
+        top: var(--dialog-y);
+      }
     </style>
   </head>
   <body>
