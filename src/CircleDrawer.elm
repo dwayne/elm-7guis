@@ -5,6 +5,9 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
+import CircleDrawer.Html.Attributes as HA
+import CircleDrawer.Dialog as Dialog
+import CircleDrawer.Position exposing (Position)
 import CircleDrawer.UndoManager as UndoManager
 
 
@@ -31,12 +34,6 @@ type alias Circle =
     { id : Int
     , position : Position
     , diameter : Int
-    }
-
-
-type alias Position =
-    { x : Int
-    , y : Int
     }
 
 
@@ -269,21 +266,20 @@ view : Model -> H.Html Msg
 view { circles, selection, undoManager } =
     H.div []
         [ viewUndoRedo undoManager
-        , viewWithDialog
+        , Dialog.view
             { viewport = viewCanvas (selectionToId selection) circles
-            , maybeDialog =
-                mapSelected
-                    { selected =
-                        \_ position ->
-                            Just
-                                { block =
-                                    H.button [] [ H.text "Adjust Diameter" ]
-                                , position = position
-                                }
-                    , other = Nothing
-                    }
-                    selection
             }
+            <| mapSelected
+                { selected =
+                    \_ position ->
+                        Just
+                            { block =
+                                H.button [] [ H.text "Adjust Diameter" ]
+                            , position = position
+                            }
+                , other = Nothing
+                }
+                selection
         ]
 
 
@@ -354,7 +350,7 @@ viewCircle activeId { id, position, diameter } =
             [ ( "circle", True )
             , ( "circle--selected", Just id == activeId )
             ]
-        , customProperties
+        , HA.customProperties
             [ ( "circle-x", String.fromInt position.x ++ "px" )
             , ( "circle-y", String.fromInt position.y ++ "px" )
             , ( "circle-diameter", String.fromInt diameter ++ "px" )
@@ -390,44 +386,3 @@ positionDecoder =
         (JD.field "pageY" JD.int)
         (JD.at [ "currentTarget", "offsetLeft" ] JD.int)
         (JD.at [ "currentTarget", "offsetTop" ] JD.int)
-
-
-type alias Dialog msg =
-    { block : H.Html msg
-    , position : Position
-    }
-
-
-viewWithDialog
-    : { viewport : H.Html msg
-      , maybeDialog : Maybe (Dialog msg)
-      }
-    -> H.Html msg
-viewWithDialog { viewport, maybeDialog } =
-    case maybeDialog of
-        Just { block, position } ->
-            H.div
-                [ HA.class "dialog-wrapper" ]
-                [ viewport
-                , H.div
-                    [ HA.class "dialog-background" ]
-                    [ H.div
-                        [ HA.class "dialog"
-                        , customProperties
-                            [ ( "dialog-x", String.fromInt position.x ++ "px" )
-                            , ( "dialog-y", String.fromInt position.y ++ "px" )
-                            ]
-                        ]
-                        [ block ]
-                    ]
-                ]
-
-        Nothing ->
-            viewport
-
-
-customProperties : List (String, String) -> H.Attribute msg
-customProperties =
-    List.map (\(name, value) -> "--" ++ name ++ ": " ++ value)
-        >> String.join "; "
-        >> HA.attribute "style"
