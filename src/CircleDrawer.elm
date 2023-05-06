@@ -21,7 +21,8 @@ defaultDiameter =
 
 dialogConfig : Dialog.Config Msg
 dialogConfig =
-    { onChange = ChangedDialog
+    { onClose = ClosedDialog
+    , onChange = ChangedDialog
     }
 
 
@@ -135,6 +136,7 @@ type Msg
     | MouseLeftCanvas
     | ClickedUndo
     | ClickedRedo
+    | ClosedDialog
     | ChangedDialog Dialog.Msg
 
 
@@ -198,7 +200,11 @@ update msg model =
             )
 
         ClickedUndo ->
-            ( model.undoManager
+            ( if isSelected model.selection then
+                model
+
+            else
+            model.undoManager
                 |> UndoManager.undo
                 |> Maybe.map
                     (\(undo, undoManager) ->
@@ -214,24 +220,33 @@ update msg model =
             )
 
         ClickedRedo ->
-            ( model.undoManager
-                |> UndoManager.redo
-                |> Maybe.map
-                    (\(redo, undoManager) ->
-                        case redo of
-                            AddCircle circles ->
-                                { model
-                                | circles = circles
-                                , undoManager = undoManager
-                                }
-                    )
-                |> Maybe.withDefault model
+            ( if isSelected model.selection then
+                model
+
+            else
+                model.undoManager
+                    |> UndoManager.redo
+                    |> Maybe.map
+                        (\(redo, undoManager) ->
+                            case redo of
+                                AddCircle circles ->
+                                    { model
+                                    | circles = circles
+                                    , undoManager = undoManager
+                                    }
+                        )
+                    |> Maybe.withDefault model
             , Cmd.none
             )
 
-        ChangedDialog _ ->
-            ( model
+        ClosedDialog ->
+            ( { model | selection = None }
             , Cmd.none
+            )
+
+        ChangedDialog dialogMsg ->
+            ( model
+            , Dialog.update dialogConfig dialogMsg
             )
 
 
@@ -293,6 +308,7 @@ view { circles, selection, undoManager } =
         , Dialog.view
             { viewport = viewCanvas (selectionToId selection) circles
             }
+            dialogConfig
             <| mapSelected
                 { selected =
                     \_ position ->
