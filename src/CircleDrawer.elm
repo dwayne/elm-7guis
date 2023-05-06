@@ -21,7 +21,8 @@ defaultDiameter =
 
 dialogConfig : Dialog.Config Msg
 dialogConfig =
-    { onChange = ChangedDialog
+    { onClose = ClosedDialog
+    , onChange = ChangedDialog
     }
 
 
@@ -135,6 +136,7 @@ type Msg
     | MouseLeftCanvas
     | ClickedUndo
     | ClickedRedo
+    | ClosedDialog
     | ChangedDialog Dialog.Msg
 
 
@@ -229,9 +231,14 @@ update msg model =
             , Cmd.none
             )
 
-        ChangedDialog _ ->
-            ( model
+        ClosedDialog ->
+            ( { model | selection = None }
             , Cmd.none
+            )
+
+        ChangedDialog dialogMsg ->
+            ( model
+            , Dialog.update dialogConfig dialogMsg
             )
 
 
@@ -288,59 +295,76 @@ sqr n =
 
 view : Model -> H.Html Msg
 view { circles, selection, undoManager } =
+    let
+        ( isEnabled, activeId, maybeDialog ) =
+            case selection of
+                None ->
+                    ( True
+                    , Nothing
+                    , Nothing
+                    )
+
+                Hovered id ->
+                    ( True
+                    , Just id
+                    , Nothing
+                    )
+
+                Selected id position ->
+                    ( False
+                    , Just id
+                    , Just
+                        { htmlId = "menu"
+                        , block = H.button [] [ H.text "Adjust Diameter" ]
+                        , position = position
+                        }
+                    )
+    in
     H.div []
-        [ viewUndoRedo undoManager
+        [ viewUndoRedo isEnabled undoManager
         , Dialog.view
-            { viewport = viewCanvas (selectionToId selection) circles
+            { viewport = viewCanvas activeId circles
             }
-            <| mapSelected
-                { selected =
-                    \_ position ->
-                        Just
-                            { htmlId = "menu"
-                            , block = H.button [] [ H.text "Adjust Diameter" ]
-                            , position = position
-                            }
-                , other = Nothing
-                }
-                selection
+            dialogConfig
+            maybeDialog
         ]
 
 
-viewUndoRedo : UndoManager -> H.Html Msg
-viewUndoRedo undoManager =
+viewUndoRedo : Bool -> UndoManager -> H.Html Msg
+viewUndoRedo isEnabled undoManager =
     H.div []
-        [ let
-            isEnabled =
-                UndoManager.canUndo undoManager
-
-            isDisabled =
-                not isEnabled
-
-            attrs =
-                attrList
-                    [ ( HA.type_ "button", True )
-                    , ( HA.disabled isDisabled, True )
-                    , ( HE.onClick ClickedUndo, isEnabled )
-                    ]
-          in
-          H.button attrs [ H.text "Undo" ]
-        , let
-            isEnabled =
-                UndoManager.canRedo undoManager
-
-            isDisabled =
-                not isEnabled
-
-            attrs =
-                attrList
-                    [ ( HA.type_ "button", True )
-                    , ( HA.disabled isDisabled, True )
-                    , ( HE.onClick ClickedRedo, isEnabled )
-                    ]
-          in
-          H.button attrs [ H.text "Redo" ]
+        [ viewButton
+            { isEnabled = isEnabled && UndoManager.canUndo undoManager
+            , text = "Undo"
+            , onClick = ClickedUndo
+            }
+        , viewButton
+            { isEnabled = isEnabled && UndoManager.canRedo undoManager
+            , text = "Redo"
+            , onClick = ClickedRedo
+            }
         ]
+
+
+viewButton
+    : { isEnabled : Bool
+      , text : String
+      , onClick : msg
+      }
+    -> H.Html msg
+viewButton options =
+    let
+        isDisabled =
+            not options.isEnabled
+
+        attrs =
+            attrList
+                [ ( HA.type_ "button", True )
+                , ( HA.disabled isDisabled, True )
+                , ( HE.onClick options.onClick, options.isEnabled )
+                ]
+    in
+    H.button attrs [ H.text options.text ]
 
 
 attrList : List (H.Attribute msg, Bool) -> List (H.Attribute msg)
