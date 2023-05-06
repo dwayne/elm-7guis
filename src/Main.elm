@@ -97,11 +97,12 @@ update msg model =
             )
 
         ChangedCircleDrawer circleDrawerMsg ->
-            ( { model
-              | circleDrawer =
-                  CircleDrawer.update circleDrawerMsg model.circleDrawer
-              }
-            , Cmd.none
+            let
+                ( circleDrawer, circleDrawerCmd ) =
+                    CircleDrawer.update circleDrawerMsg model.circleDrawer
+            in
+            ( { model | circleDrawer = circleDrawer }
+            , Cmd.map ChangedCircleDrawer circleDrawerCmd
             )
 
 

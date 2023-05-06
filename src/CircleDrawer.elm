@@ -19,6 +19,12 @@ defaultDiameter =
     30
 
 
+dialogConfig : Dialog.Config Msg
+dialogConfig =
+    { onChange = ChangedDialog
+    }
+
+
 -- MODEL
 
 
@@ -129,9 +135,10 @@ type Msg
     | MouseLeftCanvas
     | ClickedUndo
     | ClickedRedo
+    | ChangedDialog Dialog.Msg
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ClickedCanvas position ->
@@ -144,27 +151,31 @@ update msg model =
                         circles =
                             circle :: model.circles
                     in
-                    { model
-                    | id = model.id + 1
-                    , circles = circles
-                    , selection = Hovered model.id
-                    , undoManager =
-                        UndoManager.add
-                            { undo = RemoveCircle model.circles
-                            , redo = AddCircle circles
-                            }
-                            model.undoManager
-                    }
+                    ( { model
+                        | id = model.id + 1
+                        , circles = circles
+                        , selection = Hovered model.id
+                        , undoManager =
+                            UndoManager.add
+                                { undo = RemoveCircle model.circles
+                                , redo = AddCircle circles
+                                }
+                                model.undoManager
+                      }
+                    , Cmd.none
+                    )
                 , hovered =
-                    \id -> { model | selection = Selected id position }
-                , selected =
-                    \id _ -> { model | selection = Selected id position }
+                    \id ->
+                        ( { model | selection = Selected id position }
+                        , Dialog.open dialogConfig "menu"
+                        )
+                , selected = always <| always ( model, Cmd.none )
                 }
                 model.selection
 
 
         MovedMouse position ->
-            if isSelected model.selection then
+            ( if isSelected model.selection then
                 model
 
             else
@@ -174,16 +185,20 @@ update msg model =
 
                     Nothing ->
                         { model | selection = None }
+            , Cmd.none
+            )
 
         MouseLeftCanvas ->
-            if isSelected model.selection then
+            ( if isSelected model.selection then
                 model
 
             else
                 { model | selection = None }
+            , Cmd.none
+            )
 
         ClickedUndo ->
-            model.undoManager
+            ( model.undoManager
                 |> UndoManager.undo
                 |> Maybe.map
                     (\(undo, undoManager) ->
@@ -195,9 +210,11 @@ update msg model =
                                 }
                     )
                 |> Maybe.withDefault model
+            , Cmd.none
+            )
 
         ClickedRedo ->
-            model.undoManager
+            ( model.undoManager
                 |> UndoManager.redo
                 |> Maybe.map
                     (\(redo, undoManager) ->
@@ -209,6 +226,13 @@ update msg model =
                                 }
                     )
                 |> Maybe.withDefault model
+            , Cmd.none
+            )
+
+        ChangedDialog _ ->
+            ( model
+            , Cmd.none
+            )
 
 
 findClosestCircle : Position -> List Circle -> Maybe Int
@@ -273,8 +297,8 @@ view { circles, selection, undoManager } =
                 { selected =
                     \_ position ->
                         Just
-                            { block =
-                                H.button [] [ H.text "Adjust Diameter" ]
+                            { htmlId = "menu"
+                            , block = H.button [] [ H.text "Adjust Diameter" ]
                             , position = position
                             }
                 , other = Nothing
