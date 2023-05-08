@@ -200,11 +200,7 @@ update msg model =
             )
 
         ClickedUndo ->
-            ( if isSelected model.selection then
-                model
-
-            else
-            model.undoManager
+            ( model.undoManager
                 |> UndoManager.undo
                 |> Maybe.map
                     (\(undo, undoManager) ->
@@ -220,22 +216,18 @@ update msg model =
             )
 
         ClickedRedo ->
-            ( if isSelected model.selection then
-                model
-
-            else
-                model.undoManager
-                    |> UndoManager.redo
-                    |> Maybe.map
-                        (\(redo, undoManager) ->
-                            case redo of
-                                AddCircle circles ->
-                                    { model
-                                    | circles = circles
-                                    , undoManager = undoManager
-                                    }
-                        )
-                    |> Maybe.withDefault model
+            ( model.undoManager
+                |> UndoManager.redo
+                |> Maybe.map
+                    (\(redo, undoManager) ->
+                        case redo of
+                            AddCircle circles ->
+                                { model
+                                | circles = circles
+                                , undoManager = undoManager
+                                }
+                    )
+                |> Maybe.withDefault model
             , Cmd.none
             )
 
@@ -303,60 +295,76 @@ sqr n =
 
 view : Model -> H.Html Msg
 view { circles, selection, undoManager } =
+    let
+        ( isEnabled, activeId, maybeDialog ) =
+            case selection of
+                None ->
+                    ( True
+                    , Nothing
+                    , Nothing
+                    )
+
+                Hovered id ->
+                    ( True
+                    , Just id
+                    , Nothing
+                    )
+
+                Selected id position ->
+                    ( False
+                    , Just id
+                    , Just
+                        { htmlId = "menu"
+                        , block = H.button [] [ H.text "Adjust Diameter" ]
+                        , position = position
+                        }
+                    )
+    in
     H.div []
-        [ viewUndoRedo undoManager
+        [ viewUndoRedo isEnabled undoManager
         , Dialog.view
-            { viewport = viewCanvas (selectionToId selection) circles
+            { viewport = viewCanvas activeId circles
             }
             dialogConfig
-            <| mapSelected
-                { selected =
-                    \_ position ->
-                        Just
-                            { htmlId = "menu"
-                            , block = H.button [] [ H.text "Adjust Diameter" ]
-                            , position = position
-                            }
-                , other = Nothing
-                }
-                selection
+            maybeDialog
         ]
 
 
-viewUndoRedo : UndoManager -> H.Html Msg
-viewUndoRedo undoManager =
+viewUndoRedo : Bool -> UndoManager -> H.Html Msg
+viewUndoRedo isEnabled undoManager =
     H.div []
-        [ let
-            isEnabled =
-                UndoManager.canUndo undoManager
-
-            isDisabled =
-                not isEnabled
-
-            attrs =
-                attrList
-                    [ ( HA.type_ "button", True )
-                    , ( HA.disabled isDisabled, True )
-                    , ( HE.onClick ClickedUndo, isEnabled )
-                    ]
-          in
-          H.button attrs [ H.text "Undo" ]
-        , let
-            isEnabled =
-                UndoManager.canRedo undoManager
-
-            isDisabled =
-                not isEnabled
-
-            attrs =
-                attrList
-                    [ ( HA.type_ "button", True )
-                    , ( HA.disabled isDisabled, True )
-                    , ( HE.onClick ClickedRedo, isEnabled )
-                    ]
-          in
-          H.button attrs [ H.text "Redo" ]
+        [ viewButton
+            { isEnabled = isEnabled && UndoManager.canUndo undoManager
+            , text = "Undo"
+            , onClick = ClickedUndo
+            }
+        , viewButton
+            { isEnabled = isEnabled && UndoManager.canRedo undoManager
+            , text = "Redo"
+            , onClick = ClickedRedo
+            }
         ]
+
+
+viewButton
+    : { isEnabled : Bool
+      , text : String
+      , onClick : msg
+      }
+    -> H.Html msg
+viewButton options =
+    let
+        isDisabled =
+            not options.isEnabled
+
+        attrs =
+            attrList
+                [ ( HA.type_ "button", True )
+                , ( HA.disabled isDisabled, True )
+                , ( HE.onClick options.onClick, options.isEnabled )
+                ]
+    in
+    H.button attrs [ H.text options.text ]
 
 
 attrList : List (H.Attribute msg, Bool) -> List (H.Attribute msg)

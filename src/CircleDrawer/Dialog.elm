@@ -46,7 +46,7 @@ update { onClose, onChange } msg =
             Cmd.none
 
         Blur ->
-            Process.sleep 250
+            Process.sleep 0
                 |> Task.attempt (always onClose)
 
         Close ->
