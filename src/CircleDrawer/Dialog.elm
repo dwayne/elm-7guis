@@ -10,11 +10,12 @@ module CircleDrawer.Dialog exposing
 
 
 import Browser.Dom as BD
+import CircleDrawer.Html.Attributes as HA
+import CircleDrawer.Position exposing (Position)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
-import CircleDrawer.Html.Attributes as HA
-import CircleDrawer.Position exposing (Position)
+import Json.Decode as JD
 import Process
 import Task
 
@@ -27,35 +28,21 @@ type alias Config msg =
 
 open : Config msg -> String -> Cmd msg
 open { onChange } htmlId =
-    Process.sleep 0
-        |> Task.andThen (always <| BD.focus <| toDialogId htmlId)
+    "dialog-" ++ htmlId
+        |> BD.focus
         |> Task.attempt (always Focus)
         |> Cmd.map onChange
 
 
 type Msg
     = Focus
-    | Blur
-    | Close
 
 
-update : Config msg -> Msg -> Cmd msg
-update { onClose, onChange } msg =
+update : Msg -> Cmd msg
+update msg =
     case msg of
         Focus ->
             Cmd.none
-
-        Blur ->
-            Process.sleep 0
-                |> Task.attempt (always onClose)
-
-        Close ->
-            dispatch onClose
-
-
-dispatch : msg -> Cmd msg
-dispatch =
-    Task.succeed >> Task.perform identity
 
 
 type alias Dialog msg =
@@ -71,23 +58,25 @@ type alias Options msg =
 
 
 view : Options msg -> Config msg -> Maybe (Dialog msg) -> H.Html msg
-view { viewport } { onChange } maybeDialog =
+view { viewport } { onClose } maybeDialog =
     case maybeDialog of
         Just { htmlId, block, position } ->
             H.div
                 [ HA.class "dialog-wrapper" ]
                 [ viewport
                 , H.div
-                    [ HA.class "dialog-background" ]
+                    [ HA.id <| "dialog-background-" ++ htmlId
+                    , currentTargetOnClick onClose
+                    , HA.class "dialog-background"
+                    ]
                     [ H.div
-                        [ HA.id <| toDialogId htmlId
+                        [ HA.id <| "dialog-" ++ htmlId
                         , HA.tabindex -1
                         , HA.class "dialog"
                         , HA.customProperties
                             [ ( "dialog-x", String.fromInt position.x ++ "px" )
                             , ( "dialog-y", String.fromInt position.y ++ "px" )
                             ]
-                        , HE.onBlur (onChange Blur)
                         ]
                         [ block ]
                     ]
@@ -97,6 +86,20 @@ view { viewport } { onChange } maybeDialog =
             viewport
 
 
-toDialogId : String -> String
-toDialogId =
-    (++) "dialog-"
+currentTargetOnClick : msg -> H.Attribute msg
+currentTargetOnClick msg =
+    let
+        decoder =
+            JD.map2 Tuple.pair
+              (JD.at [ "currentTarget", "id" ] JD.string)
+              (JD.at [ "target", "id" ] JD.string)
+                |> JD.andThen
+                    (\(currentTargetId, targetId) ->
+                        if currentTargetId == targetId then
+                            JD.succeed msg
+
+                        else
+                            JD.fail "ignore click"
+                    )
+    in
+    HE.on "click" decoder

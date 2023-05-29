@@ -238,7 +238,7 @@ update msg model =
 
         ChangedDialog dialogMsg ->
             ( model
-            , Dialog.update dialogConfig dialogMsg
+            , Dialog.update dialogMsg
             )
 
 
