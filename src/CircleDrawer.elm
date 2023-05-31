@@ -46,6 +46,20 @@ type alias Circle =
     }
 
 
+findCircleById : Int -> List Circle -> Maybe Circle
+findCircleById id circles =
+    case circles of
+        [] ->
+            Nothing
+
+        circle :: restCircles ->
+            if circle.id == id then
+                Just circle
+
+            else
+                findCircleById id restCircles
+
+
 type Selection
     = None
     | Hovered Int
@@ -145,6 +159,7 @@ type Msg
     | ClickedUndo
     | ClickedRedo
     | ClickedAdjustDiameter
+    | InputDiameter Diameter
     | ClosedDialog
     | ChangedDialog Dialog.Msg
 
@@ -266,6 +281,34 @@ update msg model =
             , Cmd.none
             )
 
+        InputDiameter diameter ->
+            ( mapSelected
+                { selected =
+                    \id position mode ->
+                        case mode of
+                            AdjustDiameter _ ->
+                                { model
+                                    | circles =
+                                        List.map
+                                            (\circle ->
+                                                if circle.id == id then
+                                                    { circle | diameter = diameter }
+
+                                                else
+                                                    circle
+                                            )
+                                            model.circles
+                                    , selection = Selected id position (AdjustDiameter diameter)
+                                }
+
+                            _ ->
+                                model
+                , other = model
+                }
+                model.selection
+            , Cmd.none
+            )
+
         ClosedDialog ->
             ( { model | selection = None }
             , Cmd.none
@@ -325,20 +368,6 @@ sqr n =
     toFloat <| n * n
 
 
-findCircleById : Int -> List Circle -> Maybe Circle
-findCircleById id circles =
-    case circles of
-        [] ->
-            Nothing
-
-        circle :: restCircles ->
-            if circle.id == id then
-                Just circle
-
-            else
-                findCircleById id restCircles
-
-
 
 -- VIEW
 
@@ -382,9 +411,10 @@ view { circles, selection, undoManager } =
                                         [ H.p [] [ H.text "Adjust Diameter" ]
                                         , H.input
                                             [ HA.type_ "range"
-                                            , HA.min "2"
-                                            , HA.max "100"
+                                            , HA.min <| Diameter.toString Diameter.min
+                                            , HA.max <| Diameter.toString Diameter.max
                                             , HA.value <| Diameter.toString diameter
+                                            , onInputDiameter InputDiameter
                                             ]
                                             []
                                         ]
@@ -506,3 +536,19 @@ positionDecoder =
         (JD.field "pageY" JD.int)
         (JD.at [ "currentTarget", "offsetLeft" ] JD.int)
         (JD.at [ "currentTarget", "offsetTop" ] JD.int)
+
+
+onInputDiameter : (Diameter -> msg) -> H.Attribute msg
+onInputDiameter toMsg =
+    let
+        diameterDecoder =
+            JD.at [ "target", "value" ] JD.string
+                |> JD.andThen
+                    (\s ->
+                        String.toInt s
+                            |> Maybe.andThen Diameter.fromInt
+                            |> Maybe.map JD.succeed
+                            |> Maybe.withDefault (JD.fail "invalid diameter")
+                    )
+    in
+    HE.on "input" (JD.map toMsg diameterDecoder)

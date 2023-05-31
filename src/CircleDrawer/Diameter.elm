@@ -2,6 +2,8 @@ module CircleDrawer.Diameter exposing
     ( Diameter
     , fromInt
     , fromSafeInt
+    , max
+    , min
     , toFloat
     , toString
     )
@@ -9,6 +11,16 @@ module CircleDrawer.Diameter exposing
 
 type Diameter
     = Diameter Int
+
+
+min : Diameter
+min =
+    Diameter 2
+
+
+max : Diameter
+max =
+    Diameter 100
 
 
 fromInt : Int -> Maybe Diameter
