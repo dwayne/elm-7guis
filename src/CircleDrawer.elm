@@ -49,7 +49,12 @@ type alias Circle =
 type Selection
     = None
     | Hovered Int
-    | Selected Int Position
+    | Selected Int Position Mode
+
+
+type Mode
+    = Menu
+    | AdjustDiameter Diameter
 
 
 selectionToId : Selection -> Maybe Int
@@ -61,14 +66,14 @@ selectionToId selection =
         Hovered id ->
             Just id
 
-        Selected id _ ->
+        Selected id _ _ ->
             Just id
 
 
 isSelected : Selection -> Bool
 isSelected selection =
     case selection of
-        Selected _ _ ->
+        Selected _ _ _ ->
             True
 
         _ ->
@@ -78,7 +83,7 @@ isSelected selection =
 mapSelection :
     { none : a
     , hovered : Int -> a
-    , selected : Int -> Position -> a
+    , selected : Int -> Position -> Mode -> a
     }
     -> Selection
     -> a
@@ -90,12 +95,12 @@ mapSelection { none, hovered, selected } selection =
         Hovered id ->
             hovered id
 
-        Selected id position ->
-            selected id position
+        Selected id position mode ->
+            selected id position mode
 
 
 mapSelected :
-    { selected : Int -> Position -> a
+    { selected : Int -> Position -> Mode -> a
     , other : a
     }
     -> Selection
@@ -139,6 +144,7 @@ type Msg
     | MouseLeftCanvas
     | ClickedUndo
     | ClickedRedo
+    | ClickedAdjustDiameter
     | ClosedDialog
     | ChangedDialog Dialog.Msg
 
@@ -171,10 +177,14 @@ update msg model =
                     )
                 , hovered =
                     \id ->
-                        ( { model | selection = Selected id position }
+                        ( { model | selection = Selected id position Menu }
                         , Dialog.open dialogConfig "menu"
                         )
-                , selected = always <| always ( model, Cmd.none )
+                , selected =
+                    \_ _ _ ->
+                        ( model
+                        , Cmd.none
+                        )
                 }
                 model.selection
 
@@ -230,6 +240,24 @@ update msg model =
                                 }
                     )
                 |> Maybe.withDefault model
+            , Cmd.none
+            )
+
+        ClickedAdjustDiameter ->
+            ( mapSelected
+                { selected =
+                    \id position mode ->
+                        case mode of
+                            Menu ->
+                                { model
+                                    | selection = Selected id position (AdjustDiameter <| Diameter.fromSafeInt 10)
+                                }
+
+                            _ ->
+                                model
+                , other = model
+                }
+                model.selection
             , Cmd.none
             )
 
@@ -313,14 +341,36 @@ view { circles, selection, undoManager } =
                     , Nothing
                     )
 
-                Selected id position ->
+                Selected id position mode ->
                     ( False
                     , Just id
-                    , Just
-                        { htmlId = "menu"
-                        , block = H.button [] [ H.text "Adjust Diameter" ]
-                        , position = position
-                        }
+                    , case mode of
+                        Menu ->
+                            Just
+                                { htmlId = "menu"
+                                , block =
+                                    H.button
+                                        [ HE.onClick ClickedAdjustDiameter ]
+                                        [ H.text "Adjust Diameter" ]
+                                , position = position
+                                }
+
+                        AdjustDiameter diameter ->
+                            Just
+                                { htmlId = "adjustDiameter"
+                                , block =
+                                    H.div []
+                                        [ H.p [] [ H.text "Adjust Diameter" ]
+                                        , H.input
+                                            [ HA.type_ "range"
+                                            , HA.min "2"
+                                            , HA.max "100"
+                                            , HA.value <| Diameter.toString diameter
+                                            ]
+                                            []
+                                        ]
+                                , position = position
+                                }
                     )
     in
     H.div []
