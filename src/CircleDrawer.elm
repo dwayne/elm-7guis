@@ -249,9 +249,14 @@ update msg model =
                     \id position mode ->
                         case mode of
                             Menu ->
-                                { model
-                                    | selection = Selected id position (AdjustDiameter <| Diameter.fromSafeInt 10)
-                                }
+                                case findCircleById id model.circles of
+                                    Just { diameter } ->
+                                        { model
+                                            | selection = Selected id position (AdjustDiameter diameter)
+                                        }
+
+                                    Nothing ->
+                                        model
 
                             _ ->
                                 model
@@ -318,6 +323,20 @@ distanceBetween { x, y } { position } =
 sqr : Int -> Float
 sqr n =
     toFloat <| n * n
+
+
+findCircleById : Int -> List Circle -> Maybe Circle
+findCircleById id circles =
+    case circles of
+        [] ->
+            Nothing
+
+        circle :: restCircles ->
+            if circle.id == id then
+                Just circle
+
+            else
+                findCircleById id restCircles
 
 
 
