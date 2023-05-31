@@ -1,6 +1,10 @@
 module Timer.Duration exposing
-    ( Duration, fromInt, fromString
-    , toInt, toFloat, toString
+    ( Duration
+    , fromInt
+    , fromString
+    , toFloat
+    , toInt
+    , toString
     )
 
 

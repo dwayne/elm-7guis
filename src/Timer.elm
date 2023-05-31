@@ -1,11 +1,11 @@
-module Timer exposing (Model, init, Msg, update, subscriptions, view)
-
+module Timer exposing (Model, Msg, init, subscriptions, update, view)
 
 import Browser.Events as BE
-import Timer.Duration as Duration exposing (Duration)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+import Timer.Duration as Duration exposing (Duration)
+
 
 
 -- CONSTANTS
@@ -19,6 +19,7 @@ maxMillis =
 maxDuration : Duration
 maxDuration =
     Duration.fromInt maxMillis
+
 
 
 -- MODEL
@@ -35,6 +36,7 @@ init =
     { duration = Duration.fromInt <| maxMillis // 2
     , elapsedTime = 0
     }
+
 
 
 -- UPDATE
@@ -60,7 +62,8 @@ update msg model =
         NewDelta delta ->
             let
                 elapsedTime =
-                    model.elapsedTime + delta
+                    model.elapsedTime
+                        + delta
                         |> clamp 0 max
 
                 max =
@@ -70,6 +73,7 @@ update msg model =
 
         ClickedReset ->
             { model | elapsedTime = 0 }
+
 
 
 -- SUBSCRIPTIONS
@@ -82,6 +86,7 @@ subscriptions { duration, elapsedTime } =
 
     else
         Sub.none
+
 
 
 -- VIEW
@@ -125,11 +130,13 @@ viewElapsedTime : Float -> H.Html msg
 viewElapsedTime elapsedTime =
     let
         wholePart =
-            elapsedTime / 1000
+            elapsedTime
+                / 1000
                 |> floor
 
         decimalPart =
-            elapsedTime / 100
+            elapsedTime
+                / 100
                 |> floor
                 |> modBy 10
 

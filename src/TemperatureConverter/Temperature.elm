@@ -43,7 +43,12 @@ toCelsius t =
                     ftoc f
             in
             String.fromFloat c
-                |> if isFinite c then Ok else Err
+                |> (if isFinite c then
+                        Ok
+
+                    else
+                        Err
+                   )
 
 
 toFahrenheit : Temperature -> Result String String
@@ -55,7 +60,12 @@ toFahrenheit t =
                     ctof c
             in
             String.fromFloat f
-                |> if isFinite f then Ok else Err
+                |> (if isFinite f then
+                        Ok
+
+                    else
+                        Err
+                   )
 
         Fahrenheit f ->
             Ok <| String.fromFloat f

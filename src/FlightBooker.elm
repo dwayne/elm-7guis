@@ -1,10 +1,10 @@
-module FlightBooker exposing (Model, init, Msg, update, view)
-
+module FlightBooker exposing (Model, Msg, init, update, view)
 
 import FlightBooker.Date as Date exposing (Date)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+
 
 
 -- MODEL
@@ -37,6 +37,7 @@ init =
     ( Loading
     , Date.today <| LoadingMsg << GotDate
     )
+
 
 
 -- UPDATE
@@ -92,16 +93,16 @@ updateLoaded msg ({ flight, start, end } as state) =
         InputFlight value ->
             ( Loaded
                 { state
-                | flight =
-                    case value of
-                        "one-way" ->
-                            OneWay
+                    | flight =
+                        case value of
+                            "one-way" ->
+                                OneWay
 
-                        "return" ->
-                            Return
+                            "return" ->
+                                Return
 
-                        _ ->
-                            flight
+                            _ ->
+                                flight
                 }
             , Cmd.none
             )
@@ -109,13 +110,13 @@ updateLoaded msg ({ flight, start, end } as state) =
         InputStart rawInput ->
             ( Loaded
                 { state
-                | start =
-                    case Date.fromString rawInput of
-                        Just startDate ->
-                            Valid startDate
+                    | start =
+                        case Date.fromString rawInput of
+                            Just startDate ->
+                                Valid startDate
 
-                        Nothing ->
-                            Invalid rawInput
+                            Nothing ->
+                                Invalid rawInput
                 }
             , Cmd.none
             )
@@ -128,13 +129,13 @@ updateLoaded msg ({ flight, start, end } as state) =
                 Return ->
                     Loaded
                         { state
-                        | end =
-                            case Date.fromString rawInput of
-                                Just endDate ->
-                                    Valid endDate
+                            | end =
+                                case Date.fromString rawInput of
+                                    Just endDate ->
+                                        Valid endDate
 
-                                Nothing ->
-                                    Invalid rawInput
+                                    Nothing ->
+                                        Invalid rawInput
                         }
             , Cmd.none
             )
@@ -159,6 +160,7 @@ updateLoaded msg ({ flight, start, end } as state) =
                 start
                 end
             )
+
 
 
 -- VIEW
@@ -295,11 +297,11 @@ isBookable =
         }
 
 
-mapBookable
-    : { onOneWay : Date -> a
-      , onReturn : Date -> Date -> a
-      , default : a
-      }
+mapBookable :
+    { onOneWay : Date -> a
+    , onReturn : Date -> Date -> a
+    , default : a
+    }
     -> Flight
     -> Field
     -> Field

@@ -1,13 +1,12 @@
 module CircleDrawer.Dialog exposing
     ( Config
+    , Dialog
+    , Msg
+    , Options
     , open
     , update
-    , Msg
-    , Dialog
-    , Options
     , view
     )
-
 
 import Browser.Dom as BD
 import CircleDrawer.Html.Attributes as HA
@@ -28,7 +27,8 @@ type alias Config msg =
 
 open : Config msg -> String -> Cmd msg
 open { onChange } htmlId =
-    "dialog-" ++ htmlId
+    "dialog-"
+        ++ htmlId
         |> BD.focus
         |> Task.attempt (always Focus)
         |> Cmd.map onChange
@@ -91,10 +91,10 @@ currentTargetOnClick msg =
     let
         decoder =
             JD.map2 Tuple.pair
-              (JD.at [ "currentTarget", "id" ] JD.string)
-              (JD.at [ "target", "id" ] JD.string)
+                (JD.at [ "currentTarget", "id" ] JD.string)
+                (JD.at [ "target", "id" ] JD.string)
                 |> JD.andThen
-                    (\(currentTargetId, targetId) ->
+                    (\( currentTargetId, targetId ) ->
                         if currentTargetId == targetId then
                             JD.succeed msg
 

@@ -1,8 +1,8 @@
-module Counter exposing (Model, init, Msg, update, view)
-
+module Counter exposing (Model, Msg, init, update, view)
 
 import Html as H
 import Html.Events as HE
+
 
 
 -- MODEL
@@ -17,6 +17,7 @@ init =
     Model 0
 
 
+
 -- UPDATE
 
 
@@ -29,6 +30,7 @@ update msg (Model n) =
     case msg of
         ClickedIncrement ->
             Model <| n + 1
+
 
 
 -- VIEW

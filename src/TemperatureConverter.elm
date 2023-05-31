@@ -1,10 +1,10 @@
-module TemperatureConverter exposing (Model, init, Msg, update, view)
-
+module TemperatureConverter exposing (Model, Msg, init, update, view)
 
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import TemperatureConverter.Temperature as Temperature
+
 
 
 -- MODEL
@@ -27,6 +27,7 @@ init =
     { celsius = Initial ""
     , fahrenheit = Initial ""
     }
+
 
 
 -- UPDATE
@@ -52,14 +53,14 @@ update msg model =
                 case Temperature.fromCelsius cleanInput of
                     Just tempC ->
                         { model
-                        | celsius = Valid rawInput
-                        , fahrenheit =
-                            case Temperature.toFahrenheit tempC of
-                                Ok valueF ->
-                                    Valid valueF
+                            | celsius = Valid rawInput
+                            , fahrenheit =
+                                case Temperature.toFahrenheit tempC of
+                                    Ok valueF ->
+                                        Valid valueF
 
-                                Err s ->
-                                    Invalid s
+                                    Err s ->
+                                        Invalid s
                         }
 
                     Nothing ->
@@ -77,18 +78,19 @@ update msg model =
                 case Temperature.fromFahrenheit cleanInput of
                     Just tempF ->
                         { model
-                        | celsius =
-                            case Temperature.toCelsius tempF of
-                                Ok valueC ->
-                                    Valid valueC
+                            | celsius =
+                                case Temperature.toCelsius tempF of
+                                    Ok valueC ->
+                                        Valid valueC
 
-                                Err s ->
-                                    Invalid s
-                        , fahrenheit = Valid rawInput
+                                    Err s ->
+                                        Invalid s
+                            , fahrenheit = Valid rawInput
                         }
 
                     Nothing ->
                         { model | fahrenheit = Invalid rawInput }
+
 
 
 -- VIEW

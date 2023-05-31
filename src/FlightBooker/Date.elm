@@ -1,11 +1,10 @@
 module FlightBooker.Date exposing
     ( Date
-    , today
     , fromString
     , isLaterThan
     , toString
+    , today
     )
-
 
 import Char
 import Date as JDate

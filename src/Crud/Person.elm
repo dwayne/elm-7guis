@@ -1,8 +1,11 @@
 module Crud.Person exposing
-    ( Person, create
-    , update
-    , toId, toFirstAndLastName, toLastName
+    ( Person
+    , create
+    , toFirstAndLastName
+    , toId
+    , toLastName
     , toString
+    , update
     )
 
 
@@ -55,6 +58,7 @@ toFirstAndLastName (Person { firstName, lastName }) =
 toLastName : Person -> String
 toLastName (Person { lastName }) =
     lastName
+
 
 toString : Person -> String
 toString (Person { firstName, lastName }) =

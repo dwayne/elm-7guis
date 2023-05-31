@@ -1,9 +1,12 @@
 module Crud.Selection exposing
-    ( Selection, empty, fromList
+    ( Selection
     , cons
-    , selectBy, selected
     , deselect
+    , empty
+    , fromList
     , mapSelected
+    , selectBy
+    , selected
     , toList
     )
 
@@ -52,7 +55,7 @@ selected (Selection _ maybeSel _) =
 
 
 deselect : Selection a -> Selection a
-deselect (Selection front maybeSel back as selection) =
+deselect ((Selection front maybeSel back) as selection) =
     case maybeSel of
         Just a ->
             Selection front Nothing (a :: back)

@@ -1,11 +1,11 @@
-module Crud exposing (Model, init, Msg, update, view)
-
+module Crud exposing (Model, Msg, init, update, view)
 
 import Crud.Person as Person
 import Crud.Roster as Roster exposing (Roster)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+
 
 
 -- MODEL
@@ -24,13 +24,14 @@ init =
     { prefix = ""
     , roster =
         Roster.fromList
-            [ ("Hans", "Emil")
-            , ("Max", "Mustermann")
-            , ("Roman", "Tisch")
+            [ ( "Hans", "Emil" )
+            , ( "Max", "Mustermann" )
+            , ( "Roman", "Tisch" )
             ]
     , firstName = ""
     , lastName = ""
     }
+
 
 
 -- UPDATE
@@ -56,15 +57,15 @@ update msg model =
             String.toInt idAsString
                 |> Maybe.andThen (\id -> Roster.select id model.roster)
                 |> Maybe.map
-                    (\(person, roster) ->
+                    (\( person, roster ) ->
                         let
                             { firstName, lastName } =
                                 Person.toFirstAndLastName person
                         in
                         { model
-                        | roster = roster
-                        , firstName = firstName
-                        , lastName = lastName
+                            | roster = roster
+                            , firstName = firstName
+                            , lastName = lastName
                         }
                     )
                 |> Maybe.withDefault model
@@ -79,9 +80,9 @@ update msg model =
             case Roster.add model.firstName model.lastName model.roster of
                 Just roster ->
                     { model
-                    | roster = Roster.deselect roster
-                    , firstName = ""
-                    , lastName = ""
+                        | roster = Roster.deselect roster
+                        , firstName = ""
+                        , lastName = ""
                     }
 
                 Nothing ->
@@ -91,9 +92,9 @@ update msg model =
             case Roster.update model.firstName model.lastName model.roster of
                 Just roster ->
                     { model
-                    | roster = Roster.deselect roster
-                    , firstName = ""
-                    , lastName = ""
+                        | roster = Roster.deselect roster
+                        , firstName = ""
+                        , lastName = ""
                     }
 
                 Nothing ->
@@ -101,10 +102,11 @@ update msg model =
 
         ClickedDelete ->
             { model
-            | roster = Roster.delete model.roster
-            , firstName = ""
-            , lastName = ""
+                | roster = Roster.delete model.roster
+                , firstName = ""
+                , lastName = ""
             }
+
 
 
 -- VIEW
@@ -155,26 +157,26 @@ view { prefix, roster, firstName, lastName } =
             isDeleteDisabled =
                 isUpdateDisabled
           in
-            H.div []
-                [ H.button
-                    [ HA.type_ "button"
-                    , HA.disabled isCreateDisabled
-                    , HE.onClick ClickedCreate
-                    ]
-                    [ H.text "Create" ]
-                , H.button
-                    [ HA.type_ "button"
-                    , HA.disabled isUpdateDisabled
-                    , HE.onClick ClickedUpdate
-                    ]
-                    [ H.text "Update" ]
-                , H.button
-                    [ HA.type_ "button"
-                    , HA.disabled isDeleteDisabled
-                    , HE.onClick ClickedDelete
-                    ]
-                    [ H.text "Delete" ]
+          H.div []
+            [ H.button
+                [ HA.type_ "button"
+                , HA.disabled isCreateDisabled
+                , HE.onClick ClickedCreate
                 ]
+                [ H.text "Create" ]
+            , H.button
+                [ HA.type_ "button"
+                , HA.disabled isUpdateDisabled
+                , HE.onClick ClickedUpdate
+                ]
+                [ H.text "Update" ]
+            , H.button
+                [ HA.type_ "button"
+                , HA.disabled isDeleteDisabled
+                , HE.onClick ClickedDelete
+                ]
+                [ H.text "Delete" ]
+            ]
         ]
 
 
@@ -184,7 +186,7 @@ viewRoster prefix roster =
         people =
             Roster.filter prefix roster
 
-        viewPerson (isSelected, person) =
+        viewPerson ( isSelected, person ) =
             H.option
                 [ HA.value <| String.fromInt <| Person.toId person
                 , HA.selected isSelected

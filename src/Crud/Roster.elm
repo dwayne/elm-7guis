@@ -1,11 +1,15 @@
 module Crud.Roster exposing
-    ( Roster, empty, fromList
-    , add, update, delete
-    , select, selected
+    ( Roster
+    , add
+    , delete
     , deselect
+    , empty
     , filter
+    , fromList
+    , select
+    , selected
+    , update
     )
-
 
 import Crud.Person as Person exposing (Person)
 import Crud.Selection as Selection exposing (Selection)
@@ -26,10 +30,10 @@ empty =
         }
 
 
-fromList : List (String, String) -> Roster
+fromList : List ( String, String ) -> Roster
 fromList =
     List.foldr
-        (\(rawFirstName, rawLastName) roster ->
+        (\( rawFirstName, rawLastName ) roster ->
             add rawFirstName rawLastName roster
                 |> Maybe.withDefault roster
         )
@@ -66,12 +70,12 @@ update rawFirstName rawLastName (Roster state) =
                     Just <|
                         Roster
                             { state
-                            | people =
-                                Selection.mapSelected
-                                    { selected = always updatedPerson
-                                    , rest = identity
-                                    }
-                                    state.people
+                                | people =
+                                    Selection.mapSelected
+                                        { selected = always updatedPerson
+                                        , rest = identity
+                                        }
+                                        state.people
                             }
             )
 
@@ -94,27 +98,27 @@ delete : Roster -> Roster
 delete (Roster state) =
     Roster
         { state
-        | people =
-            state.people
-                |> Selection.mapSelected
-                    { selected = always Nothing
-                    , rest = Just
-                    }
-                |> Selection.toList
-                |> List.filterMap identity
-                |> Selection.fromList
+            | people =
+                state.people
+                    |> Selection.mapSelected
+                        { selected = always Nothing
+                        , rest = Just
+                        }
+                    |> Selection.toList
+                    |> List.filterMap identity
+                    |> Selection.fromList
         }
 
 
-select : Int -> Roster -> Maybe (Person, Roster)
+select : Int -> Roster -> Maybe ( Person, Roster )
 select id (Roster state) =
     let
         people =
-            Selection.selectBy (Person.toId >> ((==) id)) state.people
+            Selection.selectBy (Person.toId >> (==) id) state.people
     in
     people
         |> Selection.selected
-        |> Maybe.map (\person -> (person, Roster { state | people = people }))
+        |> Maybe.map (\person -> ( person, Roster { state | people = people } ))
 
 
 selected : Roster -> Maybe Person
@@ -127,7 +131,7 @@ deselect (Roster state) =
     Roster { state | people = Selection.deselect state.people }
 
 
-filter : String -> Roster -> List (Bool, Person)
+filter : String -> Roster -> List ( Bool, Person )
 filter rawPrefix (Roster { people }) =
     let
         prefix =
@@ -142,7 +146,7 @@ filter rawPrefix (Roster { people }) =
             }
         |> Selection.toList
         |> List.filter
-            (\(_, person) ->
+            (\( _, person ) ->
                 person
                     |> Person.toLastName
                     |> String.toLower

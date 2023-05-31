@@ -1,9 +1,12 @@
 module CircleDrawer.UndoManager exposing
-    ( UndoManager, Edit
-    , empty
+    ( Edit
+    , UndoManager
     , add
-    , canUndo, canRedo
-    , undo, redo
+    , canRedo
+    , canUndo
+    , empty
+    , redo
+    , undo
     )
 
 
@@ -37,8 +40,8 @@ canRedo (UndoManager _ future) =
     not <| List.isEmpty future
 
 
-undo : UndoManager u r -> Maybe (u, UndoManager u r)
-undo (UndoManager past future as undoManager) =
+undo : UndoManager u r -> Maybe ( u, UndoManager u r )
+undo ((UndoManager past future) as undoManager) =
     case past of
         [] ->
             Nothing
@@ -50,7 +53,7 @@ undo (UndoManager past future as undoManager) =
                 )
 
 
-redo : UndoManager u r -> Maybe (r, UndoManager u r)
+redo : UndoManager u r -> Maybe ( r, UndoManager u r )
 redo (UndoManager past future) =
     case future of
         [] ->

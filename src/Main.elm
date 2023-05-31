@@ -1,6 +1,5 @@
 module Main exposing (main)
 
-
 import Browser
 import CircleDrawer
 import Counter
@@ -20,6 +19,7 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
+
 
 
 -- MODEL
@@ -50,6 +50,7 @@ init _ =
       }
     , Cmd.map ChangedFlightBooker flightBookerCmd
     )
+
 
 
 -- UPDATE
@@ -106,6 +107,7 @@ update msg model =
             )
 
 
+
 -- SUBSCRIPTIONS
 
 
@@ -113,6 +115,7 @@ subscriptions : Model -> Sub Msg
 subscriptions { timer } =
     Timer.subscriptions timer
         |> Sub.map ChangedTimer
+
 
 
 -- VIEW
