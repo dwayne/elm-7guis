@@ -1,22 +1,23 @@
-module CircleDrawer exposing (Model, init, view, Msg, update)
+module CircleDrawer exposing (Model, Msg, init, update, view)
 
-
+import CircleDrawer.Dialog as Dialog
+import CircleDrawer.Diameter as Diameter exposing (Diameter)
+import CircleDrawer.Html.Attributes as HA
+import CircleDrawer.Position exposing (Position)
+import CircleDrawer.UndoManager as UndoManager
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
-import CircleDrawer.Html.Attributes as HA
-import CircleDrawer.Dialog as Dialog
-import CircleDrawer.Position exposing (Position)
-import CircleDrawer.UndoManager as UndoManager
+
 
 
 -- CONSTANTS
 
 
-defaultDiameter : Int
+defaultDiameter : Diameter
 defaultDiameter =
-    30
+    Diameter.fromSafeInt 30
 
 
 dialogConfig : Dialog.Config Msg
@@ -24,6 +25,7 @@ dialogConfig =
     { onClose = ClosedDialog
     , onChange = ChangedDialog
     }
+
 
 
 -- MODEL
@@ -40,7 +42,7 @@ type alias Model =
 type alias Circle =
     { id : Int
     , position : Position
-    , diameter : Int
+    , diameter : Diameter
     }
 
 
@@ -73,11 +75,11 @@ isSelected selection =
             False
 
 
-mapSelection
-    : { none : a
-      , hovered : Int -> a
-      , selected : Int -> Position -> a
-      }
+mapSelection :
+    { none : a
+    , hovered : Int -> a
+    , selected : Int -> Position -> a
+    }
     -> Selection
     -> a
 mapSelection { none, hovered, selected } selection =
@@ -92,10 +94,10 @@ mapSelection { none, hovered, selected } selection =
             selected id position
 
 
-mapSelected
-    : { selected : Int -> Position -> a
-      , other : a
-      }
+mapSelected :
+    { selected : Int -> Position -> a
+    , other : a
+    }
     -> Selection
     -> a
 mapSelected { selected, other } =
@@ -125,6 +127,7 @@ init =
     , selection = None
     , undoManager = UndoManager.empty
     }
+
 
 
 -- UPDATE
@@ -175,12 +178,11 @@ update msg model =
                 }
                 model.selection
 
-
         MovedMouse position ->
             ( if isSelected model.selection then
                 model
 
-            else
+              else
                 case findClosestCircle position model.circles of
                     Just id ->
                         { model | selection = Hovered id }
@@ -194,7 +196,7 @@ update msg model =
             ( if isSelected model.selection then
                 model
 
-            else
+              else
                 { model | selection = None }
             , Cmd.none
             )
@@ -203,12 +205,12 @@ update msg model =
             ( model.undoManager
                 |> UndoManager.undo
                 |> Maybe.map
-                    (\(undo, undoManager) ->
+                    (\( undo, undoManager ) ->
                         case undo of
                             RemoveCircle circles ->
                                 { model
-                                | circles = circles
-                                , undoManager = undoManager
+                                    | circles = circles
+                                    , undoManager = undoManager
                                 }
                     )
                 |> Maybe.withDefault model
@@ -219,12 +221,12 @@ update msg model =
             ( model.undoManager
                 |> UndoManager.redo
                 |> Maybe.map
-                    (\(redo, undoManager) ->
+                    (\( redo, undoManager ) ->
                         case redo of
                             AddCircle circles ->
                                 { model
-                                | circles = circles
-                                , undoManager = undoManager
+                                    | circles = circles
+                                    , undoManager = undoManager
                                 }
                     )
                 |> Maybe.withDefault model
@@ -247,7 +249,7 @@ findClosestCircle position circles =
     findClosestCircleHelper Nothing position circles
 
 
-findClosestCircleHelper : Maybe (Int, Float) -> Position -> List Circle -> Maybe Int
+findClosestCircleHelper : Maybe ( Int, Float ) -> Position -> List Circle -> Maybe Int
 findClosestCircleHelper closest position circles =
     case circles of
         [] ->
@@ -259,7 +261,7 @@ findClosestCircleHelper closest position circles =
                     distanceBetween position circle
 
                 r =
-                    toFloat circle.diameter / 2
+                    Diameter.toFloat circle.diameter / 2
 
                 newClosest =
                     if d > r then
@@ -268,11 +270,11 @@ findClosestCircleHelper closest position circles =
                     else
                         case closest of
                             Nothing ->
-                                Just (circle.id, d)
+                                Just ( circle.id, d )
 
-                            Just (minId, minD) ->
+                            Just ( minId, minD ) ->
                                 if d < minD then
-                                    Just (circle.id, d)
+                                    Just ( circle.id, d )
 
                                 else
                                     closest
@@ -288,6 +290,7 @@ distanceBetween { x, y } { position } =
 sqr : Int -> Float
 sqr n =
     toFloat <| n * n
+
 
 
 -- VIEW
@@ -346,11 +349,11 @@ viewUndoRedo isEnabled undoManager =
         ]
 
 
-viewButton
-    : { isEnabled : Bool
-      , text : String
-      , onClick : msg
-      }
+viewButton :
+    { isEnabled : Bool
+    , text : String
+    , onClick : msg
+    }
     -> H.Html msg
 viewButton options =
     let
@@ -367,10 +370,10 @@ viewButton options =
     H.button attrs [ H.text options.text ]
 
 
-attrList : List (H.Attribute msg, Bool) -> List (H.Attribute msg)
+attrList : List ( H.Attribute msg, Bool ) -> List (H.Attribute msg)
 attrList =
     List.filterMap
-        (\(attr, keep) ->
+        (\( attr, keep ) ->
             if keep then
                 Just attr
 
@@ -401,7 +404,7 @@ viewCircle activeId { id, position, diameter } =
         , HA.customProperties
             [ ( "circle-x", String.fromInt position.x ++ "px" )
             , ( "circle-y", String.fromInt position.y ++ "px" )
-            , ( "circle-diameter", String.fromInt diameter ++ "px" )
+            , ( "circle-diameter", Diameter.toString diameter ++ "px" )
             ]
         ]
         []
