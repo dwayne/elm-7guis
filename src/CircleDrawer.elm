@@ -3,7 +3,7 @@ module CircleDrawer exposing (Model, Msg, init, update, view)
 import CircleDrawer.Dialog as Dialog
 import CircleDrawer.Diameter as Diameter exposing (Diameter)
 import CircleDrawer.Html.Attributes as HA
-import CircleDrawer.Position exposing (Position)
+import CircleDrawer.Position as Position exposing (Position)
 import CircleDrawer.UndoManager as UndoManager
 import Html as H
 import Html.Attributes as HA
@@ -467,7 +467,7 @@ view { circles, selection, undoManager } =
                                 { htmlId = "adjustDiameter"
                                 , block =
                                     H.div []
-                                        [ H.p [] [ H.text "Adjust Diameter" ]
+                                        [ H.p [] [ H.text <| "Adjust Diameter of circle at " ++ Position.toString position ]
                                         , H.input
                                             [ HA.type_ "range"
                                             , HA.min <| Diameter.toString Diameter.min
