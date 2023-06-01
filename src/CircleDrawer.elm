@@ -283,11 +283,12 @@ update msg model =
         MouseUpAfterInputDiameter ->
             ( mapSelected
                 { selected =
-                    \id _ mode ->
+                    \id position mode ->
                         case mode of
                             AdjustDiameter initialCircles finalDiameter ->
                                 { model
-                                    | undoManager =
+                                    | selection = Selected id position (AdjustDiameter model.circles finalDiameter)
+                                    , undoManager =
                                         UndoManager.add
                                             { undo = UndoAdjustDiameter initialCircles
                                             , redo = RedoAdjustDiameter model.circles
