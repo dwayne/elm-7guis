@@ -68,7 +68,7 @@ type Selection
 
 type Mode
     = Menu
-    | AdjustDiameter Diameter
+    | AdjustDiameter (List Circle) Diameter
 
 
 selectionToId : Selection -> Maybe Int
@@ -133,10 +133,12 @@ type alias UndoManager =
 
 type Undo
     = RemoveCircle (List Circle)
+    | UndoAdjustDiameter (List Circle)
 
 
 type Redo
     = AddCircle (List Circle)
+    | RedoAdjustDiameter (List Circle)
 
 
 init : Model
@@ -156,10 +158,11 @@ type Msg
     = ClickedCanvas Position
     | MovedMouse Position
     | MouseLeftCanvas
-    | ClickedUndo
-    | ClickedRedo
     | ClickedAdjustDiameter
     | InputDiameter Diameter
+    | MouseUpAfterInputDiameter
+    | ClickedUndo
+    | ClickedRedo
     | ClosedDialog
     | ChangedDialog Dialog.Msg
 
@@ -226,6 +229,80 @@ update msg model =
             , Cmd.none
             )
 
+        ClickedAdjustDiameter ->
+            ( mapSelected
+                { selected =
+                    \id position mode ->
+                        case mode of
+                            Menu ->
+                                case findCircleById id model.circles of
+                                    Just { diameter } ->
+                                        { model
+                                            | selection = Selected id position (AdjustDiameter model.circles diameter)
+                                        }
+
+                                    Nothing ->
+                                        model
+
+                            _ ->
+                                model
+                , other = model
+                }
+                model.selection
+            , Cmd.none
+            )
+
+        InputDiameter newDiameter ->
+            ( mapSelected
+                { selected =
+                    \id position mode ->
+                        case mode of
+                            AdjustDiameter initialCircles _ ->
+                                { model
+                                    | circles =
+                                        List.map
+                                            (\circle ->
+                                                if circle.id == id then
+                                                    { circle | diameter = newDiameter }
+
+                                                else
+                                                    circle
+                                            )
+                                            model.circles
+                                    , selection = Selected id position (AdjustDiameter initialCircles newDiameter)
+                                }
+
+                            _ ->
+                                model
+                , other = model
+                }
+                model.selection
+            , Cmd.none
+            )
+
+        MouseUpAfterInputDiameter ->
+            ( mapSelected
+                { selected =
+                    \id _ mode ->
+                        case mode of
+                            AdjustDiameter initialCircles finalDiameter ->
+                                { model
+                                    | undoManager =
+                                        UndoManager.add
+                                            { undo = UndoAdjustDiameter initialCircles
+                                            , redo = RedoAdjustDiameter model.circles
+                                            }
+                                            model.undoManager
+                                }
+
+                            _ ->
+                                model
+                , other = model
+                }
+                model.selection
+            , Cmd.none
+            )
+
         ClickedUndo ->
             ( model.undoManager
                 |> UndoManager.undo
@@ -233,6 +310,12 @@ update msg model =
                     (\( undo, undoManager ) ->
                         case undo of
                             RemoveCircle circles ->
+                                { model
+                                    | circles = circles
+                                    , undoManager = undoManager
+                                }
+
+                            UndoAdjustDiameter circles ->
                                 { model
                                     | circles = circles
                                     , undoManager = undoManager
@@ -253,59 +336,14 @@ update msg model =
                                     | circles = circles
                                     , undoManager = undoManager
                                 }
+
+                            RedoAdjustDiameter circles ->
+                                { model
+                                    | circles = circles
+                                    , undoManager = undoManager
+                                }
                     )
                 |> Maybe.withDefault model
-            , Cmd.none
-            )
-
-        ClickedAdjustDiameter ->
-            ( mapSelected
-                { selected =
-                    \id position mode ->
-                        case mode of
-                            Menu ->
-                                case findCircleById id model.circles of
-                                    Just { diameter } ->
-                                        { model
-                                            | selection = Selected id position (AdjustDiameter diameter)
-                                        }
-
-                                    Nothing ->
-                                        model
-
-                            _ ->
-                                model
-                , other = model
-                }
-                model.selection
-            , Cmd.none
-            )
-
-        InputDiameter diameter ->
-            ( mapSelected
-                { selected =
-                    \id position mode ->
-                        case mode of
-                            AdjustDiameter _ ->
-                                { model
-                                    | circles =
-                                        List.map
-                                            (\circle ->
-                                                if circle.id == id then
-                                                    { circle | diameter = diameter }
-
-                                                else
-                                                    circle
-                                            )
-                                            model.circles
-                                    , selection = Selected id position (AdjustDiameter diameter)
-                                }
-
-                            _ ->
-                                model
-                , other = model
-                }
-                model.selection
             , Cmd.none
             )
 
@@ -403,7 +441,7 @@ view { circles, selection, undoManager } =
                                 , position = position
                                 }
 
-                        AdjustDiameter diameter ->
+                        AdjustDiameter _ diameter ->
                             Just
                                 { htmlId = "adjustDiameter"
                                 , block =
@@ -415,6 +453,7 @@ view { circles, selection, undoManager } =
                                             , HA.max <| Diameter.toString Diameter.max
                                             , HA.value <| Diameter.toString diameter
                                             , onInputDiameter InputDiameter
+                                            , HE.onMouseUp MouseUpAfterInputDiameter
                                             ]
                                             []
                                         ]
