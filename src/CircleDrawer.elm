@@ -155,7 +155,8 @@ init =
 
 
 type Msg
-    = ClickedCanvas Position
+    = MainButtonClickedCanvas Position
+    | SecondaryButtonClickedCanvas Position
     | MovedMouse Position
     | MouseLeftCanvas
     | ClickedAdjustDiameter
@@ -170,7 +171,7 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ClickedCanvas position ->
+        MainButtonClickedCanvas position ->
             mapSelection
                 { none =
                     let
@@ -191,6 +192,25 @@ update msg model =
                                 }
                                 model.undoManager
                       }
+                    , Cmd.none
+                    )
+                , hovered =
+                    \_ ->
+                        ( model
+                        , Cmd.none
+                        )
+                , selected =
+                    \_ _ _ ->
+                        ( model
+                        , Cmd.none
+                        )
+                }
+                model.selection
+
+        SecondaryButtonClickedCanvas position ->
+            mapSelection
+                { none =
+                    ( model
                     , Cmd.none
                     )
                 , hovered =
@@ -527,7 +547,8 @@ viewCanvas activeId =
         >> List.map (viewCircle activeId)
         >> H.div
             [ HA.class "canvas"
-            , onClick ClickedCanvas
+            , onMainButtonClick MainButtonClickedCanvas
+            , onSecondaryButtonClick SecondaryButtonClickedCanvas
             , onMouseMove MovedMouse
             , HE.onMouseLeave MouseLeftCanvas
             ]
@@ -549,9 +570,40 @@ viewCircle activeId { id, position, diameter } =
         []
 
 
-onClick : (Position -> msg) -> H.Attribute msg
-onClick toMsg =
-    HE.on "click" (JD.map toMsg positionDecoder)
+onMainButtonClick : (Position -> msg) -> H.Attribute msg
+onMainButtonClick toMsg =
+    let
+        decoder =
+            JD.field "button" JD.int
+                |> JD.andThen
+                    (\button ->
+                        if button == 0 then
+                            JD.map toMsg positionDecoder
+
+                        else
+                            JD.fail "unknown click"
+                    )
+    in
+    HE.on "click" decoder
+
+
+onSecondaryButtonClick : (Position -> msg) -> H.Attribute msg
+onSecondaryButtonClick toMsg =
+    let
+        decoder =
+            JD.field "button" JD.int
+                |> JD.andThen
+                    (\button ->
+                        if button == 2 then
+                            JD.map
+                                (\position -> ( toMsg position, True ))
+                                positionDecoder
+
+                        else
+                            JD.fail "unknown click"
+                    )
+    in
+    HE.preventDefaultOn "contextmenu" decoder
 
 
 onMouseMove : (Position -> msg) -> H.Attribute msg
