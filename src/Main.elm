@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Browser
+import Cells
 import CircleDrawer
 import Counter
 import Crud
@@ -170,6 +171,7 @@ view model =
             |> CircleDrawer.view
             |> H.map ChangedCircleDrawer
             |> viewTask "Circle Drawer"
+        , viewTask "Cells" Cells.view
         ]
 
 

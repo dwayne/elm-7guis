@@ -70,6 +70,61 @@
       .dialog:focus {
         outline: 3px solid pink;
       }
+
+      .sheet__table,
+      .sheet__th,
+      .sheet__td {
+        border: 1px solid;
+      }
+
+      .sheet__th,
+      .sheet__td {
+        border-top-width: 0;
+        border-left-width: 0;
+      }
+
+      .sheet__th:last-child,
+      .sheet__td:last-child {
+        border-right-width: 0;
+      }
+
+      .sheet__tbody .sheet__tr:last-child .sheet__th,
+      .sheet__tbody .sheet__tr:last-child .sheet__td {
+        border-bottom-width: 0;
+      }
+
+      .sheet__table {
+        width: 100%;
+        max-width: 485px;
+        height: 290px;
+        display: block;
+        overflow-x: auto;
+        border-spacing: 0;
+      }
+
+      .sheet__th, .sheet__td {
+        padding: 4px;
+      }
+
+      .sheet__thead .sheet__th {
+        position: sticky;
+        top: 0;
+        background: #fff;
+      }
+
+      .sheet__tbody .sheet__th {
+        position: sticky;
+        left: 0;
+        background: #fff;
+      }
+
+      .sheet__row-headers-column-header {
+        min-width: 30px;
+      }
+
+      .sheet__column-header {
+        min-width: 80px;
+      }
     </style>
   </head>
   <body>
