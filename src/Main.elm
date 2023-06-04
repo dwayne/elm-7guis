@@ -33,6 +33,7 @@ type alias Model =
     , timer : Timer.Model
     , crud : Crud.Model
     , circleDrawer : CircleDrawer.Model
+    , cells : Cells.Model
     }
 
 
@@ -48,6 +49,7 @@ init _ =
       , timer = Timer.init
       , crud = Crud.init
       , circleDrawer = CircleDrawer.init
+      , cells = Cells.init
       }
     , Cmd.map ChangedFlightBooker flightBookerCmd
     )
@@ -64,6 +66,7 @@ type Msg
     | ChangedTimer Timer.Msg
     | ChangedCrud Crud.Msg
     | ChangedCircleDrawer CircleDrawer.Msg
+    | ChangedCells Cells.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -105,6 +108,15 @@ update msg model =
             in
             ( { model | circleDrawer = circleDrawer }
             , Cmd.map ChangedCircleDrawer circleDrawerCmd
+            )
+
+        ChangedCells cellsMsg ->
+            let
+                ( cells, cellsCmd ) =
+                    Cells.update cellsMsg model.cells
+            in
+            ( { model | cells = cells }
+            , Cmd.map ChangedCells cellsCmd
             )
 
 
@@ -171,7 +183,10 @@ view model =
             |> CircleDrawer.view
             |> H.map ChangedCircleDrawer
             |> viewTask "Circle Drawer"
-        , viewTask "Cells" Cells.view
+        , model.cells
+            |> Cells.view
+            |> H.map ChangedCells
+            |> viewTask "Cells"
         ]
 
 
