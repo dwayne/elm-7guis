@@ -1,4 +1,4 @@
-module Cells.Column exposing
+module Cells.Data.Column exposing
     ( Column
     , fromInt
     , map

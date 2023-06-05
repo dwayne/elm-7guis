@@ -1,4 +1,4 @@
-module Cells.Sheet exposing
+module Cells.View.Sheet exposing
     ( Handlers
     , Model
     , Msg
@@ -10,9 +10,10 @@ module Cells.Sheet exposing
     )
 
 import Browser.Dom as BD
-import Cells.Column as Column exposing (Column)
-import Cells.Coord as Coord exposing (Coord)
-import Cells.Row as Row exposing (Row)
+import Cells.Data.Column as Column exposing (Column)
+import Cells.Data.Coord as Coord exposing (Coord)
+import Cells.Data.Row as Row exposing (Row)
+import Cells.Data.SCells as SCells exposing (SCells)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
@@ -41,6 +42,7 @@ type alias Edit =
 
 type alias Handlers msg =
     { onChange : Msg -> msg
+    , onInput : Coord -> String -> msg
     }
 
 
@@ -61,6 +63,7 @@ initState =
 
 type alias UpdateOptions msg =
     { handlers : Handlers msg
+    , scells : SCells
     }
 
 
@@ -68,16 +71,21 @@ type Msg
     = DoubleClickedCell Coord
     | FocusedInput
     | BlurredInput
+    | Input String
     | PressedEsc
     | PressedEnter
 
 
 update : UpdateOptions msg -> Msg -> Model -> ( Model, Cmd msg )
-update options msg (Model state) =
+update { handlers, scells } msg (Model state) =
     case msg of
         DoubleClickedCell coord ->
-            ( Model { state | maybeEdit = Just { coord = coord, value = "=add(1, 2)" } }
-            , focus (inputId coord) (options.handlers.onChange FocusedInput)
+            let
+                value =
+                    SCells.get coord scells
+            in
+            ( Model { state | maybeEdit = Just { coord = coord, value = value } }
+            , focus (inputId coord) (handlers.onChange FocusedInput)
             )
 
         FocusedInput ->
@@ -90,16 +98,25 @@ update options msg (Model state) =
             , Cmd.none
             )
 
+        Input value ->
+            ( Model { state | maybeEdit = Maybe.map (\edit -> { edit | value = value }) state.maybeEdit }
+            , Cmd.none
+            )
+
         PressedEsc ->
             ( Model { state | maybeEdit = Nothing }
             , Cmd.none
             )
 
         PressedEnter ->
-            ( Model state
-            , Cmd.none
+            ( Model { state | maybeEdit = Nothing }
+            , case state.maybeEdit of
+                Just { coord, value } ->
+                    dispatch <| handlers.onInput coord value
+
+                Nothing ->
+                    Cmd.none
             )
-                |> Debug.log "Pressed enter!"
 
 
 focus : String -> msg -> Cmd msg
@@ -108,12 +125,17 @@ focus id msg =
         |> Task.attempt (always msg)
 
 
+dispatch : msg -> Cmd msg
+dispatch =
+    Task.succeed >> Task.perform identity
+
 
 -- VIEW
 
 
 type alias ViewOptions msg =
     { handlers : Handlers msg
+    , scells : SCells
     }
 
 
@@ -170,7 +192,7 @@ viewRow options state row =
 
 
 viewCell : ViewOptions msg -> State -> Coord -> H.Html msg
-viewCell { handlers } { maybeEdit } coord =
+viewCell { handlers, scells } { maybeEdit } coord =
     let
         maybeBeingEdited =
             maybeEdit
@@ -192,6 +214,7 @@ viewCell { handlers } { maybeEdit } coord =
                     , HA.class "sheet__input"
                     , HA.type_ "text"
                     , HA.value edit.value
+                    , HE.onInput <| handlers.onChange << Input
                     , HE.onBlur <| handlers.onChange BlurredInput
                     , onKey
                         { esc = PressedEsc
@@ -203,16 +226,20 @@ viewCell { handlers } { maybeEdit } coord =
                 ]
 
         Nothing ->
+            let
+                value =
+                    SCells.get coord scells
+            in
             H.td
                 [ HA.class "sheet__td sheet__cell"
                 , HE.onDoubleClick <| handlers.onChange <| DoubleClickedCell coord
                 ]
-                []
+                [ H.text value ]
 
 
 inputId : Coord -> String
 inputId coord =
-    "sheet__input-" ++ Coord.toString coord
+    "sheet__input-" ++ Coord.toName coord
 
 
 onKey : { esc : msg, enter : msg } -> H.Attribute msg

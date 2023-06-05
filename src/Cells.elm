@@ -6,7 +6,9 @@ module Cells exposing
     , view
     )
 
-import Cells.Sheet as Sheet
+import Cells.Data.Coord exposing (Coord)
+import Cells.Data.SCells as SCells exposing (SCells)
+import Cells.View.Sheet as Sheet
 import Html as H
 
 
@@ -15,19 +17,22 @@ import Html as H
 
 
 type alias Model =
-    { sheet : Sheet.Model
+    { scells : SCells
+    , sheet : Sheet.Model
     }
 
 
 init : Model
 init =
-    { sheet = Sheet.init
+    { scells = SCells.empty
+    , sheet = Sheet.init
     }
 
 
 sheetHandlers : Sheet.Handlers Msg
 sheetHandlers =
     { onChange = ChangedSheet
+    , onInput = Input
     }
 
 
@@ -37,14 +42,20 @@ sheetHandlers =
 
 type Msg
     = ChangedSheet Sheet.Msg
+    | Input Coord String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ChangedSheet sheetMsg ->
-            Sheet.update { handlers = sheetHandlers } sheetMsg model.sheet
+            Sheet.update { scells = model.scells, handlers = sheetHandlers } sheetMsg model.sheet
                 |> Tuple.mapFirst (\sheet -> { model | sheet = sheet })
+
+        Input coord value ->
+            ( { model | scells = SCells.set coord value model.scells }
+            , Cmd.none
+            )
 
 
 
@@ -52,5 +63,5 @@ update msg model =
 
 
 view : Model -> H.Html Msg
-view { sheet } =
-    Sheet.view { handlers = sheetHandlers } sheet
+view { scells, sheet } =
+    Sheet.view { scells = scells, handlers = sheetHandlers } sheet
