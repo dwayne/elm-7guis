@@ -66,6 +66,7 @@ type alias UpdateOptions msg =
 type Msg
     = DoubleClickedCell Coord
     | FocusedInput
+    | BlurredInput
 
 
 update : UpdateOptions msg -> Msg -> Model -> ( Model, Cmd msg )
@@ -78,6 +79,11 @@ update options msg (Model state) =
 
         FocusedInput ->
             ( Model state
+            , Cmd.none
+            )
+
+        BlurredInput ->
+            ( Model { state | maybeEdit = Nothing }
             , Cmd.none
             )
 
@@ -172,6 +178,7 @@ viewCell { handlers } { maybeEdit } coord =
                     , HA.class "sheet__input"
                     , HA.type_ "text"
                     , HA.value edit.value
+                    , HE.onBlur <| handlers.onChange BlurredInput
                     ]
                     []
                 ]
