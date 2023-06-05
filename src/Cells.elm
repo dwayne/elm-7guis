@@ -49,7 +49,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ChangedSheet sheetMsg ->
-            Sheet.update { scells = model.scells, handlers = sheetHandlers } sheetMsg model.sheet
+            Sheet.update { handlers = sheetHandlers, scells = model.scells } sheetMsg model.sheet
                 |> Tuple.mapFirst (\sheet -> { model | sheet = sheet })
 
         Input coord value ->
@@ -64,4 +64,4 @@ update msg model =
 
 view : Model -> H.Html Msg
 view { scells, sheet } =
-    Sheet.view { scells = scells, handlers = sheetHandlers } sheet
+    Sheet.view { handlers = sheetHandlers, scells = scells } sheet
