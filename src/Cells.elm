@@ -8,7 +8,7 @@ module Cells exposing
 
 import Cells.Data.Coord exposing (Coord)
 import Cells.Data.SCells as SCells exposing (SCells)
-import Cells.View.Sheet as Sheet
+import Cells.View.Sheet as Sheet exposing (Sheet)
 import Html as H
 
 
@@ -18,7 +18,7 @@ import Html as H
 
 type alias Model =
     { scells : SCells
-    , sheet : Sheet.Model
+    , sheet : Sheet
     }
 
 

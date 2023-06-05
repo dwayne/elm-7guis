@@ -1,7 +1,7 @@
 module Cells.View.Sheet exposing
     ( Handlers
-    , Model
     , Msg
+    , Sheet
     , UpdateOptions
     , ViewOptions
     , init
@@ -25,8 +25,8 @@ import Task
 -- MODEL
 
 
-type Model
-    = Model State
+type Sheet
+    = Sheet State
 
 
 type alias State =
@@ -46,9 +46,9 @@ type alias Handlers msg =
     }
 
 
-init : Model
+init : Sheet
 init =
-    Model initState
+    Sheet initState
 
 
 initState : State
@@ -76,40 +76,40 @@ type Msg
     | PressedEnter
 
 
-update : UpdateOptions msg -> Msg -> Model -> ( Model, Cmd msg )
-update { handlers, scells } msg (Model state) =
+update : UpdateOptions msg -> Msg -> Sheet -> ( Sheet, Cmd msg )
+update { handlers, scells } msg (Sheet state) =
     case msg of
         DoubleClickedCell coord ->
             let
                 value =
                     SCells.get coord scells
             in
-            ( Model { state | maybeEdit = Just { coord = coord, value = value } }
+            ( Sheet { state | maybeEdit = Just { coord = coord, value = value } }
             , focus (inputId coord) (handlers.onChange FocusedInput)
             )
 
         FocusedInput ->
-            ( Model state
+            ( Sheet state
             , Cmd.none
             )
 
         BlurredInput ->
-            ( Model { state | maybeEdit = Nothing }
+            ( Sheet { state | maybeEdit = Nothing }
             , Cmd.none
             )
 
         Input value ->
-            ( Model { state | maybeEdit = Maybe.map (\edit -> { edit | value = value }) state.maybeEdit }
+            ( Sheet { state | maybeEdit = Maybe.map (\edit -> { edit | value = value }) state.maybeEdit }
             , Cmd.none
             )
 
         PressedEsc ->
-            ( Model { state | maybeEdit = Nothing }
+            ( Sheet { state | maybeEdit = Nothing }
             , Cmd.none
             )
 
         PressedEnter ->
-            ( Model { state | maybeEdit = Nothing }
+            ( Sheet { state | maybeEdit = Nothing }
             , case state.maybeEdit of
                 Just { coord, value } ->
                     dispatch <| handlers.onInput coord value
@@ -130,6 +130,7 @@ dispatch =
     Task.succeed >> Task.perform identity
 
 
+
 -- VIEW
 
 
@@ -139,8 +140,8 @@ type alias ViewOptions msg =
     }
 
 
-view : ViewOptions msg -> Model -> H.Html msg
-view options (Model state) =
+view : ViewOptions msg -> Sheet -> H.Html msg
+view options (Sheet state) =
     H.div [ HA.class "sheet" ]
         [ H.table [ HA.class "sheet__table" ]
             [ viewColumnHeaders

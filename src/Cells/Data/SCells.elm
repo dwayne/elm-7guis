@@ -1,5 +1,4 @@
-module Cells.Data.SCells exposing (SCells, empty, set, get)
-
+module Cells.Data.SCells exposing (SCells, empty, get, set)
 
 import Cells.Data.Coord as Coord exposing (Coord)
 import Dict exposing (Dict)
@@ -30,4 +29,4 @@ get coords (SCells cells) =
             Coord.toName coords
     in
     Dict.get name cells
-      |> Maybe.withDefault ""
+        |> Maybe.withDefault ""
