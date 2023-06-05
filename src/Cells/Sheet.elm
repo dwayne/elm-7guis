@@ -16,6 +16,7 @@ import Cells.Row as Row exposing (Row)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+import Json.Decode as JD
 import Task
 
 
@@ -67,6 +68,8 @@ type Msg
     = DoubleClickedCell Coord
     | FocusedInput
     | BlurredInput
+    | PressedEsc
+    | PressedEnter
 
 
 update : UpdateOptions msg -> Msg -> Model -> ( Model, Cmd msg )
@@ -86,6 +89,17 @@ update options msg (Model state) =
             ( Model { state | maybeEdit = Nothing }
             , Cmd.none
             )
+
+        PressedEsc ->
+            ( Model { state | maybeEdit = Nothing }
+            , Cmd.none
+            )
+
+        PressedEnter ->
+            ( Model state
+            , Cmd.none
+            )
+                |> Debug.log "Pressed enter!"
 
 
 focus : String -> msg -> Cmd msg
@@ -179,6 +193,11 @@ viewCell { handlers } { maybeEdit } coord =
                     , HA.type_ "text"
                     , HA.value edit.value
                     , HE.onBlur <| handlers.onChange BlurredInput
+                    , onKey
+                        { esc = PressedEsc
+                        , enter = PressedEnter
+                        }
+                        |> HA.map handlers.onChange
                     ]
                     []
                 ]
@@ -194,3 +213,24 @@ viewCell { handlers } { maybeEdit } coord =
 inputId : Coord -> String
 inputId coord =
     "sheet__input-" ++ Coord.toString coord
+
+
+onKey : { esc : msg, enter : msg } -> H.Attribute msg
+onKey { esc, enter } =
+    let
+        decoder =
+            HE.keyCode
+                |> JD.andThen
+                    (\code ->
+                        case code of
+                            13 ->
+                                JD.succeed enter
+
+                            27 ->
+                                JD.succeed esc
+
+                            _ ->
+                                JD.fail <| "must be one of the codes 13 or 27: " ++ String.fromInt code
+                    )
+    in
+    HE.on "keydown" decoder
