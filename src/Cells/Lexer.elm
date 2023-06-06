@@ -4,9 +4,19 @@ import Char
 import Parser as P exposing ((|.), Parser)
 
 
-parseString : String -> Result (List P.DeadEnd) Float
+type AST
+    = Number Float
+    | Text String
+
+
+parseString : String -> Result (List P.DeadEnd) AST
 parseString =
-    P.run decimal
+    P.run ast
+
+
+ast : Parser AST
+ast =
+    P.oneOf [ P.map Number decimal, P.map Text text ]
 
 
 decimal : Parser Float
@@ -54,3 +64,15 @@ optional p =
         [ p
         , P.succeed ()
         ]
+
+
+text : Parser String
+text =
+    P.getChompedString chompText
+
+
+chompText : Parser ()
+chompText =
+    P.succeed ()
+        |. P.chompIf ((/=) '=')
+        |. P.chompWhile (always True)
