@@ -1,7 +1,10 @@
 module Cells.Lexer exposing (parseString)
 
+import Cells.Data.Column as Column exposing (Column)
+import Cells.Data.Row as Row exposing (Row)
+import Cells.Data.Coord exposing (Coord)
 import Char
-import Parser as P exposing ((|.), Parser)
+import Parser as P exposing ((|.), (|=), Parser)
 
 
 type AST
@@ -9,9 +12,9 @@ type AST
     | Text String
 
 
-parseString : String -> Result (List P.DeadEnd) String
+parseString : String -> Result (List P.DeadEnd) Coord
 parseString =
-    P.run identifier
+    P.run coord
 
 
 ast : Parser AST
@@ -29,7 +32,7 @@ decimal =
                         P.succeed f
 
                     Nothing ->
-                        P.problem <| "improperly formatted float string: " ++ s
+                        P.problem <| "unexpected decimal: " ++ s
             )
 
 
@@ -94,3 +97,40 @@ isLetterOrUnderscore c =
 isLetterOrDigitOrUnderscore : Char -> Bool
 isLetterOrDigitOrUnderscore c =
     Char.isAlphaNum c || c == '_'
+
+
+coord : Parser Coord
+coord =
+    P.succeed Coord
+        |= column
+        |= row
+
+
+row : Parser Row
+row =
+    oneOrMoreDigits
+        |> P.getChompedString
+        |> P.andThen
+            (\s ->
+                case Row.fromString s of
+                    Just r ->
+                        P.succeed r
+
+                    Nothing ->
+                        P.problem <| "unexpected row: " ++ s
+            )
+
+
+column : Parser Column
+column =
+    P.chompIf Char.isUpper
+        |> P.getChompedString
+        |> P.andThen
+            (\s ->
+                case Column.fromString s of
+                    Just c ->
+                        P.succeed c
+
+                    Nothing ->
+                        P.problem <| "unexpected column: " ++ s
+            )

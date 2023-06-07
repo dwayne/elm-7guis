@@ -1,6 +1,7 @@
 module Cells.Data.Column exposing
     ( Column
     , fromInt
+    , fromString
     , map
     , toInt
     , toString
@@ -23,7 +24,21 @@ maxN =
 
 fromInt : Int -> Column
 fromInt =
+    -- TODO: Rename to fromSafeInt.
     Column << toSafeN
+
+
+fromString : String -> Maybe Column
+fromString s =
+    String.uncons s
+        |> Maybe.andThen
+            (\( c, t ) ->
+                if Char.isUpper c && String.isEmpty t then
+                    Just <| Column <| Char.toCode c - codeForA
+
+                else
+                    Nothing
+            )
 
 
 toSafeN : Int -> Int
