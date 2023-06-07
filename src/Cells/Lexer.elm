@@ -1,4 +1,4 @@
-module Cells.Lexer exposing (decimal, parseString)
+module Cells.Lexer exposing (parseString)
 
 import Char
 import Parser as P exposing ((|.), Parser)
@@ -9,9 +9,9 @@ type AST
     | Text String
 
 
-parseString : String -> Result (List P.DeadEnd) AST
+parseString : String -> Result (List P.DeadEnd) String
 parseString =
-    P.run ast
+    P.run identifier
 
 
 ast : Parser AST
@@ -39,14 +39,6 @@ chompDecimal =
         minusSign =
             P.chompIf ((==) '-')
 
-        zeroOrMoreDigits =
-            P.chompWhile Char.isDigit
-
-        oneOrMoreDigits =
-            P.succeed ()
-                |. P.chompIf Char.isDigit
-                |. zeroOrMoreDigits
-
         decimalPart =
             P.succeed ()
                 |. P.chompIf ((==) '.')
@@ -56,6 +48,18 @@ chompDecimal =
         |. optional minusSign
         |. oneOrMoreDigits
         |. optional decimalPart
+
+
+zeroOrMoreDigits : Parser ()
+zeroOrMoreDigits =
+    P.chompWhile Char.isDigit
+
+
+oneOrMoreDigits : Parser ()
+oneOrMoreDigits =
+    P.succeed ()
+        |. P.chompIf Char.isDigit
+        |. zeroOrMoreDigits
 
 
 optional : Parser () -> Parser ()
@@ -68,11 +72,25 @@ optional p =
 
 text : Parser String
 text =
-    P.getChompedString chompText
+    P.getChompedString <|
+        P.succeed ()
+            |. P.chompIf ((/=) '=')
+            |. P.chompWhile (always True)
 
 
-chompText : Parser ()
-chompText =
-    P.succeed ()
-        |. P.chompIf ((/=) '=')
-        |. P.chompWhile (always True)
+identifier : Parser String
+identifier =
+    P.getChompedString <|
+        P.succeed ()
+            |. P.chompIf isLetterOrUnderscore
+            |. P.chompWhile isLetterOrDigitOrUnderscore
+
+
+isLetterOrUnderscore : Char -> Bool
+isLetterOrUnderscore c =
+    Char.isAlpha c || c == '_'
+
+
+isLetterOrDigitOrUnderscore : Char -> Bool
+isLetterOrDigitOrUnderscore c =
+    Char.isAlphaNum c || c == '_'
