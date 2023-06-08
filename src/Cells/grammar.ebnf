@@ -8,13 +8,14 @@ Expr        ::= Number
               | Cell
               | Range
               | Application
+Number      ::= Decimal
 Cell        ::= Coord
 Range       ::= Coord ':' Coord
-Application ::= Identifier '(' (Expr (',' Expr)*)? ')'
+Application ::= Identifier '(' ( Expr ( ',' Expr )* )? ')'
 
 /* Lexemes */
 
 Text       ::= [^=] .*
-Number     ::= '-'? [0-9]+ ('.' [0-9]*)?
+Decimal    ::= '-'? [0-9]+ ('.' [0-9]*)?
 Coord      ::= [A-Z] [1-9]? [0-9]
 Identifier ::= [a-zA-Z_] [a-zA-Z0-9_]*
