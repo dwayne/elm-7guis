@@ -1,7 +1,7 @@
 module Cells.Data.Row exposing
     ( Row
     , first
-    , fromInt
+    , fromSafeInt
     , fromSafeString
     , map
     , toInt
@@ -28,9 +28,8 @@ first =
     Row minN
 
 
-fromInt : Int -> Row
-fromInt =
-    -- TODO: Rename to fromSafeInt.
+fromSafeInt : Int -> Row
+fromSafeInt =
     Row << toSafeN
 
 
