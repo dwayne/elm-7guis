@@ -1,7 +1,8 @@
 module Cells.Data.Row exposing
     ( Row
+    , first
     , fromInt
-    , fromString
+    , fromSafeString
     , map
     , toInt
     , toString
@@ -22,28 +23,34 @@ maxN =
     99
 
 
+first : Row
+first =
+    Row minN
+
+
 fromInt : Int -> Row
 fromInt =
     -- TODO: Rename to fromSafeInt.
     Row << toSafeN
 
 
-fromString : String -> Maybe Row
-fromString s =
-    String.toInt s
-        |> Maybe.andThen
-            (\n ->
-                if minN <= n && n <= maxN then
-                    Just <| Row n
-
-                else
-                    Nothing
-            )
-
-
 toSafeN : Int -> Int
 toSafeN n =
     min (max n minN) maxN
+
+
+fromSafeString : String -> Row
+fromSafeString s =
+    String.toInt s
+        |> Maybe.map
+            (\n ->
+                if minN <= n && n <= maxN then
+                    Row n
+
+                else
+                    first
+            )
+        |> Maybe.withDefault first
 
 
 map : (Row -> a) -> List a

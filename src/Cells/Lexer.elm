@@ -1,39 +1,41 @@
-module Cells.Lexer exposing (parseString)
+module Cells.Lexer exposing
+    ( coord
+    , decimal
+    , identifier
+    , parens
+    , symbol
+    , text
+    )
 
 import Cells.Data.Column as Column exposing (Column)
-import Cells.Data.Row as Row exposing (Row)
 import Cells.Data.Coord exposing (Coord)
+import Cells.Data.Row as Row exposing (Row)
 import Char
 import Parser as P exposing ((|.), (|=), Parser)
 
 
-type AST
-    = Number Float
-    | Text String
+text : Parser String
+text =
+    P.getChompedString chompText
 
 
-parseString : String -> Result (List P.DeadEnd) Coord
-parseString =
-    P.run coord
+chompText : Parser ()
+chompText =
+    P.succeed ()
+        |. P.chompIf ((/=) '=')
+        |. chompAny
 
 
-ast : Parser AST
-ast =
-    P.oneOf [ P.map Number decimal, P.map Text text ]
+chompAny : Parser ()
+chompAny =
+    P.chompWhile (always True)
 
 
 decimal : Parser Float
 decimal =
-    P.getChompedString chompDecimal
-        |> P.andThen
-            (\s ->
-                case String.toFloat s of
-                    Just f ->
-                        P.succeed f
-
-                    Nothing ->
-                        P.problem <| "unexpected decimal: " ++ s
-            )
+    chompDecimal
+        |> P.mapChompedString (\s _ -> String.toFloat s |> Maybe.withDefault 0)
+        |> lexeme
 
 
 chompDecimal : Parser ()
@@ -45,48 +47,81 @@ chompDecimal =
         decimalPart =
             P.succeed ()
                 |. P.chompIf ((==) '.')
-                |. zeroOrMoreDigits
+                |. chompZeroOrMoreDigits
     in
     P.succeed ()
-        |. optional minusSign
-        |. oneOrMoreDigits
-        |. optional decimalPart
+        |. chompOptional minusSign
+        |. chompOneOrMoreDigits
+        |. chompOptional decimalPart
 
 
-zeroOrMoreDigits : Parser ()
-zeroOrMoreDigits =
+chompOneOrMoreDigits : Parser ()
+chompOneOrMoreDigits =
+    P.succeed ()
+        |. P.chompIf Char.isDigit
+        |. chompZeroOrMoreDigits
+
+
+chompZeroOrMoreDigits : Parser ()
+chompZeroOrMoreDigits =
     P.chompWhile Char.isDigit
 
 
-oneOrMoreDigits : Parser ()
-oneOrMoreDigits =
-    P.succeed ()
-        |. P.chompIf Char.isDigit
-        |. zeroOrMoreDigits
-
-
-optional : Parser () -> Parser ()
-optional p =
+chompOptional : Parser () -> Parser ()
+chompOptional p =
     P.oneOf
         [ p
         , P.succeed ()
         ]
 
 
-text : Parser String
-text =
-    P.getChompedString <|
-        P.succeed ()
-            |. P.chompIf ((/=) '=')
-            |. P.chompWhile (always True)
+coord : Parser Coord
+coord =
+    lexeme <|
+        P.succeed Coord
+            |= column
+            |= row
+
+
+column : Parser Column
+column =
+    P.chompIf Char.isUpper
+        |> P.mapChompedString (\s _ -> Column.fromSafeString s)
+
+
+row : Parser Row
+row =
+    chompRow
+        |> P.mapChompedString (\s _ -> Row.fromSafeString s)
+
+
+chompRow : Parser ()
+chompRow =
+    P.oneOf
+        [ P.chompIf ((==) '0')
+        , P.succeed ()
+            |. P.chompIf isNonZeroDigit
+            |. chompOptional (P.chompIf Char.isDigit)
+        ]
+
+
+isNonZeroDigit : Char -> Bool
+isNonZeroDigit c =
+    Char.isDigit c && c /= '0'
 
 
 identifier : Parser String
 identifier =
-    P.getChompedString <|
-        P.succeed ()
-            |. P.chompIf isLetterOrUnderscore
-            |. P.chompWhile isLetterOrDigitOrUnderscore
+    chompIdentifier
+        |> P.getChompedString
+        |> lexeme
+
+
+chompIdentifier : Parser ()
+chompIdentifier =
+    P.succeed ()
+        |. P.chompIf isLetterOrUnderscore
+        |. P.chompWhile isLetterOrDigitOrUnderscore
 
 
 isLetterOrUnderscore : Char -> Bool
@@ -99,38 +134,36 @@ isLetterOrDigitOrUnderscore c =
     Char.isAlphaNum c || c == '_'
 
 
-coord : Parser Coord
-coord =
-    P.succeed Coord
-        |= column
-        |= row
+parens : Parser a -> Parser (List a)
+parens item =
+    between "(" item ")"
 
 
-row : Parser Row
-row =
-    oneOrMoreDigits
-        |> P.getChompedString
-        |> P.andThen
-            (\s ->
-                case Row.fromString s of
-                    Just r ->
-                        P.succeed r
-
-                    Nothing ->
-                        P.problem <| "unexpected row: " ++ s
-            )
+between : String -> Parser a -> String -> Parser (List a)
+between start item end =
+    lexeme <|
+        P.sequence
+            { start = start
+            , separator = ","
+            , end = end
+            , spaces = spaces
+            , item = item
+            , trailing = P.Forbidden
+            }
 
 
-column : Parser Column
-column =
-    P.chompIf Char.isUpper
-        |> P.getChompedString
-        |> P.andThen
-            (\s ->
-                case Column.fromString s of
-                    Just c ->
-                        P.succeed c
+symbol : String -> Parser ()
+symbol =
+    P.symbol >> lexeme
 
-                    Nothing ->
-                        P.problem <| "unexpected column: " ++ s
-            )
+
+lexeme : Parser a -> Parser a
+lexeme p =
+    P.succeed identity
+        |= p
+        |. spaces
+
+
+spaces : Parser ()
+spaces =
+    P.spaces

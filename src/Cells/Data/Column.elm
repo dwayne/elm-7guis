@@ -1,7 +1,8 @@
 module Cells.Data.Column exposing
     ( Column
+    , first
     , fromInt
-    , fromString
+    , fromSafeString
     , map
     , toInt
     , toString
@@ -22,28 +23,34 @@ maxN =
     25
 
 
+first : Column
+first =
+    Column minN
+
+
 fromInt : Int -> Column
 fromInt =
     -- TODO: Rename to fromSafeInt.
     Column << toSafeN
 
 
-fromString : String -> Maybe Column
-fromString s =
-    String.uncons s
-        |> Maybe.andThen
-            (\( c, t ) ->
-                if Char.isUpper c && String.isEmpty t then
-                    Just <| Column <| Char.toCode c - codeForA
-
-                else
-                    Nothing
-            )
-
-
 toSafeN : Int -> Int
 toSafeN n =
     min (max n minN) maxN
+
+
+fromSafeString : String -> Column
+fromSafeString s =
+    String.uncons s
+        |> Maybe.map
+            (\( c, t ) ->
+                if Char.isUpper c && String.isEmpty t then
+                    Column <| Char.toCode c - codeForA
+
+                else
+                    first
+            )
+        |> Maybe.withDefault first
 
 
 map : (Column -> a) -> List a
