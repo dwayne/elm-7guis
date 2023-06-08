@@ -3,6 +3,7 @@ module Cells.Lexer exposing
     , decimal
     , identifier
     , parens
+    , spaces
     , symbol
     , text
     )
