@@ -32,8 +32,8 @@ expr : Parser Expr
 expr =
     P.oneOf
         [ number
+        , P.backtrackable application
         , rangeOrCell
-        , application
         ]
 
 
@@ -41,6 +41,13 @@ number : Parser Expr
 number =
     L.decimal
         |> P.map AST.Number
+
+
+application : Parser Expr
+application =
+    P.succeed AST.Application
+        |= L.identifier
+        |= L.parens (P.lazy (\_ -> expr))
 
 
 rangeOrCell : Parser Expr
@@ -55,10 +62,3 @@ rangeOrCell =
                     , P.succeed <| AST.Cell start
                     ]
             )
-
-
-application : Parser Expr
-application =
-    P.succeed AST.Application
-        |= L.identifier
-        |= L.parens (P.lazy (\_ -> expr))
