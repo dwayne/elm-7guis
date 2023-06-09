@@ -4,29 +4,29 @@ import Cells.Data.Coord as Coord exposing (Coord)
 import Dict exposing (Dict)
 
 
-type SCells
-    = SCells (Dict String String)
+type SCells a
+    = SCells (Dict String a)
 
 
-empty : SCells
+empty : SCells a
 empty =
     SCells Dict.empty
 
 
-set : Coord -> String -> SCells -> SCells
-set coords value (SCells cells) =
+set : Coord -> a -> SCells a -> SCells a
+set coord a (SCells cells) =
     let
         name =
-            Coord.toName coords
+            Coord.toName coord
     in
-    SCells <| Dict.insert name value cells
+    SCells <| Dict.insert name a cells
 
 
-get : Coord -> SCells -> String
-get coords (SCells cells) =
+get : (Coord -> a) -> Coord -> SCells a -> a
+get toDefault coord (SCells cells) =
     let
         name =
-            Coord.toName coords
+            Coord.toName coord
     in
     Dict.get name cells
-        |> Maybe.withDefault ""
+        |> Maybe.withDefault (toDefault coord)

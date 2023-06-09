@@ -10,6 +10,7 @@ module Cells.View.Sheet exposing
     )
 
 import Browser.Dom as BD
+import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Column as Column exposing (Column)
 import Cells.Data.Coord as Coord exposing (Coord)
 import Cells.Data.Row as Row exposing (Row)
@@ -36,7 +37,7 @@ type alias State =
 
 type alias Edit =
     { coord : Coord
-    , value : String
+    , rawInput : String
     }
 
 
@@ -63,7 +64,7 @@ initState =
 
 type alias UpdateOptions msg =
     { handlers : Handlers msg
-    , scells : SCells
+    , scells : SCells Cell
     }
 
 
@@ -81,10 +82,17 @@ update { handlers, scells } msg (Sheet state) =
     case msg of
         DoubleClickedCell coord ->
             let
-                value =
-                    SCells.get coord scells
+                cell =
+                    get coord scells
             in
-            ( Sheet { state | maybeEdit = Just { coord = coord, value = value } }
+            ( Sheet
+                { state
+                    | maybeEdit =
+                        Just
+                            { coord = coord
+                            , rawInput = Cell.toInputString cell
+                            }
+                }
             , focus (inputId coord) (handlers.onChange FocusedInput)
             )
 
@@ -98,8 +106,8 @@ update { handlers, scells } msg (Sheet state) =
             , Cmd.none
             )
 
-        Input value ->
-            ( Sheet { state | maybeEdit = Maybe.map (\edit -> { edit | value = value }) state.maybeEdit }
+        Input rawInput ->
+            ( Sheet { state | maybeEdit = Maybe.map (\edit -> { edit | rawInput = rawInput }) state.maybeEdit }
             , Cmd.none
             )
 
@@ -111,8 +119,8 @@ update { handlers, scells } msg (Sheet state) =
         PressedEnter ->
             ( Sheet { state | maybeEdit = Nothing }
             , case state.maybeEdit of
-                Just { coord, value } ->
-                    dispatch <| handlers.onInput coord value
+                Just { coord, rawInput } ->
+                    dispatch <| handlers.onInput coord rawInput
 
                 Nothing ->
                     Cmd.none
@@ -136,7 +144,7 @@ dispatch =
 
 type alias ViewOptions msg =
     { handlers : Handlers msg
-    , scells : SCells
+    , scells : SCells Cell
     }
 
 
@@ -206,36 +214,32 @@ viewCell { handlers, scells } { maybeEdit } coord =
                             Nothing
                     )
     in
-    case maybeBeingEdited of
-        Just edit ->
-            H.td
-                [ HA.class "sheet__td sheet__cell" ]
-                [ H.input
-                    [ HA.id <| inputId coord
-                    , HA.class "sheet__input"
-                    , HA.type_ "text"
-                    , HA.value edit.value
-                    , HE.onInput <| handlers.onChange << Input
-                    , HE.onBlur <| handlers.onChange BlurredInput
-                    , onKey
-                        { esc = PressedEsc
-                        , enter = PressedEnter
-                        }
-                        |> HA.map handlers.onChange
+    H.map handlers.onChange <|
+        case maybeBeingEdited of
+            Just edit ->
+                H.td
+                    [ HA.class "sheet__td sheet__cell" ]
+                    [ H.input
+                        [ HA.id <| inputId coord
+                        , HA.class "sheet__input"
+                        , HA.type_ "text"
+                        , HA.value edit.rawInput
+                        , HE.onInput Input
+                        , HE.onBlur BlurredInput
+                        , onKey
+                            { esc = PressedEsc
+                            , enter = PressedEnter
+                            }
+                        ]
+                        []
                     ]
-                    []
-                ]
 
-        Nothing ->
-            let
-                value =
-                    SCells.get coord scells
-            in
-            H.td
-                [ HA.class "sheet__td sheet__cell"
-                , HE.onDoubleClick <| handlers.onChange <| DoubleClickedCell coord
-                ]
-                [ H.text value ]
+            Nothing ->
+                H.td
+                    [ HA.class "sheet__td sheet__cell"
+                    , HE.onDoubleClick <| DoubleClickedCell coord
+                    ]
+                    [ H.text <| Cell.toString <| get coord scells ]
 
 
 inputId : Coord -> String
@@ -262,3 +266,12 @@ onKey { esc, enter } =
                     )
     in
     HE.on "keydown" decoder
+
+
+
+-- HELPERS
+
+
+get : Coord -> SCells Cell -> Cell
+get =
+    SCells.get Cell.empty

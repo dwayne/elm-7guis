@@ -6,6 +6,7 @@ module Cells exposing
     , view
     )
 
+import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Coord exposing (Coord)
 import Cells.Data.SCells as SCells exposing (SCells)
 import Cells.View.Sheet as Sheet exposing (Sheet)
@@ -17,7 +18,7 @@ import Html as H
 
 
 type alias Model =
-    { scells : SCells
+    { scells : SCells Cell
     , sheet : Sheet
     }
 
@@ -52,8 +53,12 @@ update msg model =
             Sheet.update { handlers = sheetHandlers, scells = model.scells } sheetMsg model.sheet
                 |> Tuple.mapFirst (\sheet -> { model | sheet = sheet })
 
-        Input coord value ->
-            ( { model | scells = SCells.set coord value model.scells }
+        Input coord rawInput ->
+            let
+                cell =
+                    Cell.fromString model.scells coord rawInput
+            in
+            ( { model | scells = SCells.set coord cell model.scells }
             , Cmd.none
             )
 
