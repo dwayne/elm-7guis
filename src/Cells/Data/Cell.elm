@@ -2,17 +2,20 @@ module Cells.Data.Cell exposing
     ( Cell
     , empty
     , fromString
+    , references
+    , refresh
     , toInputString
     , toString
     )
 
 import Cells.AST as AST
-import Cells.Data.Coord exposing (Coord)
+import Cells.Data.Coord as Coord exposing (Coord)
 import Cells.Data.Range as Range exposing (Range)
 import Cells.Data.SCells as SCells exposing (SCells)
 import Cells.Parser as P
 import Dict exposing (Dict)
 import Parser exposing (DeadEnd)
+import Set exposing (Set)
 
 
 type Cell
@@ -64,10 +67,14 @@ fromString scells coord rawInput =
                     Text t
 
                 Ok (AST.Expr expr) ->
+                    let
+                        result =
+                            evaluate scells expr
+                    in
                     Expr
                         { rawInput = rawInput
                         , expr = expr
-                        , result = evaluate scells expr
+                        , result = result
                         }
 
                 Err deadEnds ->
@@ -218,6 +225,56 @@ builtinFunctions =
           , Ok << List.product
           )
         ]
+
+
+references : Cell -> Set String
+references (Cell { value }) =
+    case value of
+        Expr { expr, result } ->
+            case result of
+                Ok _ ->
+                    referencesForExpr expr
+
+                _ ->
+                    Set.empty
+
+        _ ->
+            Set.empty
+
+
+referencesForExpr : AST.Expr -> Set String
+referencesForExpr expr =
+    case expr of
+        AST.Number _ ->
+            Set.empty
+
+        AST.Cell coord ->
+            Set.singleton <| Coord.toName coord
+
+        AST.Range range ->
+            range
+                |> Range.expand
+                |> List.map Coord.toName
+                |> Set.fromList
+
+        AST.Application _ exprs ->
+            exprs
+                |> List.map referencesForExpr
+                |> List.foldl Set.union Set.empty
+
+
+refresh : SCells Cell -> Cell -> Cell
+refresh scells (Cell cell) =
+    case cell.value of
+        Expr state ->
+            let
+                newValue =
+                    Expr { state | result = evaluate scells state.expr }
+            in
+            Cell { cell | value = newValue }
+
+        _ ->
+            Cell cell
 
 
 toFloat : Cell -> Float

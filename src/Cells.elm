@@ -7,10 +7,12 @@ module Cells exposing
     )
 
 import Cells.Data.Cell as Cell exposing (Cell)
-import Cells.Data.Coord exposing (Coord)
+import Cells.Data.Coord as Coord exposing (Coord)
 import Cells.Data.SCells as SCells exposing (SCells)
+import Cells.DirectedGraph as DirectedGraph exposing (DirectedGraph)
 import Cells.View.Sheet as Sheet exposing (Sheet)
 import Html as H
+import Set
 
 
 
@@ -19,6 +21,7 @@ import Html as H
 
 type alias Model =
     { scells : SCells Cell
+    , dependencyGraph : DirectedGraph
     , sheet : Sheet
     }
 
@@ -26,6 +29,7 @@ type alias Model =
 init : Model
 init =
     { scells = SCells.empty
+    , dependencyGraph = DirectedGraph.empty
     , sheet = Sheet.init
     }
 
@@ -55,11 +59,65 @@ update msg model =
 
         Input coord rawInput ->
             let
-                cell =
+                oldCell =
+                    SCells.get Cell.empty coord model.scells
+
+                oldReferences =
+                    Cell.references oldCell
+
+                newCell =
                     Cell.fromString model.scells coord rawInput
+
+                newReferences =
+                    Cell.references newCell
+
+                dest =
+                    Coord.toName coord
+
+                edgesToBeRemoved =
+                    Set.diff oldReferences newReferences
+                        |> Set.map (\src -> ( src, dest ))
+
+                edgesToBeAdded =
+                    Set.diff newReferences oldReferences
+                        |> Set.map (\src -> ( src, dest ))
+
+                dependencyGraph =
+                    model.dependencyGraph
+                        |> DirectedGraph.removeEdges edgesToBeRemoved
+                        |> DirectedGraph.addEdges edgesToBeAdded
             in
-            ( { model | scells = SCells.set coord cell model.scells }
+            ( refresh coord newCell dest dependencyGraph model.scells
+                |> Maybe.map
+                    (\scells ->
+                        { model
+                            | scells = scells
+                            , dependencyGraph = dependencyGraph
+                        }
+                    )
+                |> Maybe.withDefault model
             , Cmd.none
+            )
+
+
+refresh : Coord -> Cell -> String -> DirectedGraph -> SCells Cell -> Maybe (SCells Cell)
+refresh startCoord startCell startName dependencyGraph scells =
+    DirectedGraph.tsort startName dependencyGraph
+        |> Maybe.map
+            (List.foldl
+                (\name nextScells ->
+                    let
+                        coord =
+                            Coord.fromSafeString name
+
+                        refreshedCell =
+                            nextScells
+                                |> SCells.get Cell.empty coord
+                                |> Cell.refresh nextScells
+                    in
+                    SCells.set coord refreshedCell nextScells
+                )
+                (SCells.set startCoord startCell scells)
             )
 
 
