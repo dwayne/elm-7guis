@@ -1,7 +1,7 @@
 module Cells.View.Sheet exposing
     ( Handlers
+    , Model
     , Msg
-    , Sheet
     , UpdateOptions
     , ViewOptions
     , init
@@ -26,8 +26,8 @@ import Task
 -- MODEL
 
 
-type Sheet
-    = Sheet State
+type Model
+    = Model State
 
 
 type alias State =
@@ -47,9 +47,9 @@ type alias Handlers msg =
     }
 
 
-init : Sheet
+init : Model
 init =
-    Sheet initState
+    Model initState
 
 
 initState : State
@@ -77,15 +77,15 @@ type Msg
     | PressedEnter
 
 
-update : UpdateOptions msg -> Msg -> Sheet -> ( Sheet, Cmd msg )
-update { handlers, scells } msg (Sheet state) =
+update : UpdateOptions msg -> Msg -> Model -> ( Model, Cmd msg )
+update { handlers, scells } msg (Model state) =
     case msg of
         DoubleClickedCell coord ->
             let
                 cell =
                     get coord scells
             in
-            ( Sheet
+            ( Model
                 { state
                     | maybeEdit =
                         Just
@@ -97,27 +97,27 @@ update { handlers, scells } msg (Sheet state) =
             )
 
         FocusedInput ->
-            ( Sheet state
+            ( Model state
             , Cmd.none
             )
 
         BlurredInput ->
-            ( Sheet { state | maybeEdit = Nothing }
+            ( Model { state | maybeEdit = Nothing }
             , Cmd.none
             )
 
         Input rawInput ->
-            ( Sheet { state | maybeEdit = Maybe.map (\edit -> { edit | rawInput = rawInput }) state.maybeEdit }
+            ( Model { state | maybeEdit = Maybe.map (\edit -> { edit | rawInput = rawInput }) state.maybeEdit }
             , Cmd.none
             )
 
         PressedEsc ->
-            ( Sheet { state | maybeEdit = Nothing }
+            ( Model { state | maybeEdit = Nothing }
             , Cmd.none
             )
 
         PressedEnter ->
-            ( Sheet { state | maybeEdit = Nothing }
+            ( Model { state | maybeEdit = Nothing }
             , case state.maybeEdit of
                 Just { coord, rawInput } ->
                     dispatch <| handlers.onInput coord rawInput
@@ -148,8 +148,8 @@ type alias ViewOptions msg =
     }
 
 
-view : ViewOptions msg -> Sheet -> H.Html msg
-view options (Sheet state) =
+view : ViewOptions msg -> Model -> H.Html msg
+view options (Model state) =
     H.div [ HA.class "sheet" ]
         [ H.table [ HA.class "sheet__table" ]
             [ viewColumnHeaders

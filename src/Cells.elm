@@ -10,7 +10,7 @@ import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Coord as Coord exposing (Coord)
 import Cells.Data.DirectedGraph as DirectedGraph exposing (DirectedGraph)
 import Cells.Data.SCells as SCells exposing (SCells)
-import Cells.View.Sheet as Sheet exposing (Sheet)
+import Cells.View.Sheet as Sheet
 import Html as H
 import Set
 
@@ -22,7 +22,7 @@ import Set
 type alias Model =
     { scells : SCells Cell
     , dependencyGraph : DirectedGraph
-    , sheet : Sheet
+    , sheet : Sheet.Model
     }
 
 
