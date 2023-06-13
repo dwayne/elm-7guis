@@ -1,5 +1,7 @@
 module Cells.Data.DirectedGraph exposing
     ( DirectedGraph
+    , Edge
+    , Vertex
     , addEdges
     , empty
     , removeEdges
@@ -15,16 +17,20 @@ type DirectedGraph
 
 
 type alias AdjSet =
-    Dict String (Set String)
+    Dict Vertex (Set Vertex)
+
+
+type alias Vertex =
+    String
+
+
+type alias Edge =
+    ( Vertex, Vertex )
 
 
 empty : DirectedGraph
 empty =
     DirectedGraph Dict.empty
-
-
-type alias Edge =
-    ( String, String )
 
 
 addEdges : Set Edge -> DirectedGraph -> DirectedGraph
@@ -42,14 +48,15 @@ addEdge ( u, v ) =
     Dict.update u (addVertex v)
 
 
-addVertex : String -> Maybe (Set String) -> Maybe (Set String)
-addVertex v maybeSet =
-    case maybeSet of
-        Nothing ->
-            Just <| Set.singleton v
+addVertex : Vertex -> Maybe (Set Vertex) -> Maybe (Set Vertex)
+addVertex v maybeVertices =
+    Just <|
+        case maybeVertices of
+            Nothing ->
+                Set.singleton v
 
-        Just vertices ->
-            Just <| Set.insert v vertices
+            Just vertices ->
+                Set.insert v vertices
 
 
 removeEdges : Set Edge -> DirectedGraph -> DirectedGraph
@@ -67,13 +74,10 @@ removeEdge ( u, v ) =
     Dict.update u (removeVertex v)
 
 
-removeVertex : String -> Maybe (Set String) -> Maybe (Set String)
-removeVertex v maybeSet =
-    case maybeSet of
-        Nothing ->
-            Nothing
-
-        Just vertices ->
+removeVertex : Vertex -> Maybe (Set Vertex) -> Maybe (Set Vertex)
+removeVertex v =
+    Maybe.andThen
+        (\vertices ->
             let
                 newVertices =
                     Set.remove v vertices
@@ -83,21 +87,18 @@ removeVertex v maybeSet =
 
             else
                 Just newVertices
+        )
 
 
-tsort : String -> DirectedGraph -> Maybe (List String)
+tsort : Vertex -> DirectedGraph -> Maybe (List Vertex)
 tsort u (DirectedGraph adj) =
-    let
-        { maybeResult } =
-            visit { marks = Dict.empty, maybeResult = Just [] } u adj
-    in
-    maybeResult
-        |> Maybe.andThen List.tail
+    visit u adj (Just initVisitState)
+        |> Maybe.map .vertices
 
 
 type alias VisitState =
-    { marks : Dict String Mark
-    , maybeResult : Maybe (List String)
+    { marks : Dict Vertex Mark
+    , vertices : List Vertex
     }
 
 
@@ -106,38 +107,43 @@ type Mark
     | Permanent
 
 
-visit : VisitState -> String -> AdjSet -> VisitState
-visit state u adj =
-    case state.maybeResult of
-        Just _ ->
+initVisitState : VisitState
+initVisitState =
+    VisitState Dict.empty []
+
+
+visit : Vertex -> AdjSet -> Maybe VisitState -> Maybe VisitState
+visit u adj =
+    Maybe.andThen
+        (\state ->
             case Dict.get u state.marks of
                 Nothing ->
                     let
-                        vertices =
+                        maybeFinalState =
+                            Set.foldl
+                                (\v -> Maybe.andThen (Just >> visit v adj))
+                                maybeStartState
+                                adjVertices
+
+                        maybeStartState =
+                            Just { state | marks = Dict.insert u Temporary state.marks }
+
+                        adjVertices =
                             Dict.get u adj
                                 |> Maybe.withDefault Set.empty
-
-                        finalState =
-                            Set.foldl
-                                (\v nextState -> visit nextState v adj)
-                                { state | marks = Dict.insert u Temporary state.marks }
-                                vertices
                     in
-                    case finalState.maybeResult of
-                        Just result ->
-                            { finalState
-                                | marks = Dict.insert u Permanent finalState.marks
-                                , maybeResult = Just <| u :: result
-                            }
-
-                        Nothing ->
-                            finalState
+                    maybeFinalState
+                        |> Maybe.map
+                            (\finalState ->
+                                { finalState
+                                    | marks = Dict.insert u Permanent finalState.marks
+                                    , vertices = u :: finalState.vertices
+                                }
+                            )
 
                 Just Temporary ->
-                    { state | maybeResult = Nothing }
+                    Nothing
 
                 Just Permanent ->
-                    state
-
-        Nothing ->
-            state
+                    Just state
+        )

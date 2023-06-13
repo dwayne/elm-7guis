@@ -106,6 +106,7 @@ update msg model =
 refresh : Coord -> Cell -> String -> DirectedGraph -> SCells -> Maybe SCells
 refresh startCoord startCell startName dependencyGraph scells =
     DirectedGraph.tsort startName dependencyGraph
+        |> Maybe.andThen List.tail
         |> Maybe.map
             (List.foldl
                 (\name nextScells ->
