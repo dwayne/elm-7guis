@@ -20,7 +20,7 @@ import Set
 
 
 type alias Model =
-    { scells : SCells Cell
+    { scells : SCells
     , dependencyGraph : DirectedGraph
     , sheet : Sheet.Model
     }
@@ -103,7 +103,7 @@ update msg model =
             )
 
 
-refresh : Coord -> Cell -> String -> DirectedGraph -> SCells Cell -> Maybe (SCells Cell)
+refresh : Coord -> Cell -> String -> DirectedGraph -> SCells -> Maybe SCells
 refresh startCoord startCell startName dependencyGraph scells =
     DirectedGraph.tsort startName dependencyGraph
         |> Maybe.map
@@ -120,7 +120,7 @@ refresh startCoord startCell startName dependencyGraph scells =
                             localEnv coord
 
                         coord =
-                            Coord.fromSafeString name
+                            Coord.fromSafeName name
                     in
                     SCells.set coord refreshedCell nextScells
                 )
@@ -128,9 +128,9 @@ refresh startCoord startCell startName dependencyGraph scells =
             )
 
 
-env : SCells Cell -> Coord -> Cell
+env : SCells -> Coord -> Cell
 env scells coord =
-    SCells.get Cell.empty coord scells
+    SCells.get coord scells
 
 
 

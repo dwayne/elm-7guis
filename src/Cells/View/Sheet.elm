@@ -64,7 +64,7 @@ initState =
 
 type alias UpdateOptions msg =
     { handlers : Handlers msg
-    , scells : SCells Cell
+    , scells : SCells
     }
 
 
@@ -83,7 +83,7 @@ update { handlers, scells } msg (Model state) =
         DoubleClickedCell coord ->
             let
                 cell =
-                    get coord scells
+                    SCells.get coord scells
             in
             ( Model
                 { state
@@ -144,7 +144,7 @@ dispatch =
 
 type alias ViewOptions msg =
     { handlers : Handlers msg
-    , scells : SCells Cell
+    , scells : SCells
     }
 
 
@@ -239,7 +239,7 @@ viewCell { handlers, scells } { maybeEdit } coord =
                     [ HA.class "sheet__td sheet__cell"
                     , HE.onDoubleClick <| DoubleClickedCell coord
                     ]
-                    [ H.text <| Cell.toString <| get coord scells ]
+                    [ H.text <| Cell.toString <| SCells.get coord scells ]
 
 
 inputId : Coord -> String
@@ -266,12 +266,3 @@ onKey { esc, enter } =
                     )
     in
     HE.on "keydown" decoder
-
-
-
--- HELPERS
-
-
-get : Coord -> SCells Cell -> Cell
-get =
-    SCells.get Cell.empty

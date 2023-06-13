@@ -19,10 +19,7 @@ import Set exposing (Set)
 
 
 type Cell
-    = Cell
-        { coord : Coord
-        , value : Value
-        }
+    = Cell Value
 
 
 type Value
@@ -50,16 +47,13 @@ type RuntimeError
     | DivisionByZero
 
 
-empty : Coord -> Cell
-empty coord =
-    Cell
-        { coord = coord
-        , value = Empty
-        }
-
-
 type alias Env =
     Coord -> Cell
+
+
+empty : Cell
+empty =
+    Cell Empty
 
 
 fromString : Env -> Coord -> String -> Cell
@@ -83,10 +77,7 @@ fromString env coord rawInput =
                         , deadEnds = deadEnds
                         }
     in
-    Cell
-        { coord = coord
-        , value = value
-        }
+    Cell value
 
 
 evaluate : Env -> AST.Expr -> Result RuntimeError Float
@@ -228,7 +219,7 @@ builtinFunctions =
 
 
 references : Cell -> Set String
-references (Cell { value }) =
+references (Cell value) =
     case value of
         Expr { expr, result } ->
             case result of
@@ -264,21 +255,21 @@ referencesForExpr expr =
 
 
 refresh : Env -> Cell -> Cell
-refresh env (Cell cell) =
-    case cell.value of
+refresh env ((Cell value) as cell) =
+    case value of
         Expr state ->
             let
                 newValue =
                     Expr { state | result = evaluate env state.expr }
             in
-            Cell { cell | value = newValue }
+            Cell newValue
 
         _ ->
-            Cell cell
+            cell
 
 
 toFloat : Cell -> Float
-toFloat (Cell { value }) =
+toFloat (Cell value) =
     case value of
         Expr { result } ->
             Result.withDefault 0 result
@@ -288,7 +279,7 @@ toFloat (Cell { value }) =
 
 
 toInputString : Cell -> String
-toInputString (Cell { value }) =
+toInputString (Cell value) =
     case value of
         Empty ->
             ""
@@ -304,7 +295,7 @@ toInputString (Cell { value }) =
 
 
 toString : Cell -> String
-toString (Cell { value }) =
+toString (Cell value) =
     case value of
         Empty ->
             ""

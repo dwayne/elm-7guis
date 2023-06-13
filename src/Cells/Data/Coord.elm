@@ -1,4 +1,4 @@
-module Cells.Data.Coord exposing (Coord, fromSafeString, toName)
+module Cells.Data.Coord exposing (Coord, fromSafeName, toName)
 
 import Cells.Data.Column as Column exposing (Column)
 import Cells.Data.Row as Row exposing (Row)
@@ -10,9 +10,9 @@ type alias Coord =
     }
 
 
-fromSafeString : String -> Coord
-fromSafeString s =
-    case String.uncons s of
+fromSafeName : String -> Coord
+fromSafeName name =
+    case String.uncons name of
         Just ( c, t ) ->
             Coord
                 (Column.fromSafeString <| String.fromChar c)

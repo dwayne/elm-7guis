@@ -24,22 +24,22 @@ exprSuite =
                 Expr (Number 5)
         , parse "=A0" <|
             Just <|
-                Expr (Cell (Coord.fromSafeString "A0"))
+                Expr (Cell (Coord.fromSafeName "A0"))
         , parse "=B0:B9" <|
             Just <|
                 Expr
                     (Range
                         (Range.Range
-                            (Coord.fromSafeString "B0")
-                            (Coord.fromSafeString "B9")
+                            (Coord.fromSafeName "B0")
+                            (Coord.fromSafeName "B9")
                         )
                     )
         , parse "=add(A0,A1)" <|
             Just <|
                 Expr
                     (Application "add"
-                        [ Cell (Coord.fromSafeString "A0")
-                        , Cell (Coord.fromSafeString "A1")
+                        [ Cell (Coord.fromSafeName "A0")
+                        , Cell (Coord.fromSafeName "A1")
                         ]
                     )
         ]
