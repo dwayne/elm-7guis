@@ -59,14 +59,17 @@ update msg model =
 
         Input coord rawInput ->
             let
+                localEnv =
+                    env model.scells
+
                 oldCell =
-                    SCells.get Cell.empty coord model.scells
+                    localEnv coord
 
                 oldReferences =
                     Cell.references oldCell
 
                 newCell =
-                    Cell.fromString model.scells coord rawInput
+                    Cell.fromString localEnv coord rawInput
 
                 newReferences =
                     Cell.references newCell
@@ -107,18 +110,27 @@ refresh startCoord startCell startName dependencyGraph scells =
             (List.foldl
                 (\name nextScells ->
                     let
+                        refreshedCell =
+                            Cell.refresh localEnv cell
+
+                        localEnv =
+                            env nextScells
+
+                        cell =
+                            localEnv coord
+
                         coord =
                             Coord.fromSafeString name
-
-                        refreshedCell =
-                            nextScells
-                                |> SCells.get Cell.empty coord
-                                |> Cell.refresh nextScells
                     in
                     SCells.set coord refreshedCell nextScells
                 )
                 (SCells.set startCoord startCell scells)
             )
+
+
+env : SCells Cell -> Coord -> Cell
+env scells coord =
+    SCells.get Cell.empty coord scells
 
 
 

@@ -1,5 +1,6 @@
 module Cells.Data.Cell exposing
     ( Cell
+    , Env
     , empty
     , fromString
     , references
@@ -12,7 +13,6 @@ import Cells.Data.Coord as Coord exposing (Coord)
 import Cells.Data.Formula.AST as AST
 import Cells.Data.Formula.Parser as P
 import Cells.Data.Range as Range exposing (Range)
-import Cells.Data.SCells as SCells exposing (SCells)
 import Dict exposing (Dict)
 import Parser exposing (DeadEnd)
 import Set exposing (Set)
@@ -58,8 +58,12 @@ empty coord =
         }
 
 
-fromString : SCells Cell -> Coord -> String -> Cell
-fromString scells coord rawInput =
+type alias Env =
+    Coord -> Cell
+
+
+fromString : Env -> Coord -> String -> Cell
+fromString env coord rawInput =
     let
         value =
             case P.parse rawInput of
@@ -67,14 +71,10 @@ fromString scells coord rawInput =
                     Text t
 
                 Ok (AST.Expr expr) ->
-                    let
-                        result =
-                            evaluate scells expr
-                    in
                     Expr
                         { rawInput = rawInput
                         , expr = expr
-                        , result = result
+                        , result = evaluate env expr
                         }
 
                 Err deadEnds ->
@@ -89,14 +89,14 @@ fromString scells coord rawInput =
         }
 
 
-evaluate : SCells Cell -> AST.Expr -> Result RuntimeError Float
-evaluate scells expr =
+evaluate : Env -> AST.Expr -> Result RuntimeError Float
+evaluate env expr =
     case expr of
         AST.Number x ->
             Ok x
 
         AST.Cell coord ->
-            Ok <| evaluateCoord scells coord
+            Ok <| evaluateCoord env coord
 
         AST.Range range ->
             Err <| TopLevelRange range
@@ -104,21 +104,21 @@ evaluate scells expr =
         AST.Application identifier exprs ->
             case Dict.get identifier builtinFunctions of
                 Just f ->
-                    evaluateArgs scells exprs
+                    evaluateArgs env exprs
                         |> Result.andThen f
 
                 Nothing ->
                     Err <| IdentifierNotFound identifier
 
 
-evaluateCoord : SCells Cell -> Coord -> Float
-evaluateCoord scells coord =
-    toFloat <| SCells.get empty coord scells
+evaluateCoord : Env -> Coord -> Float
+evaluateCoord env coord =
+    toFloat <| env coord
 
 
-evaluateArgs : SCells Cell -> List AST.Expr -> Result RuntimeError (List Float)
-evaluateArgs scells =
-    concatMapSequence (evaluateArg scells)
+evaluateArgs : Env -> List AST.Expr -> Result RuntimeError (List Float)
+evaluateArgs env =
+    concatMapSequence (evaluateArg env)
 
 
 concatMapSequence : (a -> Result e (List b)) -> List a -> Result e (List b)
@@ -141,17 +141,17 @@ concatMapSequenceHelper acc f list =
                     err
 
 
-evaluateArg : SCells Cell -> AST.Expr -> Result RuntimeError (List Float)
-evaluateArg scells expr =
+evaluateArg : Env -> AST.Expr -> Result RuntimeError (List Float)
+evaluateArg env expr =
     case expr of
         AST.Range range ->
             range
                 |> Range.expand
-                |> List.map (evaluateCoord scells)
+                |> List.map (evaluateCoord env)
                 |> Ok
 
         _ ->
-            evaluate scells expr
+            evaluate env expr
                 |> Result.map List.singleton
 
 
@@ -263,13 +263,13 @@ referencesForExpr expr =
                 |> List.foldl Set.union Set.empty
 
 
-refresh : SCells Cell -> Cell -> Cell
-refresh scells (Cell cell) =
+refresh : Env -> Cell -> Cell
+refresh env (Cell cell) =
     case cell.value of
         Expr state ->
             let
                 newValue =
-                    Expr { state | result = evaluate scells state.expr }
+                    Expr { state | result = evaluate env state.expr }
             in
             Cell { cell | value = newValue }
 
