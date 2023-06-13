@@ -1,8 +1,8 @@
-module Cells.Parser exposing (parse)
+module Cells.Data.Formula.Parser exposing (parse)
 
-import Cells.AST as AST exposing (Expr, Formula)
+import Cells.Data.Formula.AST as AST exposing (Expr, Formula)
+import Cells.Data.Formula.Lexer as L
 import Cells.Data.Range exposing (Range)
-import Cells.Lexer as L
 import Parser as P exposing ((|.), (|=), Parser)
 
 

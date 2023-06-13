@@ -8,8 +8,8 @@ module Cells exposing
 
 import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Coord as Coord exposing (Coord)
+import Cells.Data.DirectedGraph as DirectedGraph exposing (DirectedGraph)
 import Cells.Data.SCells as SCells exposing (SCells)
-import Cells.DirectedGraph as DirectedGraph exposing (DirectedGraph)
 import Cells.View.Sheet as Sheet exposing (Sheet)
 import Html as H
 import Set

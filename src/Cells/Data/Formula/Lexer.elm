@@ -1,4 +1,4 @@
-module Cells.Lexer exposing
+module Cells.Data.Formula.Lexer exposing
     ( coord
     , decimal
     , identifier

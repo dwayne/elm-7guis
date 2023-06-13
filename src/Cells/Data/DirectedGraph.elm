@@ -1,4 +1,4 @@
-module Cells.DirectedGraph exposing
+module Cells.Data.DirectedGraph exposing
     ( DirectedGraph
     , addEdges
     , empty

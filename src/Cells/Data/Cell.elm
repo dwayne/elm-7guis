@@ -8,11 +8,11 @@ module Cells.Data.Cell exposing
     , toString
     )
 
-import Cells.AST as AST
 import Cells.Data.Coord as Coord exposing (Coord)
+import Cells.Data.Formula.AST as AST
+import Cells.Data.Formula.Parser as P
 import Cells.Data.Range as Range exposing (Range)
 import Cells.Data.SCells as SCells exposing (SCells)
-import Cells.Parser as P
 import Dict exposing (Dict)
 import Parser exposing (DeadEnd)
 import Set exposing (Set)

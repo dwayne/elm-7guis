@@ -1,4 +1,4 @@
-module Cells.AST exposing
+module Cells.Data.Formula.AST exposing
     ( Expr(..)
     , Formula(..)
     )
