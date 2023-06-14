@@ -69,7 +69,7 @@ update msg model =
                     Cell.references oldCell
 
                 newCell =
-                    Cell.fromString localEnv coord rawInput
+                    Cell.fromString localEnv rawInput
 
                 newReferences =
                     Cell.references newCell
