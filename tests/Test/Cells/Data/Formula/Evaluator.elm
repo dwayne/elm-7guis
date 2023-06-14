@@ -36,10 +36,20 @@ evalStringSuite =
             Ok 26
         , evalString "=prod(1, 2, 3, 4, 5)" <|
             Ok 120
+        , evalString "=x" <|
+            Err SyntaxError
+        , evalString "=div(1, 0)" <|
+            Err <|
+                RuntimeError E.DivisionByZero
         ]
 
 
-evalString : String -> Result E.Error Int -> Test
+type Error
+    = SyntaxError
+    | RuntimeError E.RuntimeError
+
+
+evalString : String -> Result Error Int -> Test
 evalString rawInput expected =
     let
         env coord =
@@ -52,6 +62,15 @@ evalString rawInput expected =
     in
     test rawInput <|
         \_ ->
-            E.evalString env rawInput
-                |> Result.map (truncate << .value)
-                |> Expect.equal expected
+            let
+                actual =
+                    case E.evalString env rawInput of
+                        E.Formula { result } ->
+                            result
+                                |> Result.map truncate
+                                |> Result.mapError RuntimeError
+
+                        E.SyntaxError _ ->
+                            Err SyntaxError
+            in
+            Expect.equal expected actual

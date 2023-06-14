@@ -1,8 +1,7 @@
 module Cells.Data.Formula.Evaluator exposing
-    ( Answer
-    , Env
-    , Error(..)
+    ( Env
     , RuntimeError(..)
+    , Value(..)
     , evalExpr
     , evalFormula
     , evalString
@@ -20,9 +19,12 @@ type alias Env =
     Coord -> Float
 
 
-type Error
-    = SyntaxError (List DeadEnd)
-    | RuntimeError RuntimeError
+type Value
+    = Formula
+        { formula : AST.Formula
+        , result : Result RuntimeError Float
+        }
+    | SyntaxError (List DeadEnd)
 
 
 type RuntimeError
@@ -36,28 +38,17 @@ type RuntimeError
     | DivisionByZero
 
 
-type alias Answer =
-    { formula : AST.Formula
-    , value : Float
-    }
-
-
-evalString : Env -> String -> Result Error Answer
+evalString : Env -> String -> Value
 evalString env rawInput =
     case P.parse rawInput of
         Ok formula ->
-            case evalFormula env formula of
-                Ok value ->
-                    Ok
-                        { formula = formula
-                        , value = value
-                        }
-
-                Err runtimeError ->
-                    Err <| RuntimeError runtimeError
+            Formula
+                { formula = formula
+                , result = evalFormula env formula
+                }
 
         Err deadEnds ->
-            Err <| SyntaxError deadEnds
+            SyntaxError deadEnds
 
 
 evalFormula : Env -> AST.Formula -> Result RuntimeError Float
