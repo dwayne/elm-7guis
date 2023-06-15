@@ -90,7 +90,7 @@ update { handlers, sheet } msg (Model state) =
                     | maybeEdit =
                         Just
                             { coord = coord
-                            , rawInput = Cell.toInputString cell
+                            , rawInput = Cell.toEditableString cell
                             }
                 }
             , focus (inputId coord) (handlers.onChange FocusedInput)

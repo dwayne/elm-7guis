@@ -5,7 +5,7 @@ module Cells.Data.Cell exposing
     , fromString
     , references
     , refresh
-    , toInputString
+    , toEditableString
     , toString
     )
 
@@ -119,8 +119,8 @@ toFloat =
         }
 
 
-toInputString : Cell -> String
-toInputString =
+toEditableString : Cell -> String
+toEditableString =
     map
         { onEmpty = ""
         , onFormula = .rawInput
