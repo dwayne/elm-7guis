@@ -65,10 +65,11 @@ evalString rawInput expected =
             let
                 actual =
                     case E.evalString env rawInput of
-                        E.Formula { result } ->
-                            result
-                                |> Result.map truncate
-                                |> Result.mapError RuntimeError
+                        E.Formula { value } ->
+                            Ok <| truncate value
+
+                        E.RuntimeError { error } ->
+                            Err <| RuntimeError error
 
                         E.SyntaxError _ ->
                             Err SyntaxError

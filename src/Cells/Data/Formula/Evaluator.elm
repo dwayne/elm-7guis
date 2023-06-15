@@ -1,8 +1,7 @@
 module Cells.Data.Formula.Evaluator exposing
-    ( Env
+    ( Answer(..)
+    , Env
     , RuntimeError(..)
-    , Value(..)
-    , evalExpr
     , evalFormula
     , evalString
     )
@@ -19,10 +18,14 @@ type alias Env =
     Coord -> Float
 
 
-type Value
+type Answer
     = Formula
         { formula : AST.Formula
-        , result : Result RuntimeError Float
+        , value : Float
+        }
+    | RuntimeError
+        { formula : AST.Formula
+        , error : RuntimeError
         }
     | SyntaxError (List DeadEnd)
 
@@ -38,31 +41,44 @@ type RuntimeError
     | DivisionByZero
 
 
-evalString : Env -> String -> Value
+evalString : Env -> String -> Answer
 evalString env rawInput =
     case P.parse rawInput of
         Ok formula ->
-            Formula
-                { formula = formula
-                , result = evalFormula env formula
-                }
+            evalFormula env formula
 
         Err deadEnds ->
             SyntaxError deadEnds
 
 
-evalFormula : Env -> AST.Formula -> Result RuntimeError Float
+evalFormula : Env -> AST.Formula -> Answer
 evalFormula env formula =
+    case evalFormulaHelper env formula of
+        Ok x ->
+            Formula
+                { formula = formula
+                , value = x
+                }
+
+        Err runtimeError ->
+            RuntimeError
+                { formula = formula
+                , error = runtimeError
+                }
+
+
+evalFormulaHelper : Env -> AST.Formula -> Result RuntimeError Float
+evalFormulaHelper env formula =
     case formula of
         AST.Text _ ->
             Ok 0
 
         AST.Expr expr ->
-            evalExpr env expr
+            evalExprHelper env expr
 
 
-evalExpr : Env -> AST.Expr -> Result RuntimeError Float
-evalExpr env expr =
+evalExprHelper : Env -> AST.Expr -> Result RuntimeError Float
+evalExprHelper env expr =
     case expr of
         AST.Number x ->
             Ok x
@@ -118,7 +134,7 @@ evalArg env expr =
                 |> Ok
 
         _ ->
-            evalExpr env expr
+            evalExprHelper env expr
                 |> Result.map List.singleton
 
 
