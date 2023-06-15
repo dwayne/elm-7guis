@@ -13,8 +13,8 @@ import Browser.Dom as BD
 import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Column as Column exposing (Column)
 import Cells.Data.Coord as Coord exposing (Coord)
-import Cells.Data.Grid as Grid exposing (Grid)
 import Cells.Data.Row as Row exposing (Row)
+import Cells.Data.Sheet as Sheet exposing (Sheet)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
@@ -64,7 +64,7 @@ initState =
 
 type alias UpdateOptions msg =
     { handlers : Handlers msg
-    , grid : Grid
+    , sheet : Sheet
     }
 
 
@@ -78,12 +78,12 @@ type Msg
 
 
 update : UpdateOptions msg -> Msg -> Model -> ( Model, Cmd msg )
-update { handlers, grid } msg (Model state) =
+update { handlers, sheet } msg (Model state) =
     case msg of
         DoubleClickedCell coord ->
             let
                 cell =
-                    Grid.get coord grid
+                    Sheet.get coord sheet
             in
             ( Model
                 { state
@@ -144,7 +144,7 @@ dispatch =
 
 type alias ViewOptions msg =
     { handlers : Handlers msg
-    , grid : Grid
+    , sheet : Sheet
     }
 
 
@@ -201,7 +201,7 @@ viewRow options state row =
 
 
 viewCell : ViewOptions msg -> State -> Coord -> H.Html msg
-viewCell { handlers, grid } { maybeEdit } coord =
+viewCell { handlers, sheet } { maybeEdit } coord =
     let
         maybeBeingEdited =
             maybeEdit
@@ -239,7 +239,7 @@ viewCell { handlers, grid } { maybeEdit } coord =
                     [ HA.class "sheet__td sheet__cell"
                     , HE.onDoubleClick <| DoubleClickedCell coord
                     ]
-                    [ H.text <| Cell.toString <| Grid.get coord grid ]
+                    [ H.text <| Cell.toString <| Sheet.get coord sheet ]
 
 
 inputId : Coord -> String
@@ -262,7 +262,7 @@ onKey { esc, enter } =
                                 JD.succeed esc
 
                             _ ->
-                                JD.fail <| "must be one of the codes 13 or 27: " ++ String.fromInt code
+                                JD.fail "ignored"
                     )
     in
     HE.on "keydown" decoder
