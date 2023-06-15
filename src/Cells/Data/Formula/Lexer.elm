@@ -17,14 +17,7 @@ import Parser as P exposing ((|.), (|=), Parser)
 
 text : Parser String
 text =
-    P.getChompedString chompText
-
-
-chompText : Parser ()
-chompText =
-    P.succeed ()
-        |. P.chompIf ((/=) '=')
-        |. chompAny
+    P.getChompedString chompAny
 
 
 chompAny : Parser ()

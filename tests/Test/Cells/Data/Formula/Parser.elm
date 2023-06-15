@@ -11,8 +11,20 @@ import Test exposing (..)
 suite : Test
 suite =
     describe "Parser"
-        [ exprSuite
-        , textSuite
+        [ textSuite
+        , exprSuite
+        ]
+
+
+textSuite : Test
+textSuite =
+    describe "Text"
+        [ parse "" <|
+            Just <|
+                Text ""
+        , parse "This is text." <|
+            Just <|
+                Text "This is text."
         ]
 
 
@@ -42,15 +54,6 @@ exprSuite =
                         , Cell (Coord.fromSafeName "A1")
                         ]
                     )
-        ]
-
-
-textSuite : Test
-textSuite =
-    describe "Text"
-        [ parse "This is text." <|
-            Just <|
-                Text "This is text."
         ]
 
 
