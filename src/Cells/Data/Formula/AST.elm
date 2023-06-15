@@ -1,7 +1,4 @@
-module Cells.Data.Formula.AST exposing
-    ( Expr(..)
-    , Formula(..)
-    )
+module Cells.Data.Formula.AST exposing (Expr(..), Formula(..))
 
 import Cells.Data.Coord exposing (Coord)
 import Cells.Data.Range exposing (Range)

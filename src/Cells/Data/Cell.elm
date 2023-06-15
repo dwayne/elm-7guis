@@ -76,12 +76,12 @@ referencesForExpr expr =
             Set.empty
 
         AST.Cell coord ->
-            Set.singleton <| Coord.toName coord
+            Set.singleton <| Coord.toString coord
 
         AST.Range range ->
             range
                 |> Range.expand
-                |> List.map Coord.toName
+                |> List.map Coord.toString
                 |> Set.fromList
 
         AST.Application _ exprs ->
@@ -146,7 +146,7 @@ exprToString expr =
             String.fromFloat x
 
         AST.Cell coord ->
-            Coord.toName coord
+            Coord.toString coord
 
         AST.Range range ->
             Range.toString range

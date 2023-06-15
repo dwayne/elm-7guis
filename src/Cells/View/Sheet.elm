@@ -244,7 +244,7 @@ viewCell { handlers, sheet } { maybeEdit } coord =
 
 inputId : Coord -> String
 inputId coord =
-    "sheet__input-" ++ Coord.toName coord
+    "sheet__input-" ++ Coord.toString coord
 
 
 onKey : { esc : msg, enter : msg } -> H.Attribute msg

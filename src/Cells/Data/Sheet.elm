@@ -1,9 +1,4 @@
-module Cells.Data.Sheet exposing
-    ( Sheet
-    , empty
-    , get
-    , set
-    )
+module Cells.Data.Sheet exposing (Sheet, empty, get, set)
 
 import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Coord as Coord exposing (Coord)
@@ -51,7 +46,7 @@ set coord rawInput ((Sheet { grid, dependencyGraph }) as sheet) =
             Cell.references newCell
 
         dest =
-            Coord.toName coord
+            Coord.toString coord
 
         edgesToBeRemoved =
             Set.diff oldReferences newReferences
@@ -95,7 +90,7 @@ refresh startCoord startCell startName dependencyGraph grid =
                             localEnv coord
 
                         coord =
-                            Coord.fromSafeName name
+                            Coord.fromSafeString name
                     in
                     Grid.set coord refreshedCell nextGrid
                 )

@@ -18,7 +18,7 @@ set : Coord -> Cell -> Grid -> Grid
 set coord cell (Grid cells) =
     let
         name =
-            Coord.toName coord
+            Coord.toString coord
     in
     Grid <| Dict.insert name cell cells
 
@@ -27,7 +27,7 @@ get : Coord -> Grid -> Cell
 get coord (Grid cells) =
     let
         name =
-            Coord.toName coord
+            Coord.toString coord
     in
     Dict.get name cells
         |> Maybe.withDefault Cell.empty

@@ -1,4 +1,4 @@
-module Cells.Data.Range exposing (Range, expand, toString)
+module Cells.Data.Range exposing (Range, expand, fromSafeString, toString)
 
 import Cells.Data.Column as Column
 import Cells.Data.Coord as Coord exposing (Coord)
@@ -9,6 +9,16 @@ type alias Range =
     { start : Coord
     , end : Coord
     }
+
+
+fromSafeString : String -> Range
+fromSafeString s =
+    case String.split ":" s of
+        [ start, end ] ->
+            Range (Coord.fromSafeString start) (Coord.fromSafeString end)
+
+        _ ->
+            Range Coord.first Coord.first
 
 
 expand : Range -> List Coord
@@ -42,4 +52,4 @@ expand { start, end } =
 
 toString : Range -> String
 toString { start, end } =
-    Coord.toName start ++ ":" ++ Coord.toName end
+    Coord.toString start ++ ":" ++ Coord.toString end

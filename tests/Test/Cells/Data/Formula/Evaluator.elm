@@ -53,7 +53,7 @@ evalString : String -> Result Error Int -> Test
 evalString rawInput expected =
     let
         env coord =
-            case Coord.toName coord of
+            case Coord.toString coord of
                 "A0" ->
                     8
 
