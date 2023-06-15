@@ -13,8 +13,8 @@ import Browser.Dom as BD
 import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Column as Column exposing (Column)
 import Cells.Data.Coord as Coord exposing (Coord)
+import Cells.Data.Grid as Grid exposing (Grid)
 import Cells.Data.Row as Row exposing (Row)
-import Cells.Data.SCells as SCells exposing (SCells)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
@@ -64,7 +64,7 @@ initState =
 
 type alias UpdateOptions msg =
     { handlers : Handlers msg
-    , scells : SCells
+    , grid : Grid
     }
 
 
@@ -78,12 +78,12 @@ type Msg
 
 
 update : UpdateOptions msg -> Msg -> Model -> ( Model, Cmd msg )
-update { handlers, scells } msg (Model state) =
+update { handlers, grid } msg (Model state) =
     case msg of
         DoubleClickedCell coord ->
             let
                 cell =
-                    SCells.get coord scells
+                    Grid.get coord grid
             in
             ( Model
                 { state
@@ -144,7 +144,7 @@ dispatch =
 
 type alias ViewOptions msg =
     { handlers : Handlers msg
-    , scells : SCells
+    , grid : Grid
     }
 
 
@@ -201,7 +201,7 @@ viewRow options state row =
 
 
 viewCell : ViewOptions msg -> State -> Coord -> H.Html msg
-viewCell { handlers, scells } { maybeEdit } coord =
+viewCell { handlers, grid } { maybeEdit } coord =
     let
         maybeBeingEdited =
             maybeEdit
@@ -239,7 +239,7 @@ viewCell { handlers, scells } { maybeEdit } coord =
                     [ HA.class "sheet__td sheet__cell"
                     , HE.onDoubleClick <| DoubleClickedCell coord
                     ]
-                    [ H.text <| Cell.toString <| SCells.get coord scells ]
+                    [ H.text <| Cell.toString <| Grid.get coord grid ]
 
 
 inputId : Coord -> String

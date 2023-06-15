@@ -1,30 +1,30 @@
-module Cells.Data.SCells exposing (SCells, empty, get, set)
+module Cells.Data.Grid exposing (Grid, empty, get, set)
 
 import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Coord as Coord exposing (Coord)
 import Dict exposing (Dict)
 
 
-type SCells
-    = SCells (Dict String Cell)
+type Grid
+    = Grid (Dict String Cell)
 
 
-empty : SCells
+empty : Grid
 empty =
-    SCells Dict.empty
+    Grid Dict.empty
 
 
-set : Coord -> Cell -> SCells -> SCells
-set coord cell (SCells cells) =
+set : Coord -> Cell -> Grid -> Grid
+set coord cell (Grid cells) =
     let
         name =
             Coord.toName coord
     in
-    SCells <| Dict.insert name cell cells
+    Grid <| Dict.insert name cell cells
 
 
-get : Coord -> SCells -> Cell
-get coord (SCells cells) =
+get : Coord -> Grid -> Cell
+get coord (Grid cells) =
     let
         name =
             Coord.toName coord
