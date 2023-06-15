@@ -1,7 +1,7 @@
-module Cells.Data.Range exposing (Range, expand)
+module Cells.Data.Range exposing (Range, expand, toString)
 
 import Cells.Data.Column as Column
-import Cells.Data.Coord exposing (Coord)
+import Cells.Data.Coord as Coord exposing (Coord)
 import Cells.Data.Row as Row
 
 
@@ -38,3 +38,8 @@ expand { start, end } =
             List.map (Coord c) rows
     in
     List.concatMap coordsForColumn columns
+
+
+toString : Range -> String
+toString { start, end } =
+    Coord.toName start ++ ":" ++ Coord.toName end

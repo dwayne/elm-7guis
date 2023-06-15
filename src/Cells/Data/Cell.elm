@@ -114,8 +114,8 @@ toFloat =
     map
         { onEmpty = 0
         , onFormula = .value
-        , onSyntaxError = always 0
         , onRuntimeError = always 0
+        , onSyntaxError = always 0
         }
 
 
@@ -123,10 +123,43 @@ toEditableString : Cell -> String
 toEditableString =
     map
         { onEmpty = ""
-        , onFormula = .rawInput
+        , onFormula = formulaToString << .formula
+        , onRuntimeError = formulaToString << .formula
         , onSyntaxError = .rawInput
-        , onRuntimeError = .rawInput
         }
+
+
+formulaToString : AST.Formula -> String
+formulaToString formula =
+    case formula of
+        AST.Text t ->
+            t
+
+        AST.Expr expr ->
+            "=" ++ exprToString expr
+
+
+exprToString : AST.Expr -> String
+exprToString expr =
+    case expr of
+        AST.Number x ->
+            String.fromFloat x
+
+        AST.Cell coord ->
+            Coord.toName coord
+
+        AST.Range range ->
+            Range.toString range
+
+        AST.Application identifier exprs ->
+            let
+                commaSepExprs =
+                    exprs
+                        |> List.map exprToString
+                        |> List.intersperse ", "
+                        |> String.concat
+            in
+            identifier ++ "(" ++ commaSepExprs ++ ")"
 
 
 toString : Cell -> String
