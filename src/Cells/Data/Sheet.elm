@@ -1,4 +1,4 @@
-module Cells.Data.Sheet exposing (Sheet, empty, get, set)
+module Cells.Data.Sheet exposing (Sheet, build, empty, get, set)
 
 import Cells.Data.Cell as Cell exposing (Cell)
 import Cells.Data.Coord as Coord exposing (Coord)
@@ -20,6 +20,15 @@ empty =
         { grid = Grid.empty
         , dependencyGraph = DirectedGraph.empty
         }
+
+
+build : List ( String, String ) -> Sheet
+build =
+    List.foldl
+        (\( coordAsString, rawInput ) ->
+            set (Coord.fromSafeString coordAsString) rawInput
+        )
+        empty
 
 
 get : Coord -> Sheet -> Cell
