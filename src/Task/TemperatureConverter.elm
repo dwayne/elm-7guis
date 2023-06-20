@@ -1,9 +1,9 @@
-module TemperatureConverter exposing (Model, Msg, init, update, view)
+module Task.TemperatureConverter exposing (Model, Msg, init, update, view)
 
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
-import TemperatureConverter.Temperature as Temperature
+import Task.TemperatureConverter.Temperature as Temperature
 
 
 

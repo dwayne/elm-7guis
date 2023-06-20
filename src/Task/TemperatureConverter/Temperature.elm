@@ -1,4 +1,4 @@
-module TemperatureConverter.Temperature exposing
+module Task.TemperatureConverter.Temperature exposing
     ( Temperature
     , fromCelsius
     , fromFahrenheit

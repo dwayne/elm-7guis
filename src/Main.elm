@@ -8,7 +8,7 @@ import FlightBooker
 import Html as H
 import Html.Attributes as HA
 import Task.Counter as Counter
-import TemperatureConverter
+import Task.TemperatureConverter as TemperatureConverter
 import Timer
 
 
