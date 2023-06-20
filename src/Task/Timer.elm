@@ -4,21 +4,8 @@ import Browser.Events as BE
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+import Json.Decode as JD
 import Task.Timer.Duration as Duration exposing (Duration)
-
-
-
--- CONSTANTS
-
-
-maxMillis : Int
-maxMillis =
-    30000
-
-
-maxDuration : Duration
-maxDuration =
-    Duration.fromInt maxMillis
 
 
 
@@ -33,7 +20,7 @@ type alias Model =
 
 init : Model
 init =
-    { duration = Duration.fromInt <| maxMillis // 2
+    { duration = Duration.halfOfMax
     , elapsedTime = 0
     }
 
@@ -43,7 +30,7 @@ init =
 
 
 type Msg
-    = InputDuration String
+    = InputDuration Duration
     | NewDelta Float
     | ClickedReset
 
@@ -51,13 +38,8 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        InputDuration s ->
-            case Duration.fromString s of
-                Just duration ->
-                    { model | duration = duration }
-
-                Nothing ->
-                    model
+        InputDuration duration ->
+            { model | duration = duration }
 
         NewDelta delta ->
             let
@@ -110,9 +92,9 @@ view { duration, elapsedTime } =
             , H.input
                 [ HA.type_ "range"
                 , HA.min "0"
-                , HA.max <| Duration.toString maxDuration
+                , HA.max <| Duration.toString Duration.max
                 , HA.value <| Duration.toString duration
-                , HE.onInput InputDuration
+                , onDurationInput InputDuration
                 ]
                 []
             ]
@@ -124,6 +106,25 @@ view { duration, elapsedTime } =
                 [ H.text "Reset" ]
             ]
         ]
+
+
+onDurationInput : (Duration -> msg) -> H.Attribute msg
+onDurationInput toMsg =
+    let
+        decoder =
+            HE.targetValue
+                |> JD.andThen
+                    (\value ->
+                        case Duration.fromString value of
+                            Just duration ->
+                                JD.succeed duration
+
+                            Nothing ->
+                                JD.fail "ignored"
+                    )
+                |> JD.map toMsg
+    in
+    HE.on "input" decoder
 
 
 viewElapsedTime : Float -> H.Html msg
