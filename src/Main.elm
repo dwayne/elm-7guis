@@ -4,10 +4,10 @@ import Browser
 import Cells
 import CircleDrawer
 import Crud
-import FlightBooker
 import Html as H
 import Html.Attributes as HA
 import Task.Counter as Counter
+import Task.FlightBooker as FlightBooker
 import Task.TemperatureConverter as TemperatureConverter
 import Timer
 

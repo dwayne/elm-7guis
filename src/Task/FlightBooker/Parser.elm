@@ -1,4 +1,4 @@
-module FlightBooker.Parser exposing (chompExactly)
+module Task.FlightBooker.Parser exposing (chompExactly)
 
 import Parser as P exposing ((|.), Parser)
 

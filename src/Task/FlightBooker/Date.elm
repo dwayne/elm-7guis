@@ -1,4 +1,4 @@
-module FlightBooker.Date exposing
+module Task.FlightBooker.Date exposing
     ( Date
     , fromString
     , isLaterThan
@@ -8,9 +8,9 @@ module FlightBooker.Date exposing
 
 import Char
 import Date as JDate
-import FlightBooker.Parser as P
 import Parser as P exposing ((|.), (|=))
 import Task
+import Task.FlightBooker.Parser as P
 
 
 type Date

@@ -1,9 +1,9 @@
-module FlightBooker exposing (Model, Msg, init, update, view)
+module Task.FlightBooker exposing (Model, Msg, init, update, view)
 
-import FlightBooker.Date as Date exposing (Date)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+import Task.FlightBooker.Date as Date exposing (Date)
 
 
 
