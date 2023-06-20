@@ -1,10 +1,10 @@
-module Timer exposing (Model, Msg, init, subscriptions, update, view)
+module Task.Timer exposing (Model, Msg, init, subscriptions, update, view)
 
 import Browser.Events as BE
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
-import Timer.Duration as Duration exposing (Duration)
+import Task.Timer.Duration as Duration exposing (Duration)
 
 
 

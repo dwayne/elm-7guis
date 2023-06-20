@@ -9,7 +9,7 @@ import Html.Attributes as HA
 import Task.Counter as Counter
 import Task.FlightBooker as FlightBooker
 import Task.TemperatureConverter as TemperatureConverter
-import Timer
+import Task.Timer as Timer
 
 
 main : Program () Model Msg

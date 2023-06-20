@@ -1,4 +1,4 @@
-module Timer.Duration exposing
+module Task.Timer.Duration exposing
     ( Duration
     , fromInt
     , fromString
