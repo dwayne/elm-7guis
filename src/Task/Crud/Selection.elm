@@ -1,4 +1,4 @@
-module Crud.Selection exposing
+module Task.Crud.Selection exposing
     ( Selection
     , cons
     , deselect
@@ -31,22 +31,22 @@ cons a (Selection front maybeSel back) =
 
 
 selectBy : (a -> Bool) -> Selection a -> Selection a
-selectBy satisfiesCondition =
-    toList >> selectHelper [] satisfiesCondition
+selectBy isSelected =
+    toList >> selectHelper [] isSelected
 
 
 selectHelper : List a -> (a -> Bool) -> List a -> Selection a
-selectHelper front satisfiesCondition list =
+selectHelper front isSelected list =
     case list of
         [] ->
             Selection (List.reverse front) Nothing []
 
         a :: restList ->
-            if satisfiesCondition a then
+            if isSelected a then
                 Selection (List.reverse front) (Just a) restList
 
             else
-                selectHelper (a :: front) satisfiesCondition restList
+                selectHelper (a :: front) isSelected restList
 
 
 selected : Selection a -> Maybe a

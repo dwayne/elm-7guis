@@ -3,10 +3,10 @@ module Main exposing (main)
 import Browser
 import Cells
 import CircleDrawer
-import Crud
 import Html as H
 import Html.Attributes as HA
 import Task.Counter as Counter
+import Task.Crud as Crud
 import Task.FlightBooker as FlightBooker
 import Task.TemperatureConverter as TemperatureConverter
 import Task.Timer as Timer

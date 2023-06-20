@@ -1,10 +1,10 @@
-module Crud exposing (Model, Msg, init, update, view)
+module Task.Crud exposing (Model, Msg, init, update, view)
 
-import Crud.Person as Person
-import Crud.Roster as Roster exposing (Roster)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+import Task.Crud.Person as Person
+import Task.Crud.Roster as Roster exposing (Roster)
 
 
 
@@ -77,28 +77,14 @@ update msg model =
             { model | lastName = lastName }
 
         ClickedCreate ->
-            case Roster.add model.firstName model.lastName model.roster of
-                Just roster ->
-                    { model
-                        | roster = Roster.deselect roster
-                        , firstName = ""
-                        , lastName = ""
-                    }
-
-                Nothing ->
-                    model
+            Roster.add model.firstName model.lastName model.roster
+                |> Maybe.map (clear model)
+                |> Maybe.withDefault model
 
         ClickedUpdate ->
-            case Roster.update model.firstName model.lastName model.roster of
-                Just roster ->
-                    { model
-                        | roster = Roster.deselect roster
-                        , firstName = ""
-                        , lastName = ""
-                    }
-
-                Nothing ->
-                    model
+            Roster.update model.firstName model.lastName model.roster
+                |> Maybe.map (clear model)
+                |> Maybe.withDefault model
 
         ClickedDelete ->
             { model
@@ -106,6 +92,15 @@ update msg model =
                 , firstName = ""
                 , lastName = ""
             }
+
+
+clear : Model -> Roster -> Model
+clear model roster =
+    { model
+        | roster = Roster.deselect roster
+        , firstName = ""
+        , lastName = ""
+    }
 
 
 

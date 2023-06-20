@@ -1,6 +1,6 @@
-module Crud.Person exposing
+module Task.Crud.Person exposing
     ( Person
-    , create
+    , new
     , toFirstAndLastName
     , toId
     , toLastName
@@ -17,8 +17,8 @@ type Person
         }
 
 
-create : Int -> String -> String -> Maybe Person
-create id rawFirstName rawLastName =
+new : Int -> String -> String -> Maybe Person
+new id rawFirstName rawLastName =
     let
         firstName =
             String.trim rawFirstName
@@ -40,7 +40,7 @@ create id rawFirstName rawLastName =
 
 update : String -> String -> Person -> Maybe Person
 update rawFirstName rawLastName (Person { id }) =
-    create id rawFirstName rawLastName
+    new id rawFirstName rawLastName
 
 
 toId : Person -> Int

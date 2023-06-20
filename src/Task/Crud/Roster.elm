@@ -1,4 +1,4 @@
-module Crud.Roster exposing
+module Task.Crud.Roster exposing
     ( Roster
     , add
     , delete
@@ -11,8 +11,8 @@ module Crud.Roster exposing
     , update
     )
 
-import Crud.Person as Person exposing (Person)
-import Crud.Selection as Selection exposing (Selection)
+import Task.Crud.Person as Person exposing (Person)
+import Task.Crud.Selection as Selection exposing (Selection)
 
 
 type Roster
@@ -42,7 +42,7 @@ fromList =
 
 add : String -> String -> Roster -> Maybe Roster
 add rawFirstName rawLastName (Roster { nextId, people }) =
-    Person.create nextId rawFirstName rawLastName
+    Person.new nextId rawFirstName rawLastName
         |> Maybe.andThen
             (\person ->
                 if isMember person people then
@@ -58,24 +58,24 @@ add rawFirstName rawLastName (Roster { nextId, people }) =
 
 
 update : String -> String -> Roster -> Maybe Roster
-update rawFirstName rawLastName (Roster state) =
-    Selection.selected state.people
+update rawFirstName rawLastName (Roster r) =
+    Selection.selected r.people
         |> Maybe.andThen (Person.update rawFirstName rawLastName)
         |> Maybe.andThen
             (\updatedPerson ->
-                if isMember updatedPerson state.people then
+                if isMember updatedPerson r.people then
                     Nothing
 
                 else
                     Just <|
                         Roster
-                            { state
+                            { r
                                 | people =
                                     Selection.mapSelected
                                         { selected = always updatedPerson
                                         , rest = identity
                                         }
-                                        state.people
+                                        r.people
                             }
             )
 
@@ -95,11 +95,11 @@ isMember person people =
 
 
 delete : Roster -> Roster
-delete (Roster state) =
+delete (Roster r) =
     Roster
-        { state
+        { r
             | people =
-                state.people
+                r.people
                     |> Selection.mapSelected
                         { selected = always Nothing
                         , rest = Just
@@ -111,14 +111,14 @@ delete (Roster state) =
 
 
 select : Int -> Roster -> Maybe ( Person, Roster )
-select id (Roster state) =
+select id (Roster r) =
     let
         people =
-            Selection.selectBy (Person.toId >> (==) id) state.people
+            Selection.selectBy (Person.toId >> (==) id) r.people
     in
     people
         |> Selection.selected
-        |> Maybe.map (\person -> ( person, Roster { state | people = people } ))
+        |> Maybe.map (\person -> ( person, Roster { r | people = people } ))
 
 
 selected : Roster -> Maybe Person
@@ -127,8 +127,8 @@ selected (Roster { people }) =
 
 
 deselect : Roster -> Roster
-deselect (Roster state) =
-    Roster { state | people = Selection.deselect state.people }
+deselect (Roster r) =
+    Roster { r | people = Selection.deselect r.people }
 
 
 filter : String -> Roster -> List ( Bool, Person )
