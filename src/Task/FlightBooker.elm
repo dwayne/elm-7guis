@@ -3,6 +3,8 @@ module Task.FlightBooker exposing (Model, Msg, init, update, view)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+import Json.Decode as JD
+import Port
 import Task.FlightBooker.Date as Date exposing (Date)
 
 
@@ -12,10 +14,10 @@ import Task.FlightBooker.Date as Date exposing (Date)
 
 type Model
     = Loading
-    | Loaded State
+    | Loaded Booking
 
 
-type alias State =
+type alias Booking =
     { flight : Flight
     , start : Field
     , end : Field
@@ -53,7 +55,7 @@ type LoadingMsg
 
 
 type LoadedMsg
-    = InputFlight String
+    = InputFlight Flight
     | InputStart String
     | InputEnd String
     | Submitted
@@ -67,8 +69,8 @@ update msg model =
             , Cmd.none
             )
 
-        ( LoadedMsg loadedMsg, Loaded state ) ->
-            updateLoaded loadedMsg state
+        ( LoadedMsg loadedMsg, Loaded booking ) ->
+            updateLoaded loadedMsg booking
 
         _ ->
             ( model
@@ -87,29 +89,17 @@ updateLoading msg =
                 }
 
 
-updateLoaded : LoadedMsg -> State -> ( Model, Cmd msg )
-updateLoaded msg ({ flight, start, end } as state) =
+updateLoaded : LoadedMsg -> Booking -> ( Model, Cmd msg )
+updateLoaded msg booking =
     case msg of
-        InputFlight value ->
-            ( Loaded
-                { state
-                    | flight =
-                        case value of
-                            "one-way" ->
-                                OneWay
-
-                            "return" ->
-                                Return
-
-                            _ ->
-                                flight
-                }
+        InputFlight flight ->
+            ( Loaded { booking | flight = flight }
             , Cmd.none
             )
 
         InputStart rawInput ->
             ( Loaded
-                { state
+                { booking
                     | start =
                         case Date.fromString rawInput of
                             Just startDate ->
@@ -122,13 +112,13 @@ updateLoaded msg ({ flight, start, end } as state) =
             )
 
         InputEnd rawInput ->
-            ( case state.flight of
+            ( case booking.flight of
                 OneWay ->
-                    Loaded state
+                    Loaded booking
 
                 Return ->
                     Loaded
-                        { state
+                        { booking
                             | end =
                                 case Date.fromString rawInput of
                                     Just endDate ->
@@ -141,24 +131,17 @@ updateLoaded msg ({ flight, start, end } as state) =
             )
 
         Submitted ->
-            ( Loaded state
-            , mapBookable
-                --
-                -- TODO: Tell JavaScript to show the message in an alert.
-                --
+            ( Loaded booking
+            , mapBooking
                 { onOneWay =
                     \startDate ->
-                        Cmd.none
-                            |> Debug.log ("You have booked a one-way flight for " ++ Date.toString startDate ++ ".")
+                        Port.alert <| "You have booked a one-way flight for " ++ Date.toString startDate ++ "."
                 , onReturn =
                     \startDate endDate ->
-                        Cmd.none
-                            |> Debug.log ("You have booked a return flight from " ++ Date.toString startDate ++ " to " ++ Date.toString endDate ++ ".")
+                        Port.alert <| "You have booked a return flight from " ++ Date.toString startDate ++ " to " ++ Date.toString endDate ++ "."
                 , default = Cmd.none
                 }
-                flight
-                start
-                end
+                booking
             )
 
 
@@ -172,23 +155,46 @@ view model =
         Loading ->
             H.text "Loading..."
 
-        Loaded { flight, start, end } ->
-            H.form
-                [ HE.onSubmit <| LoadedMsg Submitted ]
-                [ viewFlight flight
-                , viewStart start
-                , viewEnd flight end
-                , viewSubmitButton flight start end
-                ]
+        Loaded ({ flight, start, end } as booking) ->
+            H.map LoadedMsg <|
+                H.form
+                    [ HE.onSubmit Submitted ]
+                    [ viewFlight flight
+                    , viewStart start
+                    , viewEnd flight end
+                    , viewSubmitButton booking
+                    ]
 
 
-viewFlight : Flight -> H.Html Msg
+viewFlight : Flight -> H.Html LoadedMsg
 viewFlight flight =
-    H.select [ HE.onInput <| LoadedMsg << InputFlight ] <|
+    H.select [ onFlightInput InputFlight ] <|
         List.map (viewFlightOption flight)
             [ OneWay
             , Return
             ]
+
+
+onFlightInput : (Flight -> msg) -> H.Attribute msg
+onFlightInput toMsg =
+    let
+        decoder =
+            HE.targetValue
+                |> JD.andThen
+                    (\value ->
+                        case value of
+                            "one-way" ->
+                                JD.succeed OneWay
+
+                            "return" ->
+                                JD.succeed Return
+
+                            _ ->
+                                JD.fail "ignored"
+                    )
+                |> JD.map toMsg
+    in
+    HE.on "input" decoder
 
 
 viewFlightOption : Flight -> Flight -> H.Html msg
@@ -220,12 +226,12 @@ flightToText flight =
             "return flight"
 
 
-viewStart : Field -> H.Html Msg
+viewStart : Field -> H.Html LoadedMsg
 viewStart =
-    viewInput <| Just <| LoadedMsg << InputStart
+    viewInput <| Just InputStart
 
 
-viewEnd : Flight -> Field -> H.Html Msg
+viewEnd : Flight -> Field -> H.Html LoadedMsg
 viewEnd flight =
     viewInput <|
         case flight of
@@ -233,7 +239,7 @@ viewEnd flight =
                 Nothing
 
             Return ->
-                Just <| LoadedMsg << InputEnd
+                Just InputEnd
 
 
 viewInput : Maybe (String -> msg) -> Field -> H.Html msg
@@ -270,11 +276,11 @@ viewInput maybeOnInput field =
                 []
 
 
-viewSubmitButton : Flight -> Field -> Field -> H.Html Msg
-viewSubmitButton flight start end =
+viewSubmitButton : Booking -> H.Html msg
+viewSubmitButton booking =
     let
         attrs =
-            if isBookable flight start end then
+            if isBookable booking then
                 [ HA.type_ "submit"
                 ]
 
@@ -286,9 +292,9 @@ viewSubmitButton flight start end =
     H.button attrs [ H.text "Book" ]
 
 
-isBookable : Flight -> Field -> Field -> Bool
+isBookable : Booking -> Bool
 isBookable =
-    mapBookable
+    mapBooking
         { onOneWay = always True
         , onReturn =
             \startDate endDate ->
@@ -297,16 +303,14 @@ isBookable =
         }
 
 
-mapBookable :
+mapBooking :
     { onOneWay : Date -> a
     , onReturn : Date -> Date -> a
     , default : a
     }
-    -> Flight
-    -> Field
-    -> Field
+    -> Booking
     -> a
-mapBookable { onOneWay, onReturn, default } flight start end =
+mapBooking { onOneWay, onReturn, default } { flight, start, end } =
     case ( flight, start, end ) of
         ( OneWay, Valid startDate, _ ) ->
             onOneWay startDate

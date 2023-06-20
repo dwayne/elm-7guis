@@ -185,8 +185,12 @@
     <div id="app"></div>
     <script src="/app.js"></script>
     <script>
-      Elm.Main.init({
+      const app = Elm.Main.init({
         node: document.getElementById("app")
+      });
+
+      app.ports.alert.subscribe(message => {
+        window.alert(message);
       });
     </script>
 

@@ -9,11 +9,11 @@ chompExactly n =
 
 
 chompExactlyHelper : Int -> (Char -> Bool) -> Parser ()
-chompExactlyHelper n pred =
-    if n == 0 then
+chompExactlyHelper n isGood =
+    if n <= 0 then
         P.succeed ()
 
     else
         P.succeed ()
-            |. P.chompIf pred
-            |. chompExactly (n - 1) pred
+            |. P.chompIf isGood
+            |. chompExactly (n - 1) isGood
