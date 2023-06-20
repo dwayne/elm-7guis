@@ -1,4 +1,4 @@
-module CircleDrawer.Diameter exposing
+module Task.CircleDrawer.Data.Diameter exposing
     ( Diameter
     , fromInt
     , fromSafeInt
@@ -13,32 +13,38 @@ type Diameter
     = Diameter Int
 
 
+minN : Int
+minN =
+    2
+
+
+maxN : Int
+maxN =
+    100
+
+
 min : Diameter
 min =
-    Diameter 2
+    Diameter minN
 
 
 max : Diameter
 max =
-    Diameter 100
+    Diameter maxN
+
+
+fromSafeInt : Int -> Diameter
+fromSafeInt =
+    fromInt >> Maybe.withDefault min
 
 
 fromInt : Int -> Maybe Diameter
 fromInt n =
-    if n >= 2 && n <= 100 then
+    if n >= minN && n <= maxN then
         Just <| Diameter n
 
     else
         Nothing
-
-
-fromSafeInt : Int -> Diameter
-fromSafeInt n =
-    if n >= 2 && n <= 100 then
-        Diameter n
-
-    else
-        Diameter 2
 
 
 toFloat : Diameter -> Float

@@ -1,4 +1,4 @@
-module CircleDrawer.Html.Attributes exposing (customProperties)
+module Task.CircleDrawer.Lib.Html.Attributes exposing (customProperties)
 
 import Html as H
 import Html.Attributes as HA

@@ -1,4 +1,4 @@
-module CircleDrawer.Position exposing (Position, toString)
+module Task.CircleDrawer.Data.Position exposing (Position, toString)
 
 
 type alias Position =

@@ -1,14 +1,14 @@
-module CircleDrawer exposing (Model, Msg, init, update, view)
+module Task.CircleDrawer exposing (Model, Msg, init, update, view)
 
-import CircleDrawer.Dialog as Dialog
-import CircleDrawer.Diameter as Diameter exposing (Diameter)
-import CircleDrawer.Html.Attributes as HA
-import CircleDrawer.Position as Position exposing (Position)
-import CircleDrawer.UndoManager as UndoManager
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
+import Task.CircleDrawer.Data.Diameter as Diameter exposing (Diameter)
+import Task.CircleDrawer.Data.Position as Position exposing (Position)
+import Task.CircleDrawer.Data.UndoManager as UndoManager
+import Task.CircleDrawer.Lib.Html.Attributes as HA
+import Task.CircleDrawer.View.Dialog as Dialog
 
 
 
@@ -20,8 +20,8 @@ defaultDiameter =
     Diameter.fromSafeInt 30
 
 
-dialogConfig : Dialog.Config Msg
-dialogConfig =
+dialogHandlers : Dialog.Handlers Msg
+dialogHandlers =
     { onClose = ClosedDialog
     , onChange = ChangedDialog
     }
@@ -216,7 +216,7 @@ update msg model =
                 , hovered =
                     \id ->
                         ( { model | selection = Selected id position Menu }
-                        , Dialog.open dialogConfig "menu"
+                        , Dialog.open "menu" dialogHandlers
                         )
                 , selected =
                     \_ _ _ ->
@@ -486,8 +486,8 @@ view { circles, selection, undoManager } =
         [ viewUndoRedo isEnabled undoManager
         , Dialog.view
             { viewport = viewCanvas activeId circles
+            , handlers = dialogHandlers
             }
-            dialogConfig
             maybeDialog
         ]
 

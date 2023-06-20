@@ -1,32 +1,32 @@
-module CircleDrawer.Dialog exposing
-    ( Config
-    , Dialog
+module Task.CircleDrawer.View.Dialog exposing
+    ( Dialog
+    , Handlers
     , Msg
-    , Options
+    , ViewOptions
     , open
     , update
     , view
     )
 
 import Browser.Dom as BD
-import CircleDrawer.Html.Attributes as HA
-import CircleDrawer.Position exposing (Position)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
 import Process
 import Task
+import Task.CircleDrawer.Data.Position exposing (Position)
+import Task.CircleDrawer.Lib.Html.Attributes as HA
 
 
-type alias Config msg =
+type alias Handlers msg =
     { onClose : msg
     , onChange : Msg -> msg
     }
 
 
-open : Config msg -> String -> Cmd msg
-open { onChange } htmlId =
+open : String -> Handlers msg -> Cmd msg
+open htmlId { onChange } =
     "dialog-"
         ++ htmlId
         |> BD.focus
@@ -52,13 +52,14 @@ type alias Dialog msg =
     }
 
 
-type alias Options msg =
+type alias ViewOptions msg =
     { viewport : H.Html msg
+    , handlers : Handlers msg
     }
 
 
-view : Options msg -> Config msg -> Maybe (Dialog msg) -> H.Html msg
-view { viewport } { onClose } maybeDialog =
+view : ViewOptions msg -> Maybe (Dialog msg) -> H.Html msg
+view { viewport, handlers } maybeDialog =
     case maybeDialog of
         Just { htmlId, block, position } ->
             H.div
@@ -66,7 +67,7 @@ view { viewport } { onClose } maybeDialog =
                 [ viewport
                 , H.div
                     [ HA.id <| "dialog-background-" ++ htmlId
-                    , currentTargetOnClick onClose
+                    , currentTargetOnClick handlers.onClose
                     , HA.class "dialog-background"
                     ]
                     [ H.div
@@ -99,7 +100,7 @@ currentTargetOnClick msg =
                             JD.succeed msg
 
                         else
-                            JD.fail "ignore click"
+                            JD.fail "ignored"
                     )
     in
     HE.on "click" decoder

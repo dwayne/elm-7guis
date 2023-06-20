@@ -1,4 +1,4 @@
-module CircleDrawer.UndoManager exposing
+module Task.CircleDrawer.Data.UndoManager exposing
     ( Edit
     , UndoManager
     , add
