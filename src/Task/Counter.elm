@@ -1,4 +1,4 @@
-module Counter exposing (Model, Msg, init, update, view)
+module Task.Counter exposing (Model, Msg, init, update, view)
 
 import Html as H
 import Html.Events as HE
