@@ -45,7 +45,7 @@ findClosestHelper closest position circles =
                             Nothing ->
                                 Just ( circle, d )
 
-                            Just ( minId, minD ) ->
+                            Just ( _, minD ) ->
                                 if d < minD then
                                     Just ( circle, d )
 

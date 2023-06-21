@@ -22,9 +22,6 @@ new id rawFirstName rawLastName =
     let
         firstName =
             String.trim rawFirstName
-
-        lastName =
-            String.trim rawLastName
     in
     if String.isEmpty firstName then
         Nothing
@@ -34,7 +31,7 @@ new id rawFirstName rawLastName =
             Person
                 { id = id
                 , firstName = firstName
-                , lastName = lastName
+                , lastName = String.trim rawLastName
                 }
 
 

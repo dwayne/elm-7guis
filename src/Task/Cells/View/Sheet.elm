@@ -15,7 +15,7 @@ import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
 import Task
-import Task.Cells.Data.Cell as Cell exposing (Cell)
+import Task.Cells.Data.Cell as Cell
 import Task.Cells.Data.Column as Column exposing (Column)
 import Task.Cells.Data.Coord as Coord exposing (Coord)
 import Task.Cells.Data.Row as Row exposing (Row)

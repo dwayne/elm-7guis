@@ -142,7 +142,7 @@ viewElapsedTime elapsedTime =
                 |> modBy 10
 
         seconds =
-            String.join ""
+            String.concat
                 [ String.fromInt wholePart
                 , "."
                 , String.fromInt decimalPart

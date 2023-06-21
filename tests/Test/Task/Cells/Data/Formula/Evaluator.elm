@@ -3,7 +3,7 @@ module Test.Task.Cells.Data.Formula.Evaluator exposing (suite)
 import Expect
 import Task.Cells.Data.Coord as Coord
 import Task.Cells.Data.Formula.Evaluator as E
-import Test exposing (..)
+import Test exposing (Test, describe, test)
 
 
 suite : Test

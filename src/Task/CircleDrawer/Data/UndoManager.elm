@@ -26,7 +26,7 @@ empty =
 
 
 add : Edit u r -> UndoManager u r -> UndoManager u r
-add edit (UndoManager past future) =
+add edit (UndoManager past _) =
     UndoManager (edit :: past) []
 
 
@@ -41,7 +41,7 @@ canRedo (UndoManager _ future) =
 
 
 undo : UndoManager u r -> Maybe ( u, UndoManager u r )
-undo ((UndoManager past future) as undoManager) =
+undo (UndoManager past future) =
     case past of
         [] ->
             Nothing

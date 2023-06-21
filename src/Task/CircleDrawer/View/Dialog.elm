@@ -13,7 +13,6 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
-import Process
 import Task
 import Task.CircleDrawer.Data.Position exposing (Position)
 import Task.CircleDrawer.Lib.Html.Attributes as HA

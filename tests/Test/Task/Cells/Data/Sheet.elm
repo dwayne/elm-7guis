@@ -4,7 +4,7 @@ import Expect
 import Task.Cells.Data.Cell as Cell
 import Task.Cells.Data.Coord as Coord
 import Task.Cells.Data.Sheet as Sheet exposing (Sheet)
-import Test exposing (..)
+import Test exposing (Test, describe, test)
 
 
 suite : Test

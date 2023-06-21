@@ -9,14 +9,12 @@ module Task.Cells.Data.Cell exposing
     , toString
     )
 
-import Dict exposing (Dict)
 import Parser exposing (DeadEnd)
 import Set exposing (Set)
 import Task.Cells.Data.Coord as Coord exposing (Coord)
 import Task.Cells.Data.Formula.AST as AST
 import Task.Cells.Data.Formula.Evaluator as E
-import Task.Cells.Data.Formula.Parser as P
-import Task.Cells.Data.Range as Range exposing (Range)
+import Task.Cells.Data.Range as Range
 
 
 type Cell

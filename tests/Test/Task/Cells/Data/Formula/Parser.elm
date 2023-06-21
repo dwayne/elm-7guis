@@ -5,7 +5,7 @@ import Task.Cells.Data.Coord as Coord
 import Task.Cells.Data.Formula.AST exposing (Expr(..), Formula(..))
 import Task.Cells.Data.Formula.Parser as P
 import Task.Cells.Data.Range as Range
-import Test exposing (..)
+import Test exposing (Test, describe, test)
 
 
 suite : Test

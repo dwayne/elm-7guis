@@ -8,7 +8,7 @@ module Task.Cells.Data.Formula.Evaluator exposing
 
 import Dict exposing (Dict)
 import Parser exposing (DeadEnd)
-import Task.Cells.Data.Coord as Coord exposing (Coord)
+import Task.Cells.Data.Coord exposing (Coord)
 import Task.Cells.Data.Formula.AST as AST
 import Task.Cells.Data.Formula.Parser as P
 import Task.Cells.Data.Range as Range exposing (Range)
@@ -186,13 +186,14 @@ builtinFunctions =
                 case args of
                     x :: y :: [] ->
                         let
-                            m =
-                                truncate x
-
                             n =
                                 truncate y
                         in
                         if n /= 0 then
+                            let
+                                m =
+                                    truncate x
+                            in
                             Ok <| Basics.toFloat (m |> modBy n)
 
                         else

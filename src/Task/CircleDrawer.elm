@@ -3,7 +3,6 @@ module Task.CircleDrawer exposing (Model, Msg, init, update, view)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
-import Json.Decode as JD
 import Task.CircleDrawer.Data.Circle as Circle exposing (Circle)
 import Task.CircleDrawer.Data.Diameter as Diameter exposing (Diameter)
 import Task.CircleDrawer.Data.Position as Position exposing (Position)
@@ -34,19 +33,6 @@ type Selection
 type Mode
     = Menu
     | AdjustDiameter (List Circle) Diameter
-
-
-selectionToId : Selection -> Maybe Int
-selectionToId selection =
-    case selection of
-        None ->
-            Nothing
-
-        Hovered id ->
-            Just id
-
-        Selected id _ _ ->
-            Just id
 
 
 isSelected : Selection -> Bool

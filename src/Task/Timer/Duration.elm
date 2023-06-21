@@ -4,7 +4,6 @@ module Task.Timer.Duration exposing
     , halfOfMax
     , max
     , toFloat
-    , toInt
     , toString
     )
 
@@ -31,11 +30,6 @@ fromString =
 fromInt : Int -> Duration
 fromInt =
     Duration << Basics.max 0
-
-
-toInt : Duration -> Int
-toInt (Duration n) =
-    n
 
 
 toFloat : Duration -> Float

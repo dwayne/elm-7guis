@@ -6,7 +6,6 @@ module Task.CircleDrawer.Lib.Html.Events exposing
     )
 
 import Html as H
-import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
 import Task.CircleDrawer.Data.Diameter as Diameter exposing (Diameter)

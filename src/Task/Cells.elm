@@ -7,7 +7,6 @@ module Task.Cells exposing
     )
 
 import Html as H
-import Set
 import Task.Cells.Data.Coord exposing (Coord)
 import Task.Cells.Data.Sheet as Sheet exposing (Sheet)
 import Task.Cells.View.Sheet as Sheet
