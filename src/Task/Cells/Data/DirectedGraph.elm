@@ -1,4 +1,4 @@
-module Cells.Data.DirectedGraph exposing
+module Task.Cells.Data.DirectedGraph exposing
     ( DirectedGraph
     , Edge
     , Vertex

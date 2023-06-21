@@ -1,4 +1,4 @@
-module Cells exposing
+module Task.Cells exposing
     ( Model
     , Msg
     , init
@@ -6,11 +6,11 @@ module Cells exposing
     , view
     )
 
-import Cells.Data.Coord exposing (Coord)
-import Cells.Data.Sheet as Sheet exposing (Sheet)
-import Cells.View.Sheet as Sheet
 import Html as H
 import Set
+import Task.Cells.Data.Coord exposing (Coord)
+import Task.Cells.Data.Sheet as Sheet exposing (Sheet)
+import Task.Cells.View.Sheet as Sheet
 
 
 

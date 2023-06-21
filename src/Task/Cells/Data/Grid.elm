@@ -1,8 +1,8 @@
-module Cells.Data.Grid exposing (Grid, empty, get, set)
+module Task.Cells.Data.Grid exposing (Grid, empty, get, set)
 
-import Cells.Data.Cell as Cell exposing (Cell)
-import Cells.Data.Coord as Coord exposing (Coord)
 import Dict exposing (Dict)
+import Task.Cells.Data.Cell as Cell exposing (Cell)
+import Task.Cells.Data.Coord as Coord exposing (Coord)
 
 
 type Grid

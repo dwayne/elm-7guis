@@ -1,4 +1,4 @@
-module Cells.View.Sheet exposing
+module Task.Cells.View.Sheet exposing
     ( Handlers
     , Model
     , Msg
@@ -10,16 +10,16 @@ module Cells.View.Sheet exposing
     )
 
 import Browser.Dom as BD
-import Cells.Data.Cell as Cell exposing (Cell)
-import Cells.Data.Column as Column exposing (Column)
-import Cells.Data.Coord as Coord exposing (Coord)
-import Cells.Data.Row as Row exposing (Row)
-import Cells.Data.Sheet as Sheet exposing (Sheet)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
 import Task
+import Task.Cells.Data.Cell as Cell exposing (Cell)
+import Task.Cells.Data.Column as Column exposing (Column)
+import Task.Cells.Data.Coord as Coord exposing (Coord)
+import Task.Cells.Data.Row as Row exposing (Row)
+import Task.Cells.Data.Sheet as Sheet exposing (Sheet)
 
 
 

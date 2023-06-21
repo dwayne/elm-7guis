@@ -1,7 +1,7 @@
-module Cells.Data.Coord exposing (Coord, first, fromSafeString, toString)
+module Task.Cells.Data.Coord exposing (Coord, first, fromSafeString, toString)
 
-import Cells.Data.Column as Column exposing (Column)
-import Cells.Data.Row as Row exposing (Row)
+import Task.Cells.Data.Column as Column exposing (Column)
+import Task.Cells.Data.Row as Row exposing (Row)
 
 
 type alias Coord =

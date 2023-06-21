@@ -1,9 +1,9 @@
-module Cells.Data.Formula.Parser exposing (parse)
+module Task.Cells.Data.Formula.Parser exposing (parse)
 
-import Cells.Data.Formula.AST as AST exposing (Expr, Formula)
-import Cells.Data.Formula.Lexer as L
-import Cells.Data.Range exposing (Range)
 import Parser as P exposing ((|.), (|=), Parser)
+import Task.Cells.Data.Formula.AST as AST exposing (Expr, Formula)
+import Task.Cells.Data.Formula.Lexer as L
+import Task.Cells.Data.Range exposing (Range)
 
 
 parse : String -> Result (List P.DeadEnd) Formula

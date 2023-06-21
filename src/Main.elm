@@ -1,9 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import Cells
 import Html as H
 import Html.Attributes as HA
+import Task.Cells as Cells
 import Task.CircleDrawer as CircleDrawer
 import Task.Counter as Counter
 import Task.Crud as Crud

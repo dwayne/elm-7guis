@@ -1,4 +1,4 @@
-module Cells.Data.Formula.Lexer exposing
+module Task.Cells.Data.Formula.Lexer exposing
     ( coord
     , decimal
     , identifier
@@ -8,11 +8,11 @@ module Cells.Data.Formula.Lexer exposing
     , text
     )
 
-import Cells.Data.Column as Column exposing (Column)
-import Cells.Data.Coord exposing (Coord)
-import Cells.Data.Row as Row exposing (Row)
 import Char
 import Parser as P exposing ((|.), (|=), Parser)
+import Task.Cells.Data.Column as Column exposing (Column)
+import Task.Cells.Data.Coord exposing (Coord)
+import Task.Cells.Data.Row as Row exposing (Row)
 
 
 text : Parser String

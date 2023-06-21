@@ -1,4 +1,4 @@
-module Cells.Data.Column exposing
+module Task.Cells.Data.Column exposing
     ( Column
     , first
     , fromSafeInt

@@ -1,10 +1,10 @@
-module Cells.Data.Sheet exposing (Sheet, build, empty, get, set)
+module Task.Cells.Data.Sheet exposing (Sheet, build, empty, get, set)
 
-import Cells.Data.Cell as Cell exposing (Cell)
-import Cells.Data.Coord as Coord exposing (Coord)
-import Cells.Data.DirectedGraph as DirectedGraph exposing (DirectedGraph)
-import Cells.Data.Grid as Grid exposing (Grid)
 import Set
+import Task.Cells.Data.Cell as Cell exposing (Cell)
+import Task.Cells.Data.Coord as Coord exposing (Coord)
+import Task.Cells.Data.DirectedGraph as DirectedGraph exposing (DirectedGraph)
+import Task.Cells.Data.Grid as Grid exposing (Grid)
 
 
 type Sheet

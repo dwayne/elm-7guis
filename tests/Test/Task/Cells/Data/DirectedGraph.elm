@@ -1,8 +1,8 @@
-module Test.Cells.Data.DirectedGraph exposing (suite)
+module Test.Task.Cells.Data.DirectedGraph exposing (suite)
 
-import Cells.Data.DirectedGraph as DirectedGraph exposing (DirectedGraph, Edge, Vertex)
 import Expect
 import Set
+import Task.Cells.Data.DirectedGraph as DirectedGraph exposing (DirectedGraph, Edge, Vertex)
 import Test exposing (..)
 
 

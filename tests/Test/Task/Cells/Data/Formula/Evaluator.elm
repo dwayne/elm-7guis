@@ -1,8 +1,8 @@
-module Test.Cells.Data.Formula.Evaluator exposing (suite)
+module Test.Task.Cells.Data.Formula.Evaluator exposing (suite)
 
-import Cells.Data.Coord as Coord
-import Cells.Data.Formula.Evaluator as E
 import Expect
+import Task.Cells.Data.Coord as Coord
+import Task.Cells.Data.Formula.Evaluator as E
 import Test exposing (..)
 
 

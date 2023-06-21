@@ -1,8 +1,8 @@
-module Cells.Data.Range exposing (Range, expand, fromSafeString, toString)
+module Task.Cells.Data.Range exposing (Range, expand, fromSafeString, toString)
 
-import Cells.Data.Column as Column
-import Cells.Data.Coord as Coord exposing (Coord)
-import Cells.Data.Row as Row
+import Task.Cells.Data.Column as Column
+import Task.Cells.Data.Coord as Coord exposing (Coord)
+import Task.Cells.Data.Row as Row
 
 
 type alias Range =

@@ -1,10 +1,10 @@
-module Test.Cells.Data.Formula.Parser exposing (suite)
+module Test.Task.Cells.Data.Formula.Parser exposing (suite)
 
-import Cells.Data.Coord as Coord
-import Cells.Data.Formula.AST exposing (Expr(..), Formula(..))
-import Cells.Data.Formula.Parser as P
-import Cells.Data.Range as Range
 import Expect
+import Task.Cells.Data.Coord as Coord
+import Task.Cells.Data.Formula.AST exposing (Expr(..), Formula(..))
+import Task.Cells.Data.Formula.Parser as P
+import Task.Cells.Data.Range as Range
 import Test exposing (..)
 
 

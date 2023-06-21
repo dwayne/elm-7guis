@@ -1,9 +1,9 @@
-module Test.Cells.Data.Sheet exposing (suite)
+module Test.Task.Cells.Data.Sheet exposing (suite)
 
-import Cells.Data.Cell as Cell
-import Cells.Data.Coord as Coord
-import Cells.Data.Sheet as Sheet exposing (Sheet)
 import Expect
+import Task.Cells.Data.Cell as Cell
+import Task.Cells.Data.Coord as Coord
+import Task.Cells.Data.Sheet as Sheet exposing (Sheet)
 import Test exposing (..)
 
 
