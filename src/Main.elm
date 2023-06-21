@@ -140,23 +140,20 @@ view model =
         [ H.h1 [] [ H.text "7GUIs in Elm" ]
         , H.p []
             [ H.text "This is a live version of an implementation ("
-            , H.a
-                [ HA.href "https://github.com/dwayne/elm-7guis"
-                , HA.target "_blank"
-                ]
-                [ H.text "source" ]
+            , viewExternalLink
+                { href = "https://github.com/dwayne/elm-7guis"
+                , text = "source"
+                }
             , H.text ") of "
-            , H.a
-                [ HA.href "https://eugenkiss.github.io/7guis/"
-                , HA.target "_blank"
-                ]
-                [ H.text "7GUIs" ]
+            , viewExternalLink
+                { href = "https://eugenkiss.github.io/7guis/"
+                , text = "7GUIs"
+                }
             , H.text " with "
-            , H.a
-                [ HA.href "https://elm-lang.org/"
-                , HA.target "_blank"
-                ]
-                [ H.text "Elm" ]
+            , viewExternalLink
+                { href = "https://elm-lang.org/"
+                , text = "Elm"
+                }
             , H.text "."
             ]
         , model.counter
@@ -188,6 +185,15 @@ view model =
             |> H.map ChangedCells
             |> viewTask "Cells"
         ]
+
+
+viewExternalLink : { href : String, text : String } -> H.Html msg
+viewExternalLink { href, text } =
+    H.a
+        [ HA.href href
+        , HA.target "_blank"
+        ]
+        [ H.text text ]
 
 
 viewTask : String -> H.Html msg -> H.Html msg
