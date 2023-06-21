@@ -1,0 +1,68 @@
+.canvas {
+  box-sizing: border-box;
+
+  width: 408px;
+  height: 220px;
+
+  border: 1px solid #000;
+}
+
+.canvas__layer {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  background-color: #fff;
+}
+
+.circle {
+  --circle-x: 0;
+  --circle-y: 0;
+  --circle-diameter: 30px;
+
+  position: absolute;
+  left: var(--circle-x);
+  top: var(--circle-y);
+  transform: translate(-50%, -50%);
+
+  inline-size: var(--circle-diameter);
+  aspect-ratio: 1;
+  border-radius: 50%;
+
+  border: 1px solid #000;
+}
+
+.circle--selected {
+  background-color: #eee;
+}
+
+.dialog-wrapper {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+}
+
+.dialog-background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background-color: transparent;
+}
+
+.dialog {
+  --dialog-x: 0;
+  --dialog-y: 0;
+
+  position: absolute;
+  left: var(--dialog-x);
+  top: var(--dialog-y);
+
+  min-width: max-content;
+}
