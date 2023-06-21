@@ -4,10 +4,12 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
+import Task.CircleDrawer.Data.Circle as Circle exposing (Circle)
 import Task.CircleDrawer.Data.Diameter as Diameter exposing (Diameter)
 import Task.CircleDrawer.Data.Position as Position exposing (Position)
 import Task.CircleDrawer.Data.UndoManager as UndoManager
 import Task.CircleDrawer.Lib.Html.Attributes as HA
+import Task.CircleDrawer.Lib.Html.Events as HE
 import Task.CircleDrawer.View.Dialog as Dialog
 
 
@@ -37,27 +39,6 @@ type alias Model =
     , selection : Selection
     , undoManager : UndoManager
     }
-
-
-type alias Circle =
-    { id : Int
-    , position : Position
-    , diameter : Diameter
-    }
-
-
-findCircleById : Int -> List Circle -> Maybe Circle
-findCircleById id circles =
-    case circles of
-        [] ->
-            Nothing
-
-        circle :: restCircles ->
-            if circle.id == id then
-                Just circle
-
-            else
-                findCircleById id restCircles
 
 
 type Selection
@@ -155,10 +136,10 @@ init =
 
 
 type Msg
-    = MainButtonClickedCanvas Position
-    | SecondaryButtonClickedCanvas Position
-    | MovedMouse Position
-    | MouseLeftCanvas
+    = MainButtonClicked Position
+    | SecondaryButtonClicked Position
+    | MouseMoved Position
+    | MouseLeft
     | ClickedAdjustDiameter
     | InputDiameter Diameter
     | MouseUpAfterInputDiameter
@@ -171,7 +152,7 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        MainButtonClickedCanvas position ->
+        MainButtonClicked position ->
             mapSelection
                 { none =
                     let
@@ -207,7 +188,7 @@ update msg model =
                 }
                 model.selection
 
-        SecondaryButtonClickedCanvas position ->
+        SecondaryButtonClicked position ->
             mapSelection
                 { none =
                     ( model
@@ -226,13 +207,13 @@ update msg model =
                 }
                 model.selection
 
-        MovedMouse position ->
+        MouseMoved position ->
             ( if isSelected model.selection then
                 model
 
               else
-                case findClosestCircle position model.circles of
-                    Just id ->
+                case Circle.findClosest position model.circles of
+                    Just { id } ->
                         { model | selection = Hovered id }
 
                     Nothing ->
@@ -240,7 +221,7 @@ update msg model =
             , Cmd.none
             )
 
-        MouseLeftCanvas ->
+        MouseLeft ->
             ( if isSelected model.selection then
                 model
 
@@ -255,7 +236,7 @@ update msg model =
                     \id position mode ->
                         case mode of
                             Menu ->
-                                case findCircleById id model.circles of
+                                case Circle.findById id model.circles of
                                     Just { diameter } ->
                                         { model
                                             | selection = Selected id position (AdjustDiameter model.circles diameter)
@@ -379,54 +360,6 @@ update msg model =
             )
 
 
-findClosestCircle : Position -> List Circle -> Maybe Int
-findClosestCircle position circles =
-    findClosestCircleHelper Nothing position circles
-
-
-findClosestCircleHelper : Maybe ( Int, Float ) -> Position -> List Circle -> Maybe Int
-findClosestCircleHelper closest position circles =
-    case circles of
-        [] ->
-            Maybe.map Tuple.first closest
-
-        circle :: restCircles ->
-            let
-                d =
-                    distanceBetween position circle
-
-                r =
-                    Diameter.toFloat circle.diameter / 2
-
-                newClosest =
-                    if d > r then
-                        closest
-
-                    else
-                        case closest of
-                            Nothing ->
-                                Just ( circle.id, d )
-
-                            Just ( minId, minD ) ->
-                                if d < minD then
-                                    Just ( circle.id, d )
-
-                                else
-                                    closest
-            in
-            findClosestCircleHelper newClosest position restCircles
-
-
-distanceBetween : Position -> Circle -> Float
-distanceBetween { x, y } { position } =
-    sqrt <| sqr (x - position.x) + sqr (y - position.y)
-
-
-sqr : Int -> Float
-sqr n =
-    toFloat <| n * n
-
-
 
 -- VIEW
 
@@ -473,7 +406,7 @@ view { circles, selection, undoManager } =
                                             , HA.min <| Diameter.toString Diameter.min
                                             , HA.max <| Diameter.toString Diameter.max
                                             , HA.value <| Diameter.toString diameter
-                                            , onInputDiameter InputDiameter
+                                            , HE.onInputDiameter InputDiameter
                                             , HE.onMouseUp MouseUpAfterInputDiameter
                                             ]
                                             []
@@ -484,11 +417,14 @@ view { circles, selection, undoManager } =
     in
     H.div []
         [ viewUndoRedo isEnabled undoManager
-        , Dialog.view
-            { viewport = viewCanvas activeId circles
-            , handlers = dialogHandlers
-            }
-            maybeDialog
+        , H.div
+            [ HA.class "canvas" ]
+            [ Dialog.view
+                { viewport = viewCanvasLayer activeId circles
+                , handlers = dialogHandlers
+                }
+                maybeDialog
+            ]
         ]
 
 
@@ -516,41 +452,29 @@ viewButton :
     -> H.Html msg
 viewButton options =
     let
-        isDisabled =
-            not options.isEnabled
-
         attrs =
-            attrList
+            HA.attrList
                 [ ( HA.type_ "button", True )
                 , ( HA.disabled isDisabled, True )
                 , ( HE.onClick options.onClick, options.isEnabled )
                 ]
+
+        isDisabled =
+            not options.isEnabled
     in
     H.button attrs [ H.text options.text ]
 
 
-attrList : List ( H.Attribute msg, Bool ) -> List (H.Attribute msg)
-attrList =
-    List.filterMap
-        (\( attr, keep ) ->
-            if keep then
-                Just attr
-
-            else
-                Nothing
-        )
-
-
-viewCanvas : Maybe Int -> List Circle -> H.Html Msg
-viewCanvas activeId =
+viewCanvasLayer : Maybe Int -> List Circle -> H.Html Msg
+viewCanvasLayer activeId =
     List.reverse
         >> List.map (viewCircle activeId)
         >> H.div
-            [ HA.class "canvas"
-            , onMainButtonClick MainButtonClickedCanvas
-            , onSecondaryButtonClick SecondaryButtonClickedCanvas
-            , onMouseMove MovedMouse
-            , HE.onMouseLeave MouseLeftCanvas
+            [ HA.class "canvas__layer"
+            , HE.onMainButtonClick MainButtonClicked
+            , HE.onSecondaryButtonClick SecondaryButtonClicked
+            , HE.onMouseMove MouseMoved
+            , HE.onMouseLeave MouseLeft
             ]
 
 
@@ -568,79 +492,3 @@ viewCircle activeId { id, position, diameter } =
             ]
         ]
         []
-
-
-onMainButtonClick : (Position -> msg) -> H.Attribute msg
-onMainButtonClick toMsg =
-    let
-        decoder =
-            JD.field "button" JD.int
-                |> JD.andThen
-                    (\button ->
-                        if button == 0 then
-                            JD.map toMsg positionDecoder
-
-                        else
-                            JD.fail "unknown click"
-                    )
-    in
-    HE.on "click" decoder
-
-
-onSecondaryButtonClick : (Position -> msg) -> H.Attribute msg
-onSecondaryButtonClick toMsg =
-    let
-        decoder =
-            JD.field "button" JD.int
-                |> JD.andThen
-                    (\button ->
-                        if button == 2 then
-                            JD.map
-                                (\position -> ( toMsg position, True ))
-                                positionDecoder
-
-                        else
-                            JD.fail "unknown click"
-                    )
-    in
-    HE.preventDefaultOn "contextmenu" decoder
-
-
-onMouseMove : (Position -> msg) -> H.Attribute msg
-onMouseMove toMsg =
-    HE.on "mousemove" (JD.map toMsg positionDecoder)
-
-
-positionDecoder : JD.Decoder Position
-positionDecoder =
-    JD.map4
-        (\pageX pageY offsetLeft offsetTop ->
-            let
-                x =
-                    pageX - offsetLeft
-
-                y =
-                    pageY - offsetTop
-            in
-            Position x y
-        )
-        (JD.field "pageX" JD.int)
-        (JD.field "pageY" JD.int)
-        (JD.at [ "currentTarget", "offsetLeft" ] JD.int)
-        (JD.at [ "currentTarget", "offsetTop" ] JD.int)
-
-
-onInputDiameter : (Diameter -> msg) -> H.Attribute msg
-onInputDiameter toMsg =
-    let
-        diameterDecoder =
-            JD.at [ "target", "value" ] JD.string
-                |> JD.andThen
-                    (\s ->
-                        String.toInt s
-                            |> Maybe.andThen Diameter.fromInt
-                            |> Maybe.map JD.succeed
-                            |> Maybe.withDefault (JD.fail "invalid diameter")
-                    )
-    in
-    HE.on "input" (JD.map toMsg diameterDecoder)
