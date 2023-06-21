@@ -30,8 +30,8 @@ init =
     }
 
 
-handlers : Sheet.Handlers Msg
-handlers =
+sheetHandlers : Sheet.Handlers Msg
+sheetHandlers =
     { onChange = ChangedSheet
     , onInput = Input
     }
@@ -50,7 +50,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ChangedSheet sheetMsg ->
-            Sheet.update { handlers = handlers, sheet = model.sheet } sheetMsg model.sheetModel
+            Sheet.update { handlers = sheetHandlers, sheet = model.sheet } sheetMsg model.sheetModel
                 |> Tuple.mapFirst (\sheetModel -> { model | sheetModel = sheetModel })
 
         Input coord rawInput ->
@@ -65,4 +65,4 @@ update msg model =
 
 view : Model -> H.Html Msg
 view { sheet, sheetModel } =
-    Sheet.view { handlers = handlers, sheet = sheet } sheetModel
+    Sheet.view { handlers = sheetHandlers, sheet = sheet } sheetModel

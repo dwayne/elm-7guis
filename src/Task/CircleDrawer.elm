@@ -14,22 +14,6 @@ import Task.CircleDrawer.View.Dialog as Dialog
 
 
 
--- CONSTANTS
-
-
-defaultDiameter : Diameter
-defaultDiameter =
-    Diameter.fromSafeInt 30
-
-
-dialogHandlers : Dialog.Handlers Msg
-dialogHandlers =
-    { onClose = ClosedDialog
-    , onChange = ChangedDialog
-    }
-
-
-
 -- MODEL
 
 
@@ -128,6 +112,18 @@ init =
     , circles = []
     , selection = None
     , undoManager = UndoManager.empty
+    }
+
+
+defaultDiameter : Diameter
+defaultDiameter =
+    Diameter.fromSafeInt 30
+
+
+dialogHandlers : Dialog.Handlers Msg
+dialogHandlers =
+    { onClose = ClosedDialog
+    , onChange = ChangedDialog
     }
 
 

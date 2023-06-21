@@ -34,6 +34,36 @@ type Field
     | Invalid String
 
 
+isBookable : Booking -> Bool
+isBookable =
+    mapBooking
+        { onOneWay = always True
+        , onReturn =
+            \startDate endDate ->
+                endDate |> Date.isLaterThan startDate
+        , default = False
+        }
+
+
+mapBooking :
+    { onOneWay : Date -> a
+    , onReturn : Date -> Date -> a
+    , default : a
+    }
+    -> Booking
+    -> a
+mapBooking { onOneWay, onReturn, default } { flight, start, end } =
+    case ( flight, start, end ) of
+        ( OneWay, Valid startDate, _ ) ->
+            onOneWay startDate
+
+        ( Return, Valid startDate, Valid endDate ) ->
+            onReturn startDate endDate
+
+        _ ->
+            default
+
+
 init : ( Model, Cmd Msg )
 init =
     ( Loading
@@ -290,33 +320,3 @@ viewSubmitButton booking =
                 ]
     in
     H.button attrs [ H.text "Book" ]
-
-
-isBookable : Booking -> Bool
-isBookable =
-    mapBooking
-        { onOneWay = always True
-        , onReturn =
-            \startDate endDate ->
-                endDate |> Date.isLaterThan startDate
-        , default = False
-        }
-
-
-mapBooking :
-    { onOneWay : Date -> a
-    , onReturn : Date -> Date -> a
-    , default : a
-    }
-    -> Booking
-    -> a
-mapBooking { onOneWay, onReturn, default } { flight, start, end } =
-    case ( flight, start, end ) of
-        ( OneWay, Valid startDate, _ ) ->
-            onOneWay startDate
-
-        ( Return, Valid startDate, Valid endDate ) ->
-            onReturn startDate endDate
-
-        _ ->
-            default
