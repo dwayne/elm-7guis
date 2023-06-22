@@ -1,0 +1,24 @@
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title__text {
+  margin: 0;
+  line-height: 1;
+}
+
+.title__attribution {
+  margin: 0;
+  line-height: 1;
+
+  white-space: nowrap;
+}
+
+@media (min-width: 300px) {
+  .title {
+    flex-direction: row;
+    align-items: baseline;
+  }
+}

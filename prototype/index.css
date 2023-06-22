@@ -1,0 +1,30 @@
+@import "./base.css";
+@import "./title.css";
+@import "./line.css";
+@import "./toc.css";
+@import "./home-page.css";
+
+.task__example {
+  display: flex;
+  justify-content: center;
+}
+
+.counter {
+  width: 185px;
+  height: 100px;
+  background-color: hsl(0, 0%, 100%);
+  border: 1px solid hsl(0, 0%, 13%);
+  border-radius: 4px;
+}
+
+.showcase__app {
+  display: flex;
+  justify-content: center;
+}
+
+.code-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  padding-left: 0;
+}

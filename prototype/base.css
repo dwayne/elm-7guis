@@ -1,0 +1,20 @@
+:root {
+  --text-color: hsl(0, 0%, 13%);
+  --link-color: hsl(216, 85%, 34%);
+  --background-color: hsl(0, 0%, 97%);
+}
+
+body {
+  margin: 0;
+
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+
+  color: var(--text-color);
+  background: var(--background-color);
+}
+
+a {
+  color: var(--link-color);
+}

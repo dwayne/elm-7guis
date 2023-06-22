@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+port="${1:-8001}"
+
+caddy file-server --browse --root "$project/prototype" --listen :"$port"
