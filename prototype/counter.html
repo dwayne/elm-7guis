@@ -9,53 +9,55 @@
     <link rel="stylesheet" href="./index.css">
   </head>
   <body>
-    <header class="header">
-      <!-- header__nav is optional -->
-      <nav class="header__nav">
-        <a href="../">Back</a>
-      </nav>
-      <h1 class="header__title">Counter</h1>
-      <div class="header__line">
-        ===================================================================================================================================================================
-      </div>
-    </header>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="../">Back</a>
+          </nav>
+          <div class="task__title">
+            <header class="title">
+              <h1 class="title__text">Counter</h1>
+            </header>
+          </div>
+          <div class="task__line">
+            <div class="line">===================================================================================================================================================================</div>
+          </div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
 
-    <div class="task">
-      <div class="task__description">
-        <h2>Challenge:</h2>
+              <p class="p">Understanding the basic ideas of a language/toolkit.</p>
 
-        <p>Understanding the basic ideas of a language/toolkit.</p>
+              <h2 class="h2">Criteria</h2>
 
-        <h2>Criteria:</h2>
+              <ul class="ul">
+                <li>Build a frame containing a label or read-only textfield <em>T</em> and a button <em>B</em>.</li>
+                <li>Initially, the value in <em>T</em> is 0.</li>
+                <li>Each click of <em>B</em> increases the value in <em>T</em> by 1.</li>
+              </ul>
 
-        <ul>
-          <li>Build a frame containing a label or read-only textfield <em>T</em> and a button <em>B</em>.</li>
-          <li>Initially, the value in <em>T</em> is 0.</li>
-          <li>Each click of <em>B</em> increases the value in <em>T</em> by 1.</li>
-        </ul>
+              <p class="p p--large-bottom">Counter serves as a gentle introduction to the basics of the language, paradigm and toolkit for one of the simplest GUI applications imaginable. Thus, Counter reveals the required scaffolding and how the very basic features work together to build a GUI application. A good solution will have almost no scaffolding.</p>
 
-        <p>Counter serves as a gentle introduction to the basics of the language, paradigm and toolkit for one of the simplest GUI applications imaginable. Thus, Counter reveals the required scaffolding and how the very basic features work together to build a GUI application. A good solution will have almost no scaffolding.</p>
-      </div>
-      <div class="task__example">
-        <img src="https://7guis.bradwoods.io/images/counter.png" alt="A dialogue box with a number and a Count button." />
-      </div>
-    </div>
+              <div class="task__example">
+                <img src="https://7guis.bradwoods.io/images/counter.png" alt="A dialogue box with a number and a Count button." />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app">
+                <div class="counter"></div>
+              </div>
 
-    <div class="showcase">
-      <div class="showcase__app">
-        <div class="counter"></div>
-      </div>
-
-      <div class="showcase__description">
-        <h2>Code:</h2>
-
-        <p>After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
-
-        <ul class="code-links">
-          <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm">ELM</a></li>
-          <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm">ELM</a></li>
-          <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm">ELM</a></li>
-        </ul>
+              <h2 class="h2">Code</h2>
+              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
