@@ -1,0 +1,18 @@
+.layout {
+  display: flex;
+  justify-content: center;
+}
+
+.layout__content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1360px;
+
+  padding: 20px;
+}
+
+@media (min-width: 640px) {
+  .layout__content {
+    padding: 40px;
+  }
+}

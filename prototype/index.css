@@ -2,7 +2,8 @@
 @import "./title.css";
 @import "./line.css";
 @import "./toc.css";
-@import "./home-page.css";
+@import "./home.css";
+@import "./layout.css";
 
 .task__example {
   display: flex;

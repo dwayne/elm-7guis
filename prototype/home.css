@@ -1,0 +1,15 @@
+.home__title,
+.home__line,
+.home__description {
+  margin-bottom: 32px;
+}
+
+.home__line {
+  min-width: 150px;
+}
+
+.home__description {
+  box-sizing: border-box;
+  max-width: 640px;
+  margin-top: 0;
+}
