@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Flight Booker</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="../">Back</a>
+          </nav>
+          <div class="task__title">
+            <header class="title">
+              <h1 class="title__text">Flight Booker</h1>
+            </header>
+          </div>
+          <div class="task__line">
+            <div class="line">===================================================================================================================================================================</div>
+          </div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
+
+              <p class="p">Constraints.</p>
+
+              <h2 class="h2">Criteria</h2>
+
+              <ul class="ul">
+                <li>Build a frame containing:
+                  <ul>
+                    <li>A combobox <em>C</em> with the two options "one-way flight" and "return flight".</li>
+                    <li>Two textfields <em>T<sub>1</sub></em> and <em>T<sub>2</sub></em> representing the start and return date, respectively.</li>
+                    <li>A button <em>B</em> for submitting the selected flight.</li>
+                  </ul>
+                </li>
+                <li><em>T<sub>2</sub></em> is enabled iff <em>C</em>'s value is "return flight".</li>
+                <li>When <em>C</em> has the value "return flight" and <em>T<sub>2</sub></em>'s date is strictly before <em>T<sub>1</sub></em>'s then <em>B</em> is disabled.</li>
+                <li>When a non-disabled textfield <em>T</em> has an ill-formatted date then <em>T</em> is colored red and <em>B</em> is disabled.</li>
+                <li>When clicking <em>B</em> a message is displayed informing the user of their selection (e.g. "You have booked a one-way flight on 29.06.2023.").</li>
+                <li>Initially:
+                  <ul>
+                    <li><em>C</em> has the value "one-way flight".</li>
+                    <li><em>T<sub>1</sub></em> as well as <em>T<sub>2</sub></em> have the same (arbitrary) date (it is implied that <em>T<sub>2</sub></em> is disabled).</li>
+                  </ul>
+                </li>
+              </ul>
+
+              <p class="p">The focus of Flight Booker lies on modelling constraints between widgets on the one hand and modelling constraints within a widget on the other hand. Such constraints are very common in everyday interactions with GUI applications. A good solution for Flight Booker will make the constraints clear, succinct and explicit in the source code and not hidden behind a lot of scaffolding.</p>
+
+              <p class="p p--large-bottom">Flight Booker is directly inspired by the <a href="http://blog.reactiveprogramming.org/?p=21" target="_blank" rel="noopener noreferrer">Flight Booking Java example in Sodium</a> with the simplification of using textfields for date input instead of specialized date picking widgets as the focus of Flight Booker is not on specialized/custom widgets.</p>
+
+              <div class="task__example">
+                <img src="./images/flight-booker.png" alt="Three visuals of the same frame in different states. The frame contains two text inputs, a select input, and a book button." />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app">
+                <div class="placeholder"></div>
+              </div>
+
+              <h2 class="h2">Code</h2>
+              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
