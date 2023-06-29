@@ -9,7 +9,6 @@
 
 .task__body {
   display: grid;
-  grid-template-rows: 1fr 1fr;
   row-gap: 64px;
 }
 
@@ -40,7 +39,6 @@
 
 @media (min-width: 900px) {
   .task__body {
-    grid-template-rows: initial;
     row-gap: initial;
 
     grid-template-columns: 1fr 1fr;

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Temperature Converter</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="../">Back</a>
+          </nav>
+          <div class="task__title">
+            <header class="title">
+              <h1 class="title__text">Temperature Converter</h1>
+            </header>
+          </div>
+          <div class="task__line">
+            <div class="line">===================================================================================================================================================================</div>
+          </div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
+
+              <p class="p">Bidirectional data flow, user-provided text input.</p>
+
+              <h2 class="h2">Criteria</h2>
+
+              <ul class="ul">
+                <li>Build a frame containing two textfields <em>T<sub>C</sub></em> and <em>T<sub>F</sub></em> representing the temperature in Celsius and Fahrenheit, respectively.</li>
+                <li>Initially, both <em>T<sub>C</sub></em> and <em>T<sub>F</sub></em> are empty.</li>
+                <li>When the user enters a numerical value into <em>T<sub>C</sub></em> the corresponding value in <em>T<sub>F</sub></em> is automatically updated and vice versa.</li>
+                <li>When the user enters a non-numerical string into <em>T<sub>C</sub></em> the value in <em>T<sub>F</sub></em> is not updated and vice versa.</li>
+                <li>The formula for converting a temperature <em>C</em> in Celsius into a temperature <em>F</em> in Fahrenheit is <em>F = C * (9/5) + 32</em>.</li>
+                <li>The formula for converting a temperature <em>F</em> in Fahrenheit into a temperature <em>C</em> in Celsius is <em>C = (F - 32) * (5/9)</em>.</li>
+              </ul>
+
+              <p class="p">Temperature Converter increases the complexity of Counter by having bidirectional data flow between the Celsius and Fahrenheit inputs and the need to check the user input for validity. A good solution will make the bidirectional dependency very clear with minimal boilerplate code.</p>
+
+              <p class="p p--large-bottom">Temperature Converter is inspired by the <a href="https://www.artima.com/pins1ed/gui-programming.html#32.4" target="_blank" rel="noopener noreferrer">Celsius/Fahrenheit converter</a> from the book Programming in Scala. It is such a widespread example&mdash;sometimes also in the form of a currency converter&mdash;that one could give a thousand references. The same is true for the Counter task.</p>
+
+              <div class="task__example">
+                <img src="./images/temperature-converter.png" alt="A dialogue box with 2 inputs with the labels Celsius and Fahrenheit." />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app">
+                <div class="placeholder"></div>
+              </div>
+
+              <h2 class="h2">Code</h2>
+              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
