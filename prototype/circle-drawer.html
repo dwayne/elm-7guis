@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Circle Drawer</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="../">Back</a>
+          </nav>
+          <div class="task__title">
+            <header class="title">
+              <h1 class="title__text">Circle Drawer</h1>
+            </header>
+          </div>
+          <div class="task__line">
+            <div class="line">===================================================================================================================================================================</div>
+          </div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
+
+              <p class="p">Undo/redo, custom drawing, dialog control.</p>
+
+              <h2 class="h2">Criteria</h2>
+
+              <ul class="ul">
+                <li>Build a frame containing an undo and redo button as well as a canvas area underneath.</li>
+                <li>Left-clicking an empty area inside the canvas will create an unfilled circle with a fixed diameter whose center is the left-clicked point.</li>
+                <li>The circle nearest to the mouse pointer such that the distance from its center to the pointer is less than its radius, if it exists, is filled with the color gray.</li>
+                <li>The gray circle is the selected circle <em>C</em>. Right-clicking <em>C</em> will make a popup menu appear with one entry "Adjust diameter..". Clicking on this entry will open another frame with a slider inside that adjusts the diameter of <em>C</em>. Changes are applied immediately. Closing this frame will mark the last diameter as significant for the undo/redo history.</li>
+                <li>Clicking undo will undo the last significant change (i.e. circle creation or diameter adjustment).</li>
+                <li>Clicking redo will reapply the last undone change unless new changes were made by the user in the meantime.</li>
+              </ul>
+
+              <p class="p">Circle Drawer's goal is, among other things, to test how good the common challenge of implementing an undo/redo functionality for a GUI application can be solved. In an ideal solution the undo/redo functionality comes for free, i.e. it just comes out as a natural consequence of the language / toolkit / paradigm. Moreover, Circle Drawer tests how dialog control, i.e. keeping the relevant context between several successive GUI interaction steps, is achieved in the source code. Last but not least, the ease of custom drawing is tested.</p>
+
+              <p class="p p--large-bottom">Dialog control is explained in more detail in the paper <a href="http://ceur-ws.org/Vol-610/paper11.pdf" target="_blank" rel="noopener noreferrer">Developing GUI Applications: Architectural Patterns Revisited</a> starting on page seven. The term describes the challenge of retaining context between successive GUI operations.</p>
+
+              <div class="task__example">
+                <img src="./images/circle-drawer.png" alt="A frame with multiple circles (some filled, some empty), two buttons; undo/redo buttons and a range control in a dialog." />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app">
+                <div class="placeholder"></div>
+              </div>
+
+              <h2 class="h2">Code</h2>
+              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
