@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Cells</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="../">Back</a>
+          </nav>
+          <div class="task__title">
+            <header class="title">
+              <h1 class="title__text">Cells</h1>
+            </header>
+          </div>
+          <div class="task__line">
+            <div class="line">===================================================================================================================================================================</div>
+          </div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
+
+              <p class="p">Change propagation, widget customization, implementing a more authentic/involved GUI application.</p>
+
+              <h2 class="h2">Criteria</h2>
+
+              <ul class="ul">
+                <li>Create a simple but usable spreadsheet application.</li>
+                <li>The spreadsheet should be scrollable.</li>
+                <li>The rows should be numbered from 0 to 99 and the columns from A to Z.</li>
+                <li>Double-clicking a cell <em>C</em> lets the user change <em>C</em>'s formula.</li>
+                <li>When editing is finished, the formula is parsed and evaluated and its updated value is shown in <em>C</em>. In addition, all cells which depend on <em>C</em> must be reevaluated. This process repeats until there are no more changes in the values of any cell (change propagation). Note that one should not just recompute the value of every cell but only of those cells that depend on another cell's changed value.</li>
+                <li>If there is an already provided spreadsheet widget it should not be used. Instead, another similar widget (like JTable in Swing) should be customized to become a reusable spreadsheet widget.</li>
+              </ul>
+
+              <p class="p">Cells is a more authentic and involved task that tests if a particular approach also scales to a somewhat bigger application. The two primary GUI-related challenges are intelligent propagation of changes and widget customization. Admittedly, there is a substantial part that is not necessarily very GUI-related but that is just the nature of a more authentic challenge. A good solution's change propagation will not involve much effort and the customization of a widget should not prove too difficult. The domain-specific code is clearly separated from the GUI-specific code. The resulting spreadsheet widget is reusable.</p>
+
+              <p class="p p--large-bottom">Cells is directly inspired by the <a href="https://www.artima.com/pins1ed/the-scells-spreadsheet.html" target="_blank" rel="noopener noreferrer">SCells spreadsheet example</a> from the book Programming in Scala. Please refer to the book (or the implementations in this repository) for more details especially with respect to the not directly GUI-related concerns like parsing and evaluating formulas and the precise syntax and semantics of the spreadsheet language.</p>
+
+              <div class="task__example">
+                <img src="./images/cells.png" alt="A spreadsheet." />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app">
+                <div class="placeholder"></div>
+              </div>
+
+              <h2 class="h2">Code</h2>
+              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Cells.elm">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Cells.elm">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Cells.elm">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
