@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CRUD</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="../">Back</a>
+          </nav>
+          <div class="task__title">
+            <header class="title">
+              <h1 class="title__text">CRUD</h1>
+            </header>
+          </div>
+          <div class="task__line">
+            <div class="line">===================================================================================================================================================================</div>
+          </div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
+
+              <p class="p">Separating the domain and presentation logic, managing mutation, building a non-trivial layout.</p>
+
+              <h2 class="h2">Criteria</h2>
+
+              <ul class="ul">
+                <li>Build a frame containing:
+                  <ul>
+                    <li>A textfield <em>T<sub>prefix</sub></em>, with the label "Filter prefix:".</li>
+                    <li>A pair of textfields <em>T<sub>name</sub></em> and <em>T<sub>surname</sub></em>, with the labels "Name:" and "Surname:" respectively.</li>
+                    <li>A listbox <em>L</em>.</li>
+                    <li>The create, update, and delete buttons <em>B<sub>C</sub></em>, <em>B<sub>U</sub></em>, and <em>B<sub>D</sub></em> respectively.</li>
+                  </ul>
+                </li>
+                <li><em>L</em> presents a view of the data in the database that consists of a list of names.</li>
+                <li>At most one entry can be selected in <em>L</em> at a time.</li>
+                <li>By entering a string into <em>T<sub>prefix</sub></em> the user can filter the names whose surname start with the entered prefix&mdash;this should happen immediately without having to submit the prefix with enter.</li>
+                <li>Clicking <em>B<sub>C</sub></em> will append the resulting name from concatenating the strings in <em>T<sub>name</sub></em> and <em>T<sub>surname</sub></em> to <em>L</em>.</li>
+                <li><em>B<sub>U</sub></em> and <em>B<sub>D</sub></em> are enabled iff an entry in <em>L</em> is selected.</li>
+                <li>Clicking <em>B<sub>U</sub></em> will replace the selected entry with the new name.</li>
+                <li>Clicking <em>B<sub>D</sub></em> will remove the selected entry.</li>
+                <li>The layout is to be done like suggested in the screenshot. In particular, <em>L</em> must occupy all the remaining space.</li>
+              </ul>
+
+              <p class="p">CRUD (Create, Read, Update and Delete) represents a typical graphical business application. The primary challenge is the separation of domain and presentation logic in the source code that is more or less forced on the implementer due to the ability to filter the view by a prefix. Traditionally, some form of MVC pattern is used to achieve the separation of domain and presentation logic. Also, the approach to managing the mutation of the list of names is tested. A good solution will have a good separation between the domain and presentation logic without much overhead (e.g. in the form of toolkit specific concepts or language/paradigm concepts), a mutation management that is fast but not error-prone and a natural representation of the layout (layout builders are allowed, of course, but would increase the overhead).</p>
+
+              <p class="p p--large-bottom">CRUD is directly inspired by the crud example in the blog post <a href="http://apfelmus.nfshost.com/blog/2012/03/29-frp-three-principles-bidirectional-gui.html" target="_blank" rel="noopener noreferrer">FRP - Three principles for GUI elements with bidirectional data flow</a>.</p>
+
+              <div class="task__example">
+                <img src="./images/crud.png" alt="A frame with a list of names, three textfields, and three buttons." />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app">
+                <div class="placeholder"></div>
+              </div>
+
+              <h2 class="h2">Code</h2>
+              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
