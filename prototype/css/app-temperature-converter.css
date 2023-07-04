@@ -1,0 +1,28 @@
+.temperature-converter {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.temperature-converter span {
+  text-align: center;
+}
+
+.temperature-converter__temperature {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.temperature-converter__temperature label {
+  cursor: pointer;
+}
+
+@media (min-width: 400px) {
+  .temperature-converter {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+}

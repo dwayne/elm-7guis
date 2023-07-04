@@ -5,8 +5,10 @@
 @import "./home.css";
 @import "./task.css";
 @import "./button.css";
+@import "./input.css";
 @import "./frame.css";
 @import "./app-counter.css";
+@import "./app-temperature-converter.css";
 @import "./layout.css";
 @import "./misc.css";
 
