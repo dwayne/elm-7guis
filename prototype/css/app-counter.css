@@ -1,0 +1,14 @@
+.counter {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.counter > output {
+  padding: 0 16px;
+
+  min-width: 30px;
+  text-align: center;
+
+  font-weight: bold;
+}

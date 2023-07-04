@@ -1,0 +1,23 @@
+.frame {
+  display: inline-flex;
+  flex-direction: column;
+
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: var(--box-shadow);
+}
+
+.frame__title {
+  margin: 0;
+  padding: 4px 16px 4px 16px;
+
+  text-align: center;
+  font-size: 16px;
+
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+.frame__body {
+  padding: 16px;
+}

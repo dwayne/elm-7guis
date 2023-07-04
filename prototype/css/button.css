@@ -1,0 +1,23 @@
+.button {
+  padding: 12px 24px;
+
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+  background-color: var(--text-color);
+  color: var(--background-color);
+
+  border: 0;
+}
+
+.button:hover {
+  opacity: 0.95;
+}
+
+.button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
