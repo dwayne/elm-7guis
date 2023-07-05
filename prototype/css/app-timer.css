@@ -1,0 +1,19 @@
+.timer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timer__field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timer__field > meter {
+  flex-grow: 1;
+}
+
+.timer > .button {
+  margin-top: 8px;
+}

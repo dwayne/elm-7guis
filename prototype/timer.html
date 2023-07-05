@@ -55,7 +55,23 @@
             </div>
             <div class="task__gui">
               <div class="task__app">
-                <div class="placeholder"></div>
+                <div class="frame">
+                  <h2 class="frame__title">Timer</h2>
+                  <div class="frame__body">
+                    <div class="timer">
+                      <div class="timer__field">
+                        <label for="elapsedTime">Elapsed Time:</label>
+                        <meter id="elapsedTime" min="0" max="15000" value="5000"></meter>
+                      </div>
+                      <output for="elapsedTime">5s</output>
+                      <div class="timer__field">
+                        <label for="duration">Duration:</label>
+                        <input id="duration" type="range" min="0" max="30000" value="15000" />
+                      </div>
+                      <button class="button" type="button">Reset</button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <h2 class="h2">Code</h2>
