@@ -61,7 +61,29 @@
             </div>
             <div class="task__gui">
               <div class="task__app">
-                <div class="placeholder"></div>
+                <div class="frame frame--has-flight-booker">
+                  <h2 class="frame__title">Flight Booker</h2>
+                  <div class="frame__body">
+                    <div class="flight-booker">
+                      <div class="flight-booker__field">
+                        <label for="oneWayOrReturn">One way or return:</label>
+                        <select id="oneWayOrReturn" class="select">
+                          <option>one-way flight</option>
+                          <option>return flight</option>
+                        </select>
+                      </div>
+                      <div class="flight-booker__field">
+                        <label for="departure">Departure date (format: DD.MM.YYYY)</label>
+                        <input id="departure" class="input" type="text" value="25.12.1999" />
+                      </div>
+                      <div class="flight-booker__field">
+                        <label for="return">Return date (format: DD.MM.YYYY)</label>
+                        <input id="return" class="input" type="text" value="25.12.1999" disabled />
+                      </div>
+                      <button class="button" type="submit">Book</button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <h2 class="h2">Code</h2>

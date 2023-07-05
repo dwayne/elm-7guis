@@ -1,0 +1,26 @@
+.input,
+.select {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-width: 100px;
+  padding: 8px 16px;
+
+  border: 1px solid var(--text-color);
+
+  font: inherit;
+  background-color: transparent;
+}
+
+.input:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.input--has-error {
+  background-color: tomato;
+}
+
+.input--has-warning {
+  background-color: lightgray;
+}

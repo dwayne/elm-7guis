@@ -1,0 +1,9 @@
+.flight-booker {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.flight-booker__field > label {
+  margin-bottom: 4px;
+}

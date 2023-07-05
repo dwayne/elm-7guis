@@ -5,10 +5,11 @@
 @import "./home.css";
 @import "./task.css";
 @import "./button.css";
-@import "./input.css";
+@import "./control.css";
 @import "./frame.css";
 @import "./app-counter.css";
 @import "./app-temperature-converter.css";
+@import "./app-flight-booker.css";
 @import "./layout.css";
 @import "./misc.css";
 

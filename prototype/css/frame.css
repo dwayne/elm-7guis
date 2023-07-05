@@ -21,3 +21,7 @@
 .frame__body {
   padding: 16px;
 }
+
+.frame--has-flight-booker {
+  max-width: 340px;
+}

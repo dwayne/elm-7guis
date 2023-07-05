@@ -16,12 +16,12 @@
       <div class="frame__body">
         <div class="temperature-converter">
           <div class="temperature-converter__temperature">
-            <input id="celsiusA" class="input" type="number" step="0.01" />
+            <input id="celsiusA" class="input" type="text" />
             <label for="celsiusA">&deg;C</label>
           </div>
           <span>=</span>
           <div class="temperature-converter__temperature">
-            <input id="fahrenheitA" class="input" type="number" step="0.01" />
+            <input id="fahrenheitA" class="input" type="text" />
             <label for="fahrenheitA">&deg;F</label>
           </div>
         </div>
@@ -35,13 +35,32 @@
       <div class="frame__body">
         <div class="temperature-converter">
           <div class="temperature-converter__temperature">
-            <input id="celsiusB" class="input" type="number" step="0.01" value="32" />
+            <input id="celsiusB" class="input" type="text" value="32" />
             <label for="celsiusB">&deg;C</label>
           </div>
           <span>=</span>
           <div class="temperature-converter__temperature">
-            <input id="fahrenheitB" class="input" type="number" step="0.01" value="89.60" />
+            <input id="fahrenheitB" class="input" type="text" value="89.60" />
             <label for="fahrenheitB">&deg;F</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>C</h2>
+
+    <div class="frame">
+      <h2 class="frame__title">Temperature Converter</h2>
+      <div class="frame__body">
+        <div class="temperature-converter">
+          <div class="temperature-converter__temperature">
+            <input id="celsiusC" class="input input--has-error" type="text" value="32x" />
+            <label for="celsiusC">&deg;C</label>
+          </div>
+          <span>=</span>
+          <div class="temperature-converter__temperature">
+            <input id="fahrenheitC" class="input input--has-warning" type="text" value="89.60" />
+            <label for="fahrenheitC">&deg;F</label>
           </div>
         </div>
       </div>
