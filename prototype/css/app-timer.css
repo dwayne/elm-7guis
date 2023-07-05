@@ -14,6 +14,10 @@
   flex-grow: 1;
 }
 
+.timer__field > input[type="range"] {
+  margin: 0;
+}
+
 .timer > .button {
   margin-top: 8px;
 }
