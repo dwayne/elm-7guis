@@ -32,7 +32,7 @@
 }
 
 .task__screenshot > img {
-  width: 100%;
+  max-width: 100%;
 }
 
 .task__app {
