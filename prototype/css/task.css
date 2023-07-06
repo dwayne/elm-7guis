@@ -23,7 +23,7 @@
   bottom: -32px;
   width: 100%;
   height: 1px;
-  background-color: var(--border-color);
+  background-color: var(--text-color);
 }
 
 .task__screenshot {
