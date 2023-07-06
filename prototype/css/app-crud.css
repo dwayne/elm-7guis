@@ -36,8 +36,14 @@
 
 .crud__listbox {
   width: 100%;
+  max-width: 340px;
+
   height: 100%;
   min-height: 150px;
+
+  padding: 4px;
+
+  overflow: auto;
 }
 
 .crud__names {
