@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Circle</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+    <style>
+      body {
+        height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .canvas-area {
+        box-sizing: border-box;
+
+        width: 360px;
+        height: 240px;
+
+        border: 1px solid var(--border-color);
+      }
+
+      .canvas {
+        position: relative;
+
+        width: 100%;
+        height: 100%;
+
+        overflow: hidden;
+
+        background-color: var(--background-color);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas-area">
+      <div class="canvas">
+        <div class="circle"></div>
+        <div class="circle" style="--circle-x: 150px; --circle-y: 50px; --circle-diameter: 60px"></div>
+        <div class="circle circle--selected" style="--circle-x: 50px; --circle-y: 150px; --circle-diameter: 40px"></div>
+        <div class="circle" style="--circle-x: 300px; --circle-y: 225px; --circle-diameter: 70px"></div>
+      </div>
+    </div>
+  </body>
+</html>

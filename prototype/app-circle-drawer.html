@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Circle Drawer</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <h2>No circles</h2>
+
+    <div class="frame">
+      <h2 class="frame__title">Circle Drawer</h2>
+      <div class="frame__body">
+        <div class="circle-drawer">
+          <div class="circle-drawer__undoredo">
+            <button class="button" type="button" disabled>Undo</button>
+            <button class="button" type="button" disabled>Redo</button>
+          </div>
+          <div class="circle-drawer__canvas-area">
+            <div class="circle-drawer__canvas">
+              <!-- Circles go here. -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>A few circles</h2>
+
+    <div class="frame">
+      <h2 class="frame__title">Circle Drawer</h2>
+      <div class="frame__body">
+        <div class="circle-drawer">
+          <div class="circle-drawer__undoredo">
+            <button class="button" type="button">Undo</button>
+            <button class="button" type="button" disabled>Redo</button>
+          </div>
+          <div class="circle-drawer__canvas-area">
+            <div class="circle-drawer__canvas">
+              <div class="circle"></div>
+              <div class="circle" style="--circle-x: 150px; --circle-y: 50px; --circle-diameter: 60px"></div>
+              <div class="circle circle--selected" style="--circle-x: 50px; --circle-y: 150px; --circle-diameter: 40px"></div>
+              <div class="circle" style="--circle-x: 300px; --circle-y: 225px; --circle-diameter: 70px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Menu</h2>
+
+    <div class="frame">
+      <h2 class="frame__title">Circle Drawer</h2>
+      <div class="frame__body">
+        <div class="circle-drawer">
+          <div class="circle-drawer__undoredo">
+            <button class="button" type="button">Undo</button>
+            <button class="button" type="button" disabled>Redo</button>
+          </div>
+          <div class="circle-drawer__canvas-area">
+            <div class="dialog-wrapper">
+              <!-- Viewport -->
+              <div class="circle-drawer__canvas">
+                <div class="circle"></div>
+                <div class="circle" style="--circle-x: 150px; --circle-y: 50px; --circle-diameter: 60px"></div>
+                <div class="circle circle--selected" style="--circle-x: 50px; --circle-y: 150px; --circle-diameter: 40px"></div>
+                <div class="circle" style="--circle-x: 300px; --circle-y: 225px; --circle-diameter: 70px"></div>
+              </div>
+
+              <!-- Dialog background -->
+              <div id="dialog-background-menu" class="dialog-background">
+                <div id="dialog-menu" class="dialog" tabindex="-1" style="--dialog-x: 50px; --dialog-y: 150px">
+                  <!-- Block -->
+                  <button class="button">Adjust Diameter</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Adjust diameter</h2>
+
+    <div class="frame">
+      <h2 class="frame__title">Circle Drawer</h2>
+      <div class="frame__body">
+        <div class="circle-drawer">
+          <div class="circle-drawer__undoredo">
+            <button class="button" type="button">Undo</button>
+            <button class="button" type="button" disabled>Redo</button>
+          </div>
+          <div class="circle-drawer__canvas-area">
+            <div class="dialog-wrapper">
+              <!-- Viewport -->
+              <div class="circle-drawer__canvas">
+                <div class="circle"></div>
+                <div class="circle" style="--circle-x: 150px; --circle-y: 50px; --circle-diameter: 60px"></div>
+                <div class="circle circle--selected" style="--circle-x: 50px; --circle-y: 150px; --circle-diameter: 40px"></div>
+                <div class="circle" style="--circle-x: 300px; --circle-y: 225px; --circle-diameter: 70px"></div>
+              </div>
+
+              <!-- Dialog background -->
+              <div id="dialog-background-menu" class="dialog-background">
+                <div id="dialog-menu" class="dialog" tabindex="-1" style="--dialog-x: 50px; --dialog-y: 150px">
+                  <!-- Block -->
+                  <div class="frame">
+                    <h2 class="frame__title">Adjust Diameter</h2>
+                    <div class="frame__body">
+                      <div class="adjust-diameter">
+                        <label for="diameter">Adjust diameter of circle at (50, 150).</label>
+                        <input id="diameter" type="range" step="1" min="2" max="100" value="40" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

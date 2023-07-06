@@ -6,12 +6,14 @@
 @import "./task.css";
 @import "./button.css";
 @import "./control.css";
+@import "./circle.css";
 @import "./frame.css";
 @import "./app-counter.css";
 @import "./app-temperature-converter.css";
 @import "./app-flight-booker.css";
 @import "./app-timer.css";
 @import "./app-crud.css";
+@import "./app-circle-drawer.css";
 @import "./layout.css";
 @import "./misc.css";
 

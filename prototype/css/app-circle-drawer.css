@@ -1,0 +1,62 @@
+.circle-drawer__undoredo {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+
+  margin-bottom: 16px;
+}
+
+.circle-drawer__canvas-area {
+  box-sizing: border-box;
+
+  width: 360px;
+  height: 240px;
+
+  border: 1px solid var(--border-color);
+}
+
+.circle-drawer__canvas {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  background-color: var(--background-color);
+}
+
+.dialog-wrapper {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+}
+
+.dialog-background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background-color: transparent;
+}
+
+.dialog {
+  --dialog-x: 0;
+  --dialog-y: 0;
+
+  position: absolute;
+  left: var(--dialog-x);
+  top: var(--dialog-y);
+
+  min-width: max-content;
+}
+
+.adjust-diameter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}

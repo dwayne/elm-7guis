@@ -1,0 +1,20 @@
+.circle {
+  --circle-x: 0;
+  --circle-y: 0;
+  --circle-diameter: 30px;
+
+  position: absolute;
+  left: var(--circle-x);
+  top: var(--circle-y);
+  transform: translate(-50%, -50%);
+
+  inline-size: var(--circle-diameter);
+  aspect-ratio: 1;
+  border-radius: 50%;
+
+  border: 1px solid var(--border-color);
+}
+
+.circle--selected {
+  background-color: #eee;
+}
