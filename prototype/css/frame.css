@@ -24,6 +24,11 @@
   padding: 16px;
 }
 
-.frame--has-flight-booker {
+.frame--flight-booker {
   max-width: 340px;
+}
+
+.frame--cells {
+  max-width: 100%;
+  min-width: 205px;
 }

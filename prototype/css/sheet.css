@@ -1,0 +1,118 @@
+.sheet *,
+.sheet *::before,
+.sheet *::after {
+  box-sizing: border-box;
+}
+
+.sheet {
+  --sheet-column-header-width: 130px;
+  --sheet-column-header-height: 40px;
+  --sheet-row-header-width: var(--sheet-row-header-height);
+  --sheet-row-header-height: var(--sheet-column-header-height);
+
+  display: block;
+
+  height: calc(var(--sheet-column-header-height) + 10 * var(--sheet-row-header-height));
+
+  overflow: auto;
+
+  border-spacing: 0;
+}
+
+.sheet__th,
+.sheet__td {
+  padding: 0;
+}
+
+.sheet,
+.sheet__th,
+.sheet__td {
+  border: 1px solid;
+}
+
+.sheet__th,
+.sheet__td {
+  border-top-width: 0;
+  border-left-width: 0;
+}
+
+.sheet__th:last-child,
+.sheet__td:last-child {
+  border-right-width: 0;
+}
+
+.sheet__tbody .sheet__tr:last-child .sheet__th,
+.sheet__tbody .sheet__tr:last-child .sheet__td {
+  border-bottom-width: 0;
+}
+
+.sheet__thead .sheet__th {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  background-color: var(--background-color);
+}
+
+.sheet__tbody .sheet__th {
+  position: sticky;
+  z-index: 2;
+  left: 0;
+  background-color: var(--background-color);
+}
+
+.sheet__row-headers-column-header {
+  width: var(--sheet-row-header-width);
+  min-width: var(--sheet-row-header-width);
+  max-width: var(--sheet-row-header-width);
+  height: var(--sheet-column-header-height);
+}
+
+.sheet__column-header,
+.sheet__cell {
+  width: var(--sheet-column-header-width);
+  min-width: var(--sheet-column-header-width);
+  max-width: var(--sheet-column-header-width);
+  height: var(--sheet-row-header-height);
+}
+
+.sheet__cell-value:hover {
+  filter: brightness(90%);
+
+  cursor: pointer;
+  overflow: auto;
+}
+
+.sheet__cell-value {
+  width: 100%;
+  height: 100%;
+
+  padding: 0 8px;
+
+  display: flex;
+  align-items: center;
+
+  white-space: nowrap;
+  overflow: hidden;
+
+  background-color: var(--background-color);
+}
+
+.sheet__cell-value--has-error {
+  background-color: tomato;
+  font-weight: bold;
+}
+
+.sheet__cell-input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0 8px;
+  border: 1px solid var(--border-color);
+
+  font: inherit;
+  background-color: var(--background-color);
+  filter: brightness(90%);
+
+  position: relative;
+  z-index: 1;
+}
