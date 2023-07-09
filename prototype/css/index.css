@@ -3,25 +3,22 @@
 @import "./line.css";
 @import "./toc.css";
 @import "./home.css";
-@import "./task.css";
 @import "./button.css";
 @import "./control.css";
-@import "./circle.css";
-@import "./sheet.css";
+@import "./text.css";
+@import "./placeholder.css";
+@import "./task.css";
 @import "./frame.css";
-@import "./app-counter.css";
-@import "./app-temperature-converter.css";
-@import "./app-flight-booker.css";
-@import "./app-timer.css";
-@import "./app-crud.css";
-@import "./app-circle-drawer.css";
 @import "./layout.css";
-@import "./misc.css";
 
-.placeholder {
-  width: 185px;
-  height: 100px;
-  background-color: hsl(0, 0%, 100%);
-  border: 1px solid hsl(0, 0%, 13%);
-  border-radius: 4px;
-}
+@import "./counter.css";
+@import "./temperature-converter.css";
+@import "./flight-booker.css";
+@import "./timer.css";
+@import "./crud.css";
+
+@import "./circle.css";
+@import "./canvas.css";
+@import "./circle-drawer.css";
+
+@import "./sheet.css";

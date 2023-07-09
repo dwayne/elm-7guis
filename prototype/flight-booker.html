@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Flight Booker</title>
+    <title>Flight Booker | 7GUIs</title>
 
+    <link rel="icon" href="./images/favicon.ico">
     <link rel="stylesheet" href="./css/index.css">
   </head>
   <body>
@@ -15,14 +16,10 @@
           <nav class="task__nav">
             <a href="../">Back</a>
           </nav>
-          <div class="task__title">
-            <header class="title">
-              <h1 class="title__text">Flight Booker</h1>
-            </header>
-          </div>
-          <div class="task__line">
-            <div class="line">===================================================================================================================================================================</div>
-          </div>
+          <header class="title task__title">
+            <h1 class="title__text">Flight Booker</h1>
+          </header>
+          <div class="line task__line">===================================================================================================================================================================</div>
           <div class="task__body">
             <div class="task__description">
               <h2 class="h2">Challenge</h2>
@@ -53,7 +50,7 @@
 
               <p class="p">The focus of Flight Booker lies on modelling constraints between widgets on the one hand and modelling constraints within a widget on the other hand. Such constraints are very common in everyday interactions with GUI applications. A good solution for Flight Booker will make the constraints clear, succinct and explicit in the source code and not hidden behind a lot of scaffolding.</p>
 
-              <p class="p p--large-bottom">Flight Booker is directly inspired by the <a href="http://blog.reactiveprogramming.org/?p=21" target="_blank" rel="noopener noreferrer">Flight Booking Java example in Sodium</a> with the simplification of using textfields for date input instead of specialized date picking widgets as the focus of Flight Booker is not on specialized/custom widgets.</p>
+              <p class="p p--mb-large">Flight Booker is directly inspired by the <a href="http://blog.reactiveprogramming.org/?p=21" target="_blank" rel="noopener noreferrer">Flight Booking Java example in Sodium</a> with the simplification of using textfields for date input instead of specialized date picking widgets as the focus of Flight Booker is not on specialized/custom widgets.</p>
 
               <div class="task__screenshot">
                 <img src="./images/flight-booker.png" alt='Three frames in different states. Each frame has the title "Book Flight" and contains a combobox, two textfields representing the departure and return dates, and a button labelled "Book". The first frame contains valid data, the second frame has an invalid departure date, and the third frame has an invalid return date.' />
@@ -64,12 +61,12 @@
                 <div class="frame frame--flight-booker">
                   <h2 class="frame__title">Flight Booker</h2>
                   <div class="frame__body">
-                    <div class="flight-booker">
+                    <form class="flight-booker">
                       <div class="flight-booker__field">
                         <label for="oneWayOrReturn">One way or return:</label>
                         <select id="oneWayOrReturn" class="select" autofocus>
-                          <option>one-way flight</option>
-                          <option>return flight</option>
+                          <option value="one-way">one-way flight</option>
+                          <option value="return">return flight</option>
                         </select>
                       </div>
                       <div class="flight-booker__field">
@@ -81,17 +78,17 @@
                         <input id="return" class="input" type="text" value="25.12.1999" disabled />
                       </div>
                       <button class="button" type="submit">Book</button>
-                    </div>
+                    </form>
                   </div>
                 </div>
               </div>
 
               <h2 class="h2">Code</h2>
-              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm">HTML</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm">CSS</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm">Elm</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm" rel="noreferrer" target="_blank">Elm</a></li>
               </ul>
             </div>
           </div>

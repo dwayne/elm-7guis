@@ -1,0 +1,25 @@
+.canvas {
+  box-sizing: border-box;
+
+  width: 284px;
+  height: 284px;
+
+  border: 1px solid var(--border-color);
+
+  background: var(--background-color);
+
+  position: relative;
+  overflow: hidden;
+}
+
+@container (min-width: 378px) {
+  .canvas {
+    width: 342px;
+  }
+}
+
+@container (min-width: 440px) {
+  .canvas {
+    width: 404px;
+  }
+}

@@ -1,0 +1,73 @@
+.crud {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.crud label {
+  margin-bottom: 4px;
+}
+
+.crud__names > .input {
+  margin-bottom: 16px;
+}
+
+.crud__buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  gap: 8px;
+}
+
+@container (min-width: 600px) {
+  .crud {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(auto, 360px));
+    gap: 16px;
+  }
+
+  .crud__filter-area {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .crud__listbox-area {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .crud__names-area {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .crud__buttons-area {
+    grid-column: 1 / 3;
+    grid-row: 3;
+  }
+
+  .crud__filter {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+  }
+
+  .crud__filter > label {
+    white-space: nowrap;
+  }
+
+  .crud__names {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 8px;
+    row-gap: 16px;
+  }
+
+  .crud__names > .input {
+    margin-bottom: 0;
+  }
+
+  .crud__buttons {
+    display: initial;
+  }
+}

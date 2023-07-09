@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>CRUD</title>
+    <title>CRUD | 7GUIs</title>
 
+    <link rel="icon" href="./images/favicon.ico">
     <link rel="stylesheet" href="./css/index.css">
   </head>
   <body>
@@ -52,37 +53,44 @@
 
               <p class="p">CRUD (Create, Read, Update and Delete) represents a typical graphical business application. The primary challenge is the separation of domain and presentation logic in the source code that is more or less forced on the implementer due to the ability to filter the view by a prefix. Traditionally, some form of MVC pattern is used to achieve the separation of domain and presentation logic. Also, the approach to managing the mutation of the list of names is tested. A good solution will have a good separation between the domain and presentation logic without much overhead (e.g. in the form of toolkit specific concepts or language/paradigm concepts), a mutation management that is fast but not error-prone and a natural representation of the layout (layout builders are allowed, of course, but would increase the overhead).</p>
 
-              <p class="p p--large-bottom">CRUD is directly inspired by the crud example in the blog post <a href="http://apfelmus.nfshost.com/blog/2012/03/29-frp-three-principles-bidirectional-gui.html" target="_blank" rel="noopener noreferrer">FRP - Three principles for GUI elements with bidirectional data flow</a>.</p>
+              <p class="p p--mb-large">CRUD is directly inspired by the crud example in the blog post <a href="http://apfelmus.nfshost.com/blog/2012/03/29-frp-three-principles-bidirectional-gui.html" target="_blank" rel="noopener noreferrer">FRP - Three principles for GUI elements with bidirectional data flow</a>.</p>
 
               <div class="task__screenshot">
                 <img src="./images/crud.png" alt='A frame with the title "CRUD", containing a listbox with a list of names, a textfield to filter the names, a pair of textfields for the first name and surname, and three buttons labelled "Create", "Update", and "Delete".' />
               </div>
             </div>
             <div class="task__gui">
-              <div class="task__app">
+              <div class="task__app container">
                 <div class="frame">
                   <h2 class="frame__title">CRUD</h2>
                   <div class="frame__body">
                     <div class="crud">
                       <div class="crud_filter-area">
                         <div class="crud__filter">
-                          <label for="filter">Filter prefix:</label>
-                          <input id="filter" class="input" type="text" />
+                          <label for="filterB">Filter prefix:</label>
+                          <input id="filterB" class="input" type="text" />
                         </div>
                       </div>
                       <div class="crud__listbox-area">
-                        <select class="crud__listbox" size="2">
-                          <option>Turing, Alan</option>
-                          <option>Lovelace, Ada</option>
-                          <option>Church, Alonzo</option>
+                        <select class="select" size="2">
+                          <option>Czaplicki, Evan</option>
+                          <option>Engels, Jeroen</option>
+                          <option>Feldman, Richard</option>
+                          <option>Griffith, Matthew</option>
+                          <option>Kearns, Dillon</option>
+                          <option>Kelly, Tessa</option>
+                          <option>Lydell, Simon</option>
+                          <option>Schuster, Wolfgang</option>
+                          <option>Smith, Jared</option>
+                          <option>Sokol, Tereza</option>
                         </select>
                       </div>
                       <div class="crud__names-area">
                         <div class="crud__names">
-                          <label for="name">Name:</label>
-                          <input id="name" class="input" type="text" autofocus />
-                          <label for="surname">Surname:</label>
-                          <input id="surname" class="input" type="text" />
+                          <label for="nameB">Name:</label>
+                          <input id="nameB" class="input" type="text" autofocus />
+                          <label for="surnameB">Surname:</label>
+                          <input id="surnameB" class="input" type="text" />
                         </div>
                       </div>
                       <div class="crud__buttons-area">
@@ -98,7 +106,7 @@
               </div>
 
               <h2 class="h2">Code</h2>
-              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
                 <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">HTML</a></li>
                 <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">CSS</a></li>

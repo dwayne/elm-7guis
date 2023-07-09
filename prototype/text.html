@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Text</title>
+
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <h1>Text</h1>
+
+    <h2>h2</h2>
+
+    <h2 class="h2">Challenge</h2>
+    <h2 class="h2">Criteria</h2>
+    <h2 class="h2">Assumptions</h2>
+    <h2 class="h2">Code</h2>
+
+    <h2>p</h2>
+
+    <p class="p">Understanding the basic ideas of a language/toolkit.</p>
+    <p class="p">Bidirectional data flow, user-provided text input.</p>
+    <p class="p">Constraints.</p>
+    <p class="p">Concurrency, competing user/signal interactions, responsiveness.</p>
+    <p class="p">Separating the domain and presentation logic, managing mutation, building a non-trivial layout.</p>
+    <p class="p">Undo/redo, custom drawing, dialog control.</p>
+    <p class="p">Change propagation, widget customization, implementing a more authentic/involved GUI application.</p>
+
+    <h3>p--mb-small</h3>
+
+    <p class="p p--mb-small">Understanding the basic ideas of a language/toolkit.</p>
+    <p class="p p--mb-small">Bidirectional data flow, user-provided text input.</p>
+
+    <h3>p--mb-large</h3>
+
+    <p class="p p--mb-large">Understanding the basic ideas of a language/toolkit.</p>
+    <p class="p p--mb-large">Bidirectional data flow, user-provided text input.</p>
+
+    <h2>ul</h2>
+
+    <ul class="ul">
+      <li>Build a frame containing a label or read-only textfield <em>T</em> and a button <em>B</em>.</li>
+      <li>Initially, the value in <em>T</em> is 0.</li>
+      <li>Each click of <em>B</em> increases the value in <em>T</em> by 1.</li>
+    </ul>
+
+    <h3>Nested ul's</h3>
+
+    <ul class="ul">
+      <li>Build a frame containing:
+        <ul>
+          <li>A combobox <em>C</em> with the two options "one-way flight" and "return flight".</li>
+          <li>Two textfields <em>T<sub>1</sub></em> and <em>T<sub>2</sub></em> representing the start and return date, respectively.</li>
+          <li>A button <em>B</em> for submitting the selected flight.</li>
+        </ul>
+      </li>
+      <li><em>T<sub>2</sub></em> is enabled iff <em>C</em>'s value is "return flight".</li>
+      <li>When <em>C</em> has the value "return flight" and <em>T<sub>2</sub></em>'s date is strictly before <em>T<sub>1</sub></em>'s then <em>B</em> is disabled.</li>
+      <li>When a non-disabled textfield <em>T</em> has an ill-formatted date then <em>T</em> is colored red and <em>B</em> is disabled.</li>
+      <li>When clicking <em>B</em> a message is displayed informing the user of their selection (e.g. "You have booked a one-way flight on 29.06.2023.").</li>
+      <li>Initially:
+        <ul>
+          <li><em>C</em> has the value "one-way flight".</li>
+          <li><em>T<sub>1</sub></em> as well as <em>T<sub>2</sub></em> have the same (arbitrary) date (it is implied that <em>T<sub>2</sub></em> is disabled).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>ul--alt</h3>
+
+    <ul class="ul ul--alt">
+      <li>New circle diameter = 24px.</li>
+      <li>Diameter should change in steps of 1px.</li>
+      <li>Min. diameter = 8px. Max. diameter = 100px.</li>
+      <li>When the menu or diameter slider frame is open:
+        <ul>
+          <li>Undo and redo buttons are disabled.</li>
+          <li>Creating a new circle is disabled.</li>
+          <li>The last selected circle remains selected until frames are closed.</li>
+        </ul>
+      </li>
+      <li>Undo and redo buttons are disabled if there is nothing to undo or redo.</li>
+    </ul>
+
+    <h2>src-links</h2>
+
+    <ul class="src-links">
+      <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">HTML</a></li>
+      <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">CSS</a></li>
+      <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">Elm</a></li>
+    </ul>
+  </body>
+</html>

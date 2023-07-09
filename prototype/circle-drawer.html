@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Circle Drawer</title>
+    <title>Circle Drawer | 7GUIs</title>
 
+    <link rel="icon" href="./images/favicon.ico">
     <link rel="stylesheet" href="./css/index.css">
   </head>
   <body>
@@ -15,14 +16,10 @@
           <nav class="task__nav">
             <a href="../">Back</a>
           </nav>
-          <div class="task__title">
-            <header class="title">
-              <h1 class="title__text">Circle Drawer</h1>
-            </header>
-          </div>
-          <div class="task__line">
-            <div class="line">===================================================================================================================================================================</div>
-          </div>
+          <header class="title task__title">
+            <h1 class="title__text">Circle Drawer</h1>
+          </header>
+          <div class="line task__line">===================================================================================================================================================================</div>
           <div class="task__body">
             <div class="task__description">
               <h2 class="h2">Challenge</h2>
@@ -42,14 +39,14 @@
 
               <p class="p">Circle Drawer's goal is, among other things, to test how good the common challenge of implementing an undo/redo functionality for a GUI application can be solved. In an ideal solution the undo/redo functionality comes for free, i.e. it just comes out as a natural consequence of the language / toolkit / paradigm. Moreover, Circle Drawer tests how dialog control, i.e. keeping the relevant context between several successive GUI interaction steps, is achieved in the source code. Last but not least, the ease of custom drawing is tested.</p>
 
-              <p class="p p--large-bottom">Dialog control is explained in more detail in the paper <a href="http://ceur-ws.org/Vol-610/paper11.pdf" target="_blank" rel="noopener noreferrer">Developing GUI Applications: Architectural Patterns Revisited</a> starting on page seven. The term describes the challenge of retaining context between successive GUI operations.</p>
+              <p class="p p--mb-large">Dialog control is explained in more detail in the paper <a href="http://ceur-ws.org/Vol-610/paper11.pdf" target="_blank" rel="noopener noreferrer">Developing GUI Applications: Architectural Patterns Revisited</a> starting on page seven. The term describes the challenge of retaining context between successive GUI operations.</p>
 
               <div class="task__screenshot">
                 <img src="./images/circle-drawer.png" alt='A frame with the title "CircleDraw", containing a button labelled "Undo", another button labelled "Redo", a canvas with multiple circles of various sizes one of which is colored gray, and an overlapping frame containing a slider for adjusting the diameter of the selected circle.' />
               </div>
             </div>
             <div class="task__gui">
-              <div class="task__app">
+              <div class="task__app container">
                 <div class="frame">
                   <h2 class="frame__title">Circle Drawer</h2>
                   <div class="frame__body">
@@ -58,10 +55,8 @@
                         <button class="button" type="button" disabled>Undo</button>
                         <button class="button" type="button" disabled>Redo</button>
                       </div>
-                      <div class="circle-drawer__canvas-area">
-                        <div class="circle-drawer__canvas">
-                          <!-- Circles go here. -->
-                        </div>
+                      <div class="canvas">
+                        <!-- Circles go here. -->
                       </div>
                     </div>
                   </div>
@@ -69,11 +64,11 @@
               </div>
 
               <h2 class="h2">Code</h2>
-              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm">HTML</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm">CSS</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm">Elm</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">Elm</a></li>
               </ul>
             </div>
           </div>

@@ -16,6 +16,7 @@
 
 .timer__field > input[type="range"] {
   margin: 0;
+  cursor: pointer;
 }
 
 .timer > .button {

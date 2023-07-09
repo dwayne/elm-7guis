@@ -7,6 +7,11 @@
     <title>Control</title>
 
     <link rel="stylesheet" href="./css/index.css">
+    <style>
+      body {
+        padding: 16px;
+      }
+    </style>
   </head>
   <body>
     <h2>Text</h2>
@@ -16,19 +21,65 @@
     </p>
 
     <p>
-      <input class="input input--has-error" type="text" value="25.12.199" />
+      <input class="input" type="text" value="999" />
     </p>
 
     <p>
+      <input class="input" type="text" value="31.12.2022" />
+    </p>
+
+    <h2>Text (disabled)</h2>
+
+    <p>
+      <input class="input" type="text" value="01.01.2023" disabled />
+    </p>
+
+    <h2>Text (warning)</h2>
+
+    <p>
       <input class="input input--has-warning" type="text" value="32" />
+    </p>
+
+    <h2>Text (error)</h2>
+
+    <p>
+      <input class="input input--has-error" type="text" value="25.12.199" />
     </p>
 
     <h2>Select</h2>
 
     <p>
       <select class="select">
-        <option>one-way flight</option>
-        <option>return flight</option>
+        <option value="one-way">one-way flight</option>
+        <option value="return">return flight</option>
+      </select>
+    </p>
+
+    <p>
+      <select class="select" size="2">
+        <option>Czaplicki, Evan</option>
+        <option>Feldman, Richard</option>
+      </select>
+    </p>
+
+    <p>
+      <select class="select" size="2">
+        <option>Czaplicki, Evan</option>
+        <option>Engels, Jeroen</option>
+        <option>Feldman, Richard</option>
+        <option>Griffith, Matthew</option>
+        <option>Kearns, Dillon</option>
+        <option>Kelly, Tessa</option>
+        <option>Lydell, Simon</option>
+        <option>Schuster, Wolfgang</option>
+        <option>Smith, Jared</option>
+        <option>Sokol, Tereza</option>
+      </select>
+    </p>
+
+    <p>
+      <select class="select" size="2">
+        <option>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</option>
       </select>
     </p>
   </body>

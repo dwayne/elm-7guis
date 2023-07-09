@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Temperature Converter</title>
+    <title>Temperature Converter | 7GUIs</title>
 
+    <link rel="icon" href="./images/favicon.ico">
     <link rel="stylesheet" href="./css/index.css">
   </head>
   <body>
@@ -15,14 +16,10 @@
           <nav class="task__nav">
             <a href="../">Back</a>
           </nav>
-          <div class="task__title">
-            <header class="title">
-              <h1 class="title__text">Temperature Converter</h1>
-            </header>
-          </div>
-          <div class="task__line">
-            <div class="line">===================================================================================================================================================================</div>
-          </div>
+          <header class="title task__title">
+            <h1 class="title__text">Temperature Converter</h1>
+          </header>
+          <div class="line task__line">===================================================================================================================================================================</div>
           <div class="task__body">
             <div class="task__description">
               <h2 class="h2">Challenge</h2>
@@ -42,26 +39,26 @@
 
               <p class="p">Temperature Converter increases the complexity of Counter by having bidirectional data flow between the Celsius and Fahrenheit inputs and the need to check the user input for validity. A good solution will make the bidirectional dependency very clear with minimal boilerplate code.</p>
 
-              <p class="p p--large-bottom">Temperature Converter is inspired by the <a href="https://www.artima.com/pins1ed/gui-programming.html#32.4" target="_blank" rel="noopener noreferrer">Celsius/Fahrenheit converter</a> from the book Programming in Scala. It is such a widespread example&mdash;sometimes also in the form of a currency converter&mdash;that one could give a thousand references. The same is true for the Counter task.</p>
+              <p class="p p--mb-large">Temperature Converter is inspired by the <a href="https://www.artima.com/pins1ed/gui-programming.html#32.4" target="_blank" rel="noopener noreferrer">Celsius/Fahrenheit converter</a> from the book Programming in Scala. It is such a widespread example&mdash;sometimes also in the form of a currency converter&mdash;that one could give a thousand references. The same is true for the Counter task.</p>
 
               <div class="task__screenshot">
                 <img src="./images/temperature-converter.png" alt='A frame with the title "TempConv", containing two textfields. The textfield on the left contains the number "5" and has the "Celsius" label to its right. The textfield on the right contains the number "41" and has the "Fahrenheit" label to its right.' />
               </div>
             </div>
             <div class="task__gui">
-              <div class="task__app">
+              <div class="task__app container">
                 <div class="frame">
                   <h2 class="frame__title">Temperature Converter</h2>
                   <div class="frame__body">
                     <div class="temperature-converter">
                       <div class="temperature-converter__temperature">
-                        <input id="celsiusA" class="input" type="text" autofocus />
-                        <label for="celsiusA">&deg;C</label>
+                        <input id="celsius" class="input" type="text" autofocus />
+                        <label for="celsius">&deg;C</label>
                       </div>
-                      <span>=</span>
+                      <span class="temperature-converter__eq">=</span>
                       <div class="temperature-converter__temperature">
-                        <input id="fahrenheitA" class="input" type="text" />
-                        <label for="fahrenheitA">&deg;F</label>
+                        <input id="fahrenheit" class="input" type="text" />
+                        <label for="fahrenheit">&deg;F</label>
                       </div>
                     </div>
                   </div>
@@ -69,11 +66,11 @@
               </div>
 
               <h2 class="h2">Code</h2>
-              <p class="p p--small-bottom">After opening a code link below, hit the '.' key to open GitHub's browser editor for improved reading experience.</p>
+              <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm">HTML</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm">CSS</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm">Elm</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/TemperatureConverter.elm" rel="noreferrer" target="_blank">Elm</a></li>
               </ul>
             </div>
           </div>

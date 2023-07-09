@@ -24,37 +24,22 @@
   bottom: -32px;
   width: 100%;
   height: 1px;
-  background-color: var(--text-color);
+  background: var(--text-color);
 }
 
-.task__screenshot {
-  display: flex;
-  justify-content: center;
-}
-
-.task__screenshot > img {
-  max-width: 100%;
-}
-
+.task__screenshot,
 .task__app {
   display: flex;
   justify-content: center;
+}
+
+.task__app {
   margin-bottom: 32px;
 }
 
 @media (min-width: 900px) {
   .task__body {
     display: grid;
-
-    /*
-     * grid-template-columns: 1fr 1fr;
-     *
-     * The above doesn't get me what I need or expected,
-     * i.e. the grid columns to be equal width regardless
-     * of the size of its containing content.
-     *
-     * See https://stackoverflow.com/a/61240964/391924.
-     */
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 

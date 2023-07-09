@@ -1,6 +1,7 @@
 .h2 {
   margin-top: 0;
   margin-bottom: 8px;
+
   font-size: 14px;
 }
 
@@ -13,29 +14,29 @@
   margin-bottom: 24px;
 }
 
-.p--small-bottom {
+.p--mb-small {
   margin-bottom: 8px;
 }
 
-.p--large-bottom {
+.p--mb-large {
   margin-bottom: 56px;
 }
 
 .ul {
+  padding-left: 24px;
   margin-top: 0;
   margin-bottom: 24px;
-  padding-left: 24px;
 }
 
 .ul ul {
-  margin: 0;
   padding-left: 24px;
+  margin: 0;
 }
 
 .ul--alt,
 .ul--alt ul {
-  font-style: italic;
   list-style: none;
+  font-style: italic;
 }
 
 .ul--alt li::before {
@@ -45,10 +46,12 @@
 }
 
 .src-links {
+  list-style: none;
+
   display: flex;
   gap: 24px;
-  list-style: none;
+
+  padding-left: 0;
   margin-top: 0;
   margin-bottom: 24px;
-  padding-left: 0;
 }

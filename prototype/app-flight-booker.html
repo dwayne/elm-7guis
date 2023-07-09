@@ -7,19 +7,24 @@
     <title>Flight Booker</title>
 
     <link rel="stylesheet" href="./css/index.css">
+    <style>
+      body {
+        padding: 16px;
+      }
+    </style>
   </head>
   <body>
-    <h2>A</h2>
+    <h1>Flight Booker</h1>
 
     <div class="frame frame--flight-booker">
       <h2 class="frame__title">Flight Booker</h2>
       <div class="frame__body">
-        <div class="flight-booker">
+        <form class="flight-booker">
           <div class="flight-booker__field">
             <label for="oneWayOrReturn">One way or return:</label>
-            <select id="oneWayOrReturn" class="select">
-              <option>one-way flight</option>
-              <option>return flight</option>
+            <select id="oneWayOrReturn" class="select" autofocus>
+              <option value="one-way">one-way flight</option>
+              <option value="return">return flight</option>
             </select>
           </div>
           <div class="flight-booker__field">
@@ -31,7 +36,7 @@
             <input id="return" class="input" type="text" value="25.12.1999" disabled />
           </div>
           <button class="button" type="submit">Book</button>
-        </div>
+        </form>
       </div>
     </div>
   </body>

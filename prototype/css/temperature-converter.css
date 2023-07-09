@@ -5,7 +5,7 @@
   gap: 8px;
 }
 
-.temperature-converter > span {
+.temperature-converter__eq {
   text-align: center;
 }
 
@@ -19,7 +19,7 @@
   cursor: pointer;
 }
 
-@media (min-width: 400px) {
+@container (min-width: 525px) {
   .temperature-converter {
     flex-direction: row;
     align-items: center;

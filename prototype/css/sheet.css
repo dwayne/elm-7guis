@@ -50,14 +50,14 @@
   position: sticky;
   z-index: 2;
   top: 0;
-  background-color: var(--background-color);
+  background: var(--background-color);
 }
 
 .sheet__tbody .sheet__th {
   position: sticky;
   z-index: 2;
   left: 0;
-  background-color: var(--background-color);
+  background: var(--background-color);
 }
 
 .sheet__row-headers-column-header {
@@ -94,11 +94,11 @@
   white-space: nowrap;
   overflow: hidden;
 
-  background-color: var(--background-color);
+  background: var(--background-color);
 }
 
 .sheet__cell-value--has-error {
-  background-color: tomato;
+  background: tomato;
   font-weight: bold;
 }
 
@@ -110,7 +110,7 @@
   border: 1px solid var(--border-color);
 
   font: inherit;
-  background-color: var(--background-color);
+  background: var(--background-color);
   filter: brightness(90%);
 
   position: relative;

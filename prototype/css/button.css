@@ -1,5 +1,6 @@
 .button {
   padding: 12px 24px;
+  border: 0;
 
   font: inherit;
   font-weight: bold;
@@ -7,17 +8,20 @@
   text-transform: uppercase;
 
   cursor: pointer;
-  background-color: var(--text-color);
+  background: var(--text-color);
   color: var(--background-color);
-
-  border: 0;
 }
 
 .button:hover {
-  opacity: 0.95;
+  opacity: 0.9;
+}
+
+.button:active {
+  transform: translate(1px, 1px);
 }
 
 .button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+  transform: none;
 }
