@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -e
+
+src_dir="$project"
+web_root="${web_root%/}"
+dest_dir="$build$web_root"
+
+clean () {
+  rm -rf "$build"
+}
+
+prepare_dest_dir () {
+  mkdir -p "$dest_dir"
+}
+
+build_html () {
+  cp "$src_dir"/html/*.html "$dest_dir"
+}
+
+build_css () {
+  cp -r "$src_dir/css" "$dest_dir"
+}
+
+build_images () {
+  cp -r "$src_dir/images" "$dest_dir"
+}

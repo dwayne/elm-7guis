@@ -2,4 +2,4 @@
 
 port="${1:-8000}"
 
-caddy file-server --browse --root "$project" --listen :"$port"
+caddy file-server --browse --root "$build" --listen :"$port"

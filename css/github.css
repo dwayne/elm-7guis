@@ -6,8 +6,8 @@
 }
 
 .octocat {
-  fill: #151513;
-  color: #fff;
+  fill: var(--text-color);
+  color: var(--background-color);
 }
 
 .octocat__arm {
