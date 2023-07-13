@@ -1,0 +1,43 @@
+.github {
+  display: inline-flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.octocat {
+  fill: var(--text-color);
+  color: var(--background-color);
+}
+
+.octocat__arm {
+  transform-origin: 130px 106px;
+}
+
+.octocat:hover .octocat__arm {
+  animation: octocat-wave 560ms ease-in-out;
+}
+
+@media (max-width: 500px) {
+  .octocat:hover .octocat__arm {
+    animation: none;
+  }
+
+  .octocat__arm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
+}
+
+@keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0);
+  }
+
+  20%, 60% {
+    transform: rotate(-25deg);
+  }
+
+  40%, 80% {
+    transform: rotate(10deg);
+  }
+}
