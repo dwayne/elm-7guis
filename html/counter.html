@@ -42,22 +42,16 @@
             </div>
             <div class="task__gui">
               <div class="task__app">
-                <div class="frame">
-                  <h2 class="frame__title">Counter</h2>
-                  <div class="frame__body">
-                    <div class="counter">
-                      <output>0</output>
-                      <button class="button" type="button">Count</button>
-                    </div>
-                  </div>
-                </div>
+                <div id="app"></div>
+                <script src="./js/counter.js"></script>
+                <script>Elm.Counter.init({ node: document.getElementById("app") });</script>
               </div>
 
               <h2 class="h2">Code</h2>
               <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm" rel="noreferrer" target="_blank">HTML</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/html/counter.html" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/css/counter.css" rel="noreferrer" target="_blank">CSS</a></li>
                 <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Counter.elm" rel="noreferrer" target="_blank">Elm</a></li>
               </ul>
             </div>

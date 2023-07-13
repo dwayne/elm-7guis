@@ -1,7 +1,9 @@
 module Task.Counter exposing (Model, Msg, init, update, view)
 
 import Html as H
-import Html.Events as HE
+import Html.Attributes as HA
+import Task.Support.View.Button as Button
+import Task.Support.View.Frame as Frame
 
 
 
@@ -38,7 +40,12 @@ update msg (Model n) =
 
 view : Model -> H.Html Msg
 view (Model n) =
-    H.div []
-        [ H.text <| String.fromInt n
-        , H.button [ HE.onClick ClickedIncrement ] [ H.text "Count" ]
-        ]
+    Frame.view "Counter" <|
+        H.div [ HA.class "counter" ]
+            [ H.output [] [ H.text <| String.fromInt n ]
+            , Button.view
+                { type_ = Button.Button
+                , maybeOnClick = Just ClickedIncrement
+                , text = "Count"
+                }
+            ]

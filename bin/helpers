@@ -25,3 +25,11 @@ build_css () {
 build_images () {
   cp -r "$src_dir/images" "$dest_dir"
 }
+
+build_js () {
+  js_dest_dir="$dest_dir/js"
+
+  mkdir -p "$js_dest_dir"
+
+  elm make "$src_dir/src/Counter.elm" --debug --output "$js_dest_dir/counter.js"
+}
