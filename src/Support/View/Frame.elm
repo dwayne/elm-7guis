@@ -1,4 +1,4 @@
-module Task.Support.View.Frame exposing (view)
+module Support.View.Frame exposing (view)
 
 import Html as H
 import Html.Attributes as HA

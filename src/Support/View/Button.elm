@@ -1,4 +1,4 @@
-module Task.Support.View.Button exposing
+module Support.View.Button exposing
     ( Options
     , Type(..)
     , view

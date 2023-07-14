@@ -2,8 +2,8 @@ module Task.Counter exposing (Model, Msg, init, update, view)
 
 import Html as H
 import Html.Attributes as HA
-import Task.Support.View.Button as Button
-import Task.Support.View.Frame as Frame
+import Support.View.Button as Button
+import Support.View.Frame as Frame
 
 
 

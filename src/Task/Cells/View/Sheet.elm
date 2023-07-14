@@ -9,12 +9,11 @@ module Task.Cells.View.Sheet exposing
     , view
     )
 
-import Browser.Dom as BD
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
-import Task
+import Support.Lib as Lib
 import Task.Cells.Data.Cell as Cell
 import Task.Cells.Data.Column as Column exposing (Column)
 import Task.Cells.Data.Coord as Coord exposing (Coord)
@@ -93,7 +92,7 @@ update { handlers, sheet } msg (Model state) =
                             , rawInput = Cell.toEditableString cell
                             }
                 }
-            , focus (inputId coord) (handlers.onChange FocusedInput)
+            , Lib.focus (inputId coord) (handlers.onChange FocusedInput)
             )
 
         FocusedInput ->
@@ -120,22 +119,11 @@ update { handlers, sheet } msg (Model state) =
             ( Model { state | maybeEdit = Nothing }
             , case state.maybeEdit of
                 Just { coord, rawInput } ->
-                    dispatch <| handlers.onInput coord rawInput
+                    Lib.dispatch <| handlers.onInput coord rawInput
 
                 Nothing ->
                     Cmd.none
             )
-
-
-focus : String -> msg -> Cmd msg
-focus id msg =
-    BD.focus id
-        |> Task.attempt (always msg)
-
-
-dispatch : msg -> Cmd msg
-dispatch =
-    Task.succeed >> Task.perform identity
 
 
 

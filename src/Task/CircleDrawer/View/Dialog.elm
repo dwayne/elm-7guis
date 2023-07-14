@@ -8,12 +8,11 @@ module Task.CircleDrawer.View.Dialog exposing
     , view
     )
 
-import Browser.Dom as BD
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
-import Task
+import Support.Lib as Lib
 import Task.CircleDrawer.Data.Position exposing (Position)
 import Task.CircleDrawer.Lib.Html.Attributes as HA
 
@@ -26,10 +25,7 @@ type alias Handlers msg =
 
 open : String -> Handlers msg -> Cmd msg
 open htmlId { onChange } =
-    "dialog-"
-        ++ htmlId
-        |> BD.focus
-        |> Task.attempt (always Focus)
+    Lib.focus ("dialog-" ++ htmlId) Focus
         |> Cmd.map onChange
 
 
