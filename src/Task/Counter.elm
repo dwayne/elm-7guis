@@ -40,12 +40,15 @@ update msg (Model n) =
 
 view : Model -> H.Html Msg
 view (Model n) =
-    Frame.view "Counter" <|
-        H.div [ HA.class "counter" ]
-            [ H.output [] [ H.text <| String.fromInt n ]
-            , Button.view
-                { type_ = Button.Button
-                , maybeOnClick = Just ClickedIncrement
-                , text = "Count"
-                }
-            ]
+    Frame.view
+        { modifier = Frame.Default
+        , title = "Counter"
+        , body =
+            H.div [ HA.class "counter" ]
+                [ H.output [] [ H.text <| String.fromInt n ]
+                , Button.view
+                    { type_ = Button.Button <| Just ClickedIncrement
+                    , text = "Count"
+                    }
+                ]
+        }

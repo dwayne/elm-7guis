@@ -58,36 +58,24 @@
             </div>
             <div class="task__gui">
               <div class="task__app">
-                <div class="frame frame--flight-booker">
-                  <h2 class="frame__title">Flight Booker</h2>
-                  <div class="frame__body">
-                    <form class="flight-booker">
-                      <div class="flight-booker__field">
-                        <label for="oneWayOrReturn">One way or return:</label>
-                        <select id="oneWayOrReturn" class="select" autofocus>
-                          <option value="one-way">one-way flight</option>
-                          <option value="return">return flight</option>
-                        </select>
-                      </div>
-                      <div class="flight-booker__field">
-                        <label for="departure">Departure date (format: DD.MM.YYYY)</label>
-                        <input id="departure" class="input" type="text" value="25.12.1999" />
-                      </div>
-                      <div class="flight-booker__field">
-                        <label for="return">Return date (format: DD.MM.YYYY)</label>
-                        <input id="return" class="input" type="text" value="25.12.1999" disabled />
-                      </div>
-                      <button class="button" type="submit">Book</button>
-                    </form>
-                  </div>
-                </div>
+                <div id="app"></div>
+                <script src="./js/flight-booker.js"></script>
+                <script>
+                  const app = Elm.FlightBooker.init({
+                    node: document.getElementById("app")
+                  });
+
+                  app.ports.alert.subscribe(message => {
+                    window.alert(message);
+                  });
+                </script>
               </div>
 
               <h2 class="h2">Code</h2>
               <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm" rel="noreferrer" target="_blank">HTML</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/html/flight-booker.html" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/css/flight-booker.css" rel="noreferrer" target="_blank">CSS</a></li>
                 <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/FlightBooker.elm" rel="noreferrer" target="_blank">Elm</a></li>
               </ul>
             </div>

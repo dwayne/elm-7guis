@@ -106,24 +106,28 @@ update msg model =
 
 view : Model -> H.Html Msg
 view { celsius, fahrenheit } =
-    Frame.view "Temperature Converter" <|
-        H.div [ HA.class "temperature-converter" ]
-            [ viewTemperature
-                { primary = celsius
-                , secondary = fahrenheit
-                , id = "celsius"
-                , text = "°C"
-                , onInput = InputCelsius
-                }
-            , viewEq
-            , viewTemperature
-                { primary = fahrenheit
-                , secondary = celsius
-                , id = "fahrenheit"
-                , text = "°F"
-                , onInput = InputFahrenheit
-                }
-            ]
+    Frame.view
+        { modifier = Frame.Default
+        , title = "Temperature Converter"
+        , body =
+            H.div [ HA.class "temperature-converter" ]
+                [ viewTemperature
+                    { primary = celsius
+                    , secondary = fahrenheit
+                    , id = "celsius"
+                    , text = "°C"
+                    , onInput = InputCelsius
+                    }
+                , viewEq
+                , viewTemperature
+                    { primary = fahrenheit
+                    , secondary = celsius
+                    , id = "fahrenheit"
+                    , text = "°F"
+                    , onInput = InputFahrenheit
+                    }
+                ]
+        }
 
 
 viewTemperature :

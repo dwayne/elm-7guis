@@ -9,34 +9,41 @@ import Html.Attributes as HA
 import Html.Events as HE
 
 
-type Type
-    = Button
+type Type msg
+    = Button (Maybe msg)
     | Submit
 
 
 type alias Options msg =
-    { type_ : Type
-    , maybeOnClick : Maybe msg
+    { type_ : Type msg
     , text : String
     }
 
 
 view : Options msg -> H.Html msg
-view { type_, maybeOnClick, text } =
-    H.button
-        [ HA.class "button"
-        , HA.type_ <|
+view { type_, text } =
+    let
+        attrs =
+            baseAttrs ++ additionalAttrs
+
+        baseAttrs =
+            [ HA.class "button"
+            ]
+
+        additionalAttrs =
             case type_ of
-                Button ->
-                    "button"
+                Button maybeOnClick ->
+                    [ HA.type_ "button"
+                    , case maybeOnClick of
+                        Just onClick ->
+                            HE.onClick onClick
+
+                        Nothing ->
+                            HA.disabled True
+                    ]
 
                 Submit ->
-                    "submit"
-        , case maybeOnClick of
-            Just onClick ->
-                HE.onClick onClick
-
-            Nothing ->
-                HA.disabled True
-        ]
-        [ H.text text ]
+                    [ HA.type_ "submit"
+                    ]
+    in
+    H.button attrs [ H.text text ]

@@ -4,6 +4,10 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
+import Support.Lib as Lib
+import Support.View.Button as Button
+import Support.View.Control as Control
+import Support.View.Frame as Frame
 import Task.FlightBooker.Date as Date exposing (Date)
 import Task.FlightBooker.Port as Port
 
@@ -85,19 +89,18 @@ type LoadingMsg
 
 
 type LoadedMsg
-    = InputFlight Flight
+    = FocusFlight
+    | InputFlight Flight
     | InputStart String
     | InputEnd String
     | Submitted
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model ) of
         ( LoadingMsg loadingMsg, Loading ) ->
-            ( updateLoading loadingMsg
-            , Cmd.none
-            )
+            updateLoading loadingMsg
 
         ( LoadedMsg loadedMsg, Loaded booking ) ->
             updateLoaded loadedMsg booking
@@ -108,20 +111,27 @@ update msg model =
             )
 
 
-updateLoading : LoadingMsg -> Model
+updateLoading : LoadingMsg -> ( Model, Cmd Msg )
 updateLoading msg =
     case msg of
         GotDate date ->
-            Loaded
+            ( Loaded
                 { flight = OneWay
                 , start = Valid date
                 , end = Valid date
                 }
+            , Lib.focus "oneWayOrReturn" <| LoadedMsg FocusFlight
+            )
 
 
 updateLoaded : LoadedMsg -> Booking -> ( Model, Cmd msg )
 updateLoaded msg booking =
     case msg of
+        FocusFlight ->
+            ( Loaded booking
+            , Cmd.none
+            )
+
         InputFlight flight ->
             ( Loaded { booking | flight = flight }
             , Cmd.none
@@ -187,53 +197,81 @@ view model =
 
         Loaded ({ flight, start, end } as booking) ->
             H.map LoadedMsg <|
-                H.form
-                    [ HE.onSubmit Submitted ]
-                    [ viewFlight flight
-                    , viewStart start
-                    , viewEnd flight end
-                    , viewSubmitButton booking
-                    ]
+                Frame.view
+                    { modifier = Frame.FlightBooker
+                    , title = "Flight Booker"
+                    , body =
+                        H.form
+                            [ HA.class "flight-booker"
+                            , HE.onSubmit Submitted
+                            ]
+                            [ viewField
+                                { id = "oneWayOrReturn"
+                                , text = "One way or return:"
+                                , toField = \id -> viewFlight id flight
+                                }
+                            , viewField
+                                { id = "departure"
+                                , text = "Departure date (format: DD.MM.YYYY):"
+                                , toField = \id -> viewStart id start
+                                }
+                            , viewField
+                                { id = "return"
+                                , text = "Return date (format: DD.MM.YYYY):"
+                                , toField = \id -> viewEnd id flight end
+                                }
+                            , viewSubmitButton booking
+                            ]
+                    }
 
 
-viewFlight : Flight -> H.Html LoadedMsg
-viewFlight flight =
-    H.select [ onFlightInput InputFlight ] <|
-        List.map (viewFlightOption flight)
-            [ OneWay
-            , Return
-            ]
-
-
-onFlightInput : (Flight -> msg) -> H.Attribute msg
-onFlightInput toMsg =
-    let
-        decoder =
-            HE.targetValue
-                |> JD.andThen
-                    (\value ->
-                        case value of
-                            "one-way" ->
-                                JD.succeed OneWay
-
-                            "return" ->
-                                JD.succeed Return
-
-                            _ ->
-                                JD.fail "ignored"
-                    )
-                |> JD.map toMsg
-    in
-    HE.on "input" decoder
-
-
-viewFlightOption : Flight -> Flight -> H.Html msg
-viewFlightOption selected current =
-    H.option
-        [ HA.value <| flightToValue current
-        , HA.selected <| selected == current
+viewField :
+    { id : String
+    , text : String
+    , toField : String -> H.Html msg
+    }
+    -> H.Html msg
+viewField { id, text, toField } =
+    H.div [ HA.class "flight-booker__field" ]
+        [ Control.viewLabel
+            { for = id
+            , text = text
+            }
+        , toField id
         ]
-        [ H.text <| flightToText current ]
+
+
+viewFlight : String -> Flight -> H.Html LoadedMsg
+viewFlight id flight =
+    let
+        toOption current =
+            ( flight == current
+            , current
+            )
+    in
+    Control.viewSelect
+        { id = id
+        , style = Control.Single
+        , fromString =
+            \s ->
+                case s of
+                    "one-way" ->
+                        Just OneWay
+
+                    "return" ->
+                        Just Return
+
+                    _ ->
+                        Nothing
+        , onInput = InputFlight
+        , toValue = flightToValue
+        , toText = flightToText
+        , options =
+            List.map toOption
+                [ OneWay
+                , Return
+                ]
+        }
 
 
 flightToValue : Flight -> String
@@ -256,14 +294,14 @@ flightToText flight =
             "return flight"
 
 
-viewStart : Field -> H.Html LoadedMsg
-viewStart =
-    viewInput <| Just InputStart
+viewStart : String -> Field -> H.Html LoadedMsg
+viewStart id =
+    viewInput id <| Just InputStart
 
 
-viewEnd : Flight -> Field -> H.Html LoadedMsg
-viewEnd flight =
-    viewInput <|
+viewEnd : String -> Flight -> Field -> H.Html LoadedMsg
+viewEnd id flight =
+    viewInput id <|
         case flight of
             OneWay ->
                 Nothing
@@ -272,51 +310,37 @@ viewEnd flight =
                 Just InputEnd
 
 
-viewInput : Maybe (String -> msg) -> Field -> H.Html msg
-viewInput maybeOnInput field =
+viewInput : String -> Maybe (String -> msg) -> Field -> H.Html msg
+viewInput id maybeOnInput field =
     let
-        ( value, backgroundColor ) =
+        ( status, value ) =
             case field of
                 Valid date ->
-                    ( Date.toString date
-                    , "initial"
+                    ( Control.Normal
+                    , Date.toString date
                     )
 
                 Invalid s ->
-                    ( s
-                    , "coral"
+                    ( Control.HasError
+                    , s
                     )
     in
-    case maybeOnInput of
-        Just onInput ->
-            H.input
-                [ HA.type_ "text"
-                , HA.value value
-                , HA.style "background-color" backgroundColor
-                , HE.onInput onInput
-                ]
-                []
-
-        Nothing ->
-            H.input
-                [ HA.type_ "text"
-                , HA.value value
-                , HA.disabled True
-                ]
-                []
+    Control.viewInput
+        { id = id
+        , status = status
+        , value = value
+        , maybeOnInput = maybeOnInput
+        }
 
 
 viewSubmitButton : Booking -> H.Html msg
 viewSubmitButton booking =
-    let
-        attrs =
+    Button.view
+        { type_ =
             if isBookable booking then
-                [ HA.type_ "submit"
-                ]
+                Button.Submit
 
             else
-                [ HA.type_ "button"
-                , HA.disabled True
-                ]
-    in
-    H.button attrs [ H.text "Book" ]
+                Button.Button Nothing
+        , text = "Book"
+        }
