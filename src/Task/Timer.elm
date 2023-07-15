@@ -5,6 +5,9 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
+import Support.View.Button as Button
+import Support.View.Control as Control
+import Support.View.Frame as Frame
 import Task.Timer.Duration as Duration exposing (Duration)
 
 
@@ -76,36 +79,69 @@ subscriptions { duration, elapsedTime } =
 
 view : Model -> H.Html Msg
 view { duration, elapsedTime } =
-    H.div []
-        [ H.div []
-            [ H.text "Elapsed Time: "
-            , H.meter
-                [ HA.min "0"
-                , HA.max <| Duration.toString duration
-                , HA.value <| String.fromFloat elapsedTime
+    Frame.view
+        { modifier = Frame.Default
+        , title = "Timer"
+        , body =
+            H.div [ HA.class "timer" ]
+                [ viewField
+                    { id = "elapsedTime"
+                    , text = "Elapsed Time:"
+                    , toField = \id -> viewElapsedTime id duration elapsedTime
+                    }
+                , viewOutput "elapsedTime" elapsedTime
+                , viewField
+                    { id = "duration"
+                    , text = "Duration:"
+                    , toField = \id -> viewDuration id duration
+                    }
+                , Button.view
+                    { type_ = Button.Button <| Just ClickedReset
+                    , text = "Reset"
+                    }
                 ]
-                []
-            ]
-        , viewElapsedTime elapsedTime
-        , H.div []
-            [ H.text "Duration: "
-            , H.input
-                [ HA.type_ "range"
-                , HA.min "0"
-                , HA.max <| Duration.toString Duration.max
-                , HA.value <| Duration.toString duration
-                , onDurationInput InputDuration
-                ]
-                []
-            ]
-        , H.div []
-            [ H.button
-                [ HA.type_ "button"
-                , HE.onClick ClickedReset
-                ]
-                [ H.text "Reset" ]
-            ]
+        }
+
+
+viewField :
+    { id : String
+    , text : String
+    , toField : String -> H.Html msg
+    }
+    -> H.Html msg
+viewField { id, text, toField } =
+    H.div [ HA.class "timer__field" ]
+        [ Control.viewLabel
+            { for = id
+            , text = text
+            }
+        , toField id
         ]
+
+
+viewElapsedTime : String -> Duration -> Float -> H.Html msg
+viewElapsedTime id duration elapsedTime =
+    H.meter
+        [ HA.id id
+        , HA.min "0"
+        , HA.max <| Duration.toString duration
+        , HA.value <| String.fromFloat elapsedTime
+        ]
+        []
+
+
+viewDuration : String -> Duration -> H.Html Msg
+viewDuration id duration =
+    H.input
+        [ HA.id id
+        , HA.type_ "range"
+        , HA.step "1"
+        , HA.min "0"
+        , HA.max <| Duration.toString Duration.max
+        , HA.value <| Duration.toString duration
+        , onDurationInput InputDuration
+        ]
+        []
 
 
 onDurationInput : (Duration -> msg) -> H.Attribute msg
@@ -127,8 +163,8 @@ onDurationInput toMsg =
     HE.on "input" decoder
 
 
-viewElapsedTime : Float -> H.Html msg
-viewElapsedTime elapsedTime =
+viewOutput : String -> Float -> H.Html msg
+viewOutput for elapsedTime =
     let
         wholePart =
             elapsedTime
@@ -149,4 +185,4 @@ viewElapsedTime elapsedTime =
                 , "s"
                 ]
     in
-    H.div [] [ H.text seconds ]
+    H.output [ HA.for for ] [ H.text seconds ]

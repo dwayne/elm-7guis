@@ -3,7 +3,6 @@ module Task.FlightBooker exposing (Model, Msg, init, update, view)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
-import Json.Decode as JD
 import Support.Lib as Lib
 import Support.View.Button as Button
 import Support.View.Control as Control

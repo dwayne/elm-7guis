@@ -52,30 +52,24 @@
             </div>
             <div class="task__gui">
               <div class="task__app">
-                <div class="frame">
-                  <h2 class="frame__title">Timer</h2>
-                  <div class="frame__body">
-                    <div class="timer">
-                      <div class="timer__field">
-                        <label for="elapsedTime">Elapsed Time:</label>
-                        <meter id="elapsedTime" min="0" max="15000" value="5000"></meter>
-                      </div>
-                      <output for="elapsedTime">5s</output>
-                      <div class="timer__field">
-                        <label for="duration">Duration:</label>
-                        <input id="duration" type="range" min="0" max="30000" value="15000" />
-                      </div>
-                      <button class="button" type="button">Reset</button>
-                    </div>
-                  </div>
-                </div>
+                <div id="app"></div>
+                <script src="./js/timer.js"></script>
+                <script>Elm.Timer.init({ node: document.getElementById("app") });</script>
               </div>
+
+              <h2 class="h2">Assumptions</h2>
+              <ul class="ul ul--alt">
+                <li>Elapsed time is displayed to the nearest 1/10 of a second.</li>
+                <li>Duration can be adjusted by at least 1/1000 of a second (i.e. 1&nbsp;millisecond).</li>
+                <li>Initial duration is 15 seconds.</li>
+                <li>Maximum duration is 30 seconds.</li>
+              </ul>
 
               <h2 class="h2">Code</h2>
               <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Timer.elm" rel="noreferrer" target="_blank">HTML</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Timer.elm" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/html/timer.html" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/css/timer.css" rel="noreferrer" target="_blank">CSS</a></li>
                 <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Timer.elm" rel="noreferrer" target="_blank">Elm</a></li>
               </ul>
             </div>

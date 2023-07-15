@@ -1,4 +1,4 @@
-module Support.View.Frame exposing (Modifier(..), view)
+module Support.View.Frame exposing (Modifier(..), Options, view)
 
 import Html as H
 import Html.Attributes as HA
