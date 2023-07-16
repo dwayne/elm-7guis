@@ -3,6 +3,10 @@ module Task.Crud exposing (Model, Msg, init, update, view)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+import Support.Lib as Lib
+import Support.View.Button as Button
+import Support.View.Control as Control
+import Support.View.Frame as Frame
 import Task.Crud.Person as Person
 import Task.Crud.Roster as Roster exposing (Roster)
 
@@ -19,18 +23,27 @@ type alias Model =
     }
 
 
-init : Model
+init : ( Model, Cmd Msg )
 init =
-    { prefix = ""
-    , roster =
-        Roster.fromList
-            [ ( "Hans", "Emil" )
-            , ( "Max", "Mustermann" )
-            , ( "Roman", "Tisch" )
-            ]
-    , firstName = ""
-    , lastName = ""
-    }
+    ( { prefix = ""
+      , roster =
+            Roster.fromList
+                [ ( "Evan", "Czaplicki" )
+                , ( "Jeroen", "Engels" )
+                , ( "Richard", "Feldman" )
+                , ( "Matthew", "Griffith" )
+                , ( "Dillon", "Kearns" )
+                , ( "Tessa", "Kelly" )
+                , ( "Simon", "Lydell" )
+                , ( "Wolfgang", "Schuster" )
+                , ( "Jared", "Smith" )
+                , ( "Tereza", "Sokol" )
+                ]
+      , firstName = ""
+      , lastName = ""
+      }
+    , Lib.focus "name" FocusName
+    )
 
 
 
@@ -38,7 +51,8 @@ init =
 
 
 type Msg
-    = InputPrefix String
+    = FocusName
+    | InputPrefix String
     | InputId String
     | InputFirstName String
     | InputLastName String
@@ -50,6 +64,9 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
+        FocusName ->
+            model
+
         InputPrefix prefix ->
             { model | prefix = prefix }
 
@@ -109,70 +126,95 @@ clear model roster =
 
 view : Model -> H.Html Msg
 view { prefix, roster, firstName, lastName } =
-    H.div []
-        [ H.div []
-            [ H.text "Filter prefix: "
-            , H.input
-                [ HA.type_ "text"
-                , HA.value prefix
-                , HE.onInput InputPrefix
-                ]
-                []
-            ]
-        , H.div []
-            [ H.div [] [ viewRoster prefix roster ]
-            , H.div []
-                [ H.div []
-                    [ H.label [] [ H.text "Name: " ]
-                    , H.input
-                        [ HA.type_ "text"
-                        , HA.value firstName
-                        , HE.onInput InputFirstName
+    Frame.view
+        { modifier = Frame.Default
+        , title = "CRUD"
+        , body =
+            H.div [ HA.class "crud" ]
+                [ H.div [ HA.class "crud__filter-area" ]
+                    [ H.div [ HA.class "crud__filter" ]
+                        [ Control.viewLabel
+                            { for = "filter"
+                            , text = "Filter prefix:"
+                            }
+                        , Control.viewInput
+                            { id = "filter"
+                            , status = Control.Normal
+                            , value = prefix
+                            , maybeOnInput = Just InputPrefix
+                            }
                         ]
-                        []
                     ]
-                , H.div []
-                    [ H.label [] [ H.text "Surname: " ]
-                    , H.input
-                        [ HA.type_ "text"
-                        , HA.value lastName
-                        , HE.onInput InputLastName
+                , H.div [ HA.class "crud__listbox-area" ]
+                    [ viewRoster prefix roster
+                    ]
+                , H.div [ HA.class "crud__names-area" ]
+                    [ H.div [ HA.class "crud__names" ]
+                        [ Control.viewLabel
+                            { for = "name"
+                            , text = "Name:"
+                            }
+                        , Control.viewInput
+                            { id = "name"
+                            , status = Control.Normal
+                            , value = firstName
+                            , maybeOnInput = Just InputFirstName
+                            }
+                        , Control.viewLabel
+                            { for = "surname"
+                            , text = "Surname:"
+                            }
+                        , Control.viewInput
+                            { id = "surname"
+                            , status = Control.Normal
+                            , value = lastName
+                            , maybeOnInput = Just InputLastName
+                            }
                         ]
-                        []
+                    ]
+                , let
+                    isCreateDisabled =
+                        String.isEmpty <| String.trim firstName
+
+                    isUpdateDisabled =
+                        Roster.selected roster == Nothing
+
+                    isDeleteDisabled =
+                        isUpdateDisabled
+                  in
+                  H.div [ HA.class "crud__buttons-area" ]
+                    [ H.div [ HA.class "crud__buttons" ]
+                        [ Button.view
+                            { type_ =
+                                if isCreateDisabled then
+                                    Button.Disabled
+
+                                else
+                                    Button.Button ClickedCreate
+                            , text = "Create"
+                            }
+                        , Button.view
+                            { type_ =
+                                if isUpdateDisabled then
+                                    Button.Disabled
+
+                                else
+                                    Button.Button ClickedUpdate
+                            , text = "Update"
+                            }
+                        , Button.view
+                            { type_ =
+                                if isDeleteDisabled then
+                                    Button.Disabled
+
+                                else
+                                    Button.Button ClickedDelete
+                            , text = "Delete"
+                            }
+                        ]
                     ]
                 ]
-            ]
-        , let
-            isCreateDisabled =
-                String.isEmpty <| String.trim firstName
-
-            isUpdateDisabled =
-                Roster.selected roster == Nothing
-
-            isDeleteDisabled =
-                isUpdateDisabled
-          in
-          H.div []
-            [ H.button
-                [ HA.type_ "button"
-                , HA.disabled isCreateDisabled
-                , HE.onClick ClickedCreate
-                ]
-                [ H.text "Create" ]
-            , H.button
-                [ HA.type_ "button"
-                , HA.disabled isUpdateDisabled
-                , HE.onClick ClickedUpdate
-                ]
-                [ H.text "Update" ]
-            , H.button
-                [ HA.type_ "button"
-                , HA.disabled isDeleteDisabled
-                , HE.onClick ClickedDelete
-                ]
-                [ H.text "Delete" ]
-            ]
-        ]
+        }
 
 
 viewRoster : String -> Roster -> H.Html Msg
@@ -188,5 +230,10 @@ viewRoster prefix roster =
                 ]
                 [ H.text <| Person.toString person ]
     in
-    H.select [ HA.size 2, HE.onInput InputId ] <|
+    H.select
+        [ HA.class "select"
+        , HA.size 2
+        , HE.onInput InputId
+        ]
+    <|
         List.map viewPerson people

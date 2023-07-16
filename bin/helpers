@@ -35,4 +35,5 @@ build_js () {
   elm make "$src_dir/src/TemperatureConverter.elm" --debug --output "$js_dest_dir/temperature-converter.js"
   elm make "$src_dir/src/FlightBooker.elm" --debug --output "$js_dest_dir/flight-booker.js"
   elm make "$src_dir/src/Timer.elm" --debug --output "$js_dest_dir/timer.js"
+  elm make "$src_dir/src/Crud.elm" --debug --output "$js_dest_dir/crud.js"
 }

@@ -1,6 +1,5 @@
 module Support.View.Control exposing
     ( InputStatus(..)
-    , SelectStyle(..)
     , ViewInputOptions
     , ViewLabelOptions
     , ViewSelectOptions
@@ -13,7 +12,6 @@ import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
 import Json.Decode as JD
-import Support.Html.Attributes as HA
 
 
 type alias ViewLabelOptions =
@@ -70,7 +68,6 @@ viewInput { id, status, value, maybeOnInput } =
 
 type alias ViewSelectOptions option msg =
     { id : String
-    , style : SelectStyle
     , fromString : String -> Maybe option
     , onInput : option -> msg
     , toValue : option -> String
@@ -79,13 +76,8 @@ type alias ViewSelectOptions option msg =
     }
 
 
-type SelectStyle
-    = Single
-    | Listbox
-
-
 viewSelect : ViewSelectOptions option msg -> H.Html msg
-viewSelect { id, style, fromString, onInput, toValue, toText, options } =
+viewSelect { id, fromString, onInput, toValue, toText, options } =
     let
         decoder =
             HE.targetValue
@@ -110,12 +102,6 @@ viewSelect { id, style, fromString, onInput, toValue, toText, options } =
     H.select
         [ HA.id id
         , HA.class "select"
-        , case style of
-            Single ->
-                HA.none
-
-            Listbox ->
-                HA.size 2
         , HE.on "input" decoder
         ]
     <|

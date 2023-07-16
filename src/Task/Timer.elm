@@ -96,7 +96,7 @@ view { duration, elapsedTime } =
                     , toField = \id -> viewDuration id duration
                     }
                 , Button.view
-                    { type_ = Button.Button <| Just ClickedReset
+                    { type_ = Button.Button ClickedReset
                     , text = "Reset"
                     }
                 ]

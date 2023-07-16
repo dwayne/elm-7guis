@@ -61,55 +61,24 @@
             </div>
             <div class="task__gui">
               <div class="task__app container">
-                <div class="frame">
-                  <h2 class="frame__title">CRUD</h2>
-                  <div class="frame__body">
-                    <div class="crud">
-                      <div class="crud_filter-area">
-                        <div class="crud__filter">
-                          <label for="filterB">Filter prefix:</label>
-                          <input id="filterB" class="input" type="text" />
-                        </div>
-                      </div>
-                      <div class="crud__listbox-area">
-                        <select class="select" size="2">
-                          <option>Czaplicki, Evan</option>
-                          <option>Engels, Jeroen</option>
-                          <option>Feldman, Richard</option>
-                          <option>Griffith, Matthew</option>
-                          <option>Kearns, Dillon</option>
-                          <option>Kelly, Tessa</option>
-                          <option>Lydell, Simon</option>
-                          <option>Schuster, Wolfgang</option>
-                          <option>Smith, Jared</option>
-                          <option>Sokol, Tereza</option>
-                        </select>
-                      </div>
-                      <div class="crud__names-area">
-                        <div class="crud__names">
-                          <label for="nameB">Name:</label>
-                          <input id="nameB" class="input" type="text" autofocus />
-                          <label for="surnameB">Surname:</label>
-                          <input id="surnameB" class="input" type="text" />
-                        </div>
-                      </div>
-                      <div class="crud__buttons-area">
-                        <div class="crud__buttons">
-                          <button class="button" type="button">Create</button>
-                          <button class="button" type="button" disabled>Update</button>
-                          <button class="button" type="button" disabled>Delete</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <div id="app"></div>
+                <script src="./js/crud.js"></script>
+                <script>Elm.Crud.init({ node: document.getElementById("app") });</script>
               </div>
+
+              <h2 class="h2">Assumptions</h2>
+              <ul class="ul ul--alt">
+                <li><em>T<sub>name</sub></em> and <em>T<sub>surname</sub></em> are cleared when a name is created, updated, or deleted.</li>
+                <li>Leading and trailing whitespace is removed from names.</li>
+                <li>Names must be unqiue.</li>
+                <li>Names are added to the top of the list.</li>
+              </ul>
 
               <h2 class="h2">Code</h2>
               <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">HTML</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/html/crud.html">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/css/crud.css">CSS</a></li>
                 <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">Elm</a></li>
               </ul>
             </div>

@@ -68,6 +68,6 @@
   }
 
   .crud__buttons {
-    display: initial;
+    flex-direction: row;
   }
 }

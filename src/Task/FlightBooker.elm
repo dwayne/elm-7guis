@@ -250,27 +250,25 @@ viewFlight id flight =
     in
     Control.viewSelect
         { id = id
-        , style = Control.Single
-        , fromString =
-            \s ->
-                case s of
-                    "one-way" ->
-                        Just OneWay
-
-                    "return" ->
-                        Just Return
-
-                    _ ->
-                        Nothing
+        , fromString = flightFromString
         , onInput = InputFlight
         , toValue = flightToValue
         , toText = flightToText
-        , options =
-            List.map toOption
-                [ OneWay
-                , Return
-                ]
+        , options = List.map toOption [ OneWay, Return ]
         }
+
+
+flightFromString : String -> Maybe Flight
+flightFromString s =
+    case s of
+        "one-way" ->
+            Just OneWay
+
+        "return" ->
+            Just Return
+
+        _ ->
+            Nothing
 
 
 flightToValue : Flight -> String
@@ -340,6 +338,6 @@ viewSubmitButton booking =
                 Button.Submit
 
             else
-                Button.Button Nothing
+                Button.Disabled
         , text = "Book"
         }

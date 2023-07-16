@@ -47,7 +47,7 @@ view (Model n) =
             H.div [ HA.class "counter" ]
                 [ H.output [] [ H.text <| String.fromInt n ]
                 , Button.view
-                    { type_ = Button.Button <| Just ClickedIncrement
+                    { type_ = Button.Button ClickedIncrement
                     , text = "Count"
                     }
                 ]

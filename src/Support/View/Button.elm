@@ -10,7 +10,8 @@ import Html.Events as HE
 
 
 type Type msg
-    = Button (Maybe msg)
+    = Button msg
+    | Disabled
     | Submit
 
 
@@ -32,14 +33,14 @@ view { type_, text } =
 
         additionalAttrs =
             case type_ of
-                Button maybeOnClick ->
+                Button onClick ->
                     [ HA.type_ "button"
-                    , case maybeOnClick of
-                        Just onClick ->
-                            HE.onClick onClick
+                    , HE.onClick onClick
+                    ]
 
-                        Nothing ->
-                            HA.disabled True
+                Disabled ->
+                    [ HA.type_ "button"
+                    , HA.disabled True
                     ]
 
                 Submit ->
