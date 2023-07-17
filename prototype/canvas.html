@@ -17,6 +17,9 @@
     <h2>An empty canvas</h2>
 
     <div class="canvas">
+      <div class="canvas__layer">
+        <!-- Circles go here. -->
+      </div>
     </div>
 
     <h2>A canvas with circles</h2>
@@ -25,10 +28,12 @@
 
     <div class="container">
       <div class="canvas">
-        <div class="circle"></div>
-        <div class="circle" style="--circle-x: 150px; --circle-y: 100px; --circle-diameter: 60px"></div>
-        <div class="circle circle--selected" style="--circle-x: 50px; --circle-y: 200px; --circle-diameter: 40px"></div>
-        <div class="circle" style="--circle-x: 300px; --circle-y: 275px; --circle-diameter: 70px"></div>
+        <div class="canvas__layer">
+          <div class="circle"></div>
+          <div class="circle" style="--circle-x: 150px; --circle-y: 100px; --circle-diameter: 60px"></div>
+          <div class="circle circle--selected" style="--circle-x: 50px; --circle-y: 200px; --circle-diameter: 40px"></div>
+          <div class="circle" style="--circle-x: 300px; --circle-y: 275px; --circle-diameter: 70px"></div>
+        </div>
       </div>
     </div>
   </body>

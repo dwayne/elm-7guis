@@ -2,7 +2,7 @@ module Task.CircleDrawer.View.Dialog exposing
     ( Dialog
     , Handlers
     , Msg
-    , ViewOptions
+    , Options
     , open
     , update
     , view
@@ -25,7 +25,7 @@ type alias Handlers msg =
 
 open : String -> Handlers msg -> Cmd msg
 open htmlId { onChange } =
-    Lib.focus ("dialog-" ++ htmlId) Focus
+    Lib.focus ("dialog__body-" ++ htmlId) Focus
         |> Cmd.map onChange
 
 
@@ -40,6 +40,13 @@ update msg =
             Cmd.none
 
 
+type alias Options msg =
+    { viewport : H.Html msg
+    , handlers : Handlers msg
+    , maybeDialog : Maybe (Dialog msg)
+    }
+
+
 type alias Dialog msg =
     { htmlId : String
     , block : H.Html msg
@@ -47,28 +54,22 @@ type alias Dialog msg =
     }
 
 
-type alias ViewOptions msg =
-    { viewport : H.Html msg
-    , handlers : Handlers msg
-    }
-
-
-view : ViewOptions msg -> Maybe (Dialog msg) -> H.Html msg
-view { viewport, handlers } maybeDialog =
+view : Options msg -> H.Html msg
+view { viewport, handlers, maybeDialog } =
     case maybeDialog of
         Just { htmlId, block, position } ->
             H.div
-                [ HA.class "dialog-wrapper" ]
+                [ HA.class "dialog" ]
                 [ viewport
                 , H.div
-                    [ HA.id <| "dialog-background-" ++ htmlId
+                    [ HA.id <| "dialog__background-" ++ htmlId
                     , currentTargetOnClick handlers.onClose
-                    , HA.class "dialog-background"
+                    , HA.class "dialog__background"
                     ]
                     [ H.div
-                        [ HA.id <| "dialog-" ++ htmlId
+                        [ HA.id <| "dialog__body-" ++ htmlId
                         , HA.tabindex -1
-                        , HA.class "dialog"
+                        , HA.class "dialog__body"
                         , HA.customProperties
                             [ ( "dialog-x", String.fromInt position.x ++ "px" )
                             , ( "dialog-y", String.fromInt position.y ++ "px" )

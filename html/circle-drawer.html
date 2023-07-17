@@ -47,27 +47,33 @@
             </div>
             <div class="task__gui">
               <div class="task__app container">
-                <div class="frame">
-                  <h2 class="frame__title">Circle Drawer</h2>
-                  <div class="frame__body">
-                    <div class="circle-drawer">
-                      <div class="circle-drawer__undoredo">
-                        <button class="button" type="button" disabled>Undo</button>
-                        <button class="button" type="button" disabled>Redo</button>
-                      </div>
-                      <div class="canvas">
-                        <!-- Circles go here. -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <div id="app"></div>
+                <script src="./js/circle-drawer.js"></script>
+                <script>Elm.CircleDrawer.init({ node: document.getElementById("app") });</script>
               </div>
+
+              <h2 class="h2">Assumptions</h2>
+              <ul class="ul ul--alt">
+                <li>New circle diameter = 30px.</li>
+                <li>Diameter can be adjusted by 1px increments.</li>
+                <li>Minimum diameter = 2px.</li>
+                <li>Maximum diameter = 100px.</li>
+                <li>When the menu or adjust diameter frame is open:
+                  <ul>
+                    <li>The undo/redo buttons are disabled.</li>
+                    <li>Creating a new circle is disabled.</li>
+                    <li>Selecting a different circle is disabled.</li>
+                    <li>The currently selected circle remains selected until the menu or frame is closed.</li>
+                  </ul>
+                </li>
+                <li>Undo/redo buttons are disabled if there is nothing to undo or redo.</li>
+              </ul>
 
               <h2 class="h2">Code</h2>
               <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
               <ul class="src-links">
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">HTML</a></li>
-                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/html/circle-drawer.html" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/css/circle-drawer.css" rel="noreferrer" target="_blank">CSS</a></li>
                 <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/CircleDrawer.elm" rel="noreferrer" target="_blank">Elm</a></li>
               </ul>
             </div>

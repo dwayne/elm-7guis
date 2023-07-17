@@ -3,6 +3,9 @@ module Task.CircleDrawer exposing (Model, Msg, init, update, view)
 import Html as H
 import Html.Attributes as HA
 import Html.Events as HE
+import Support.View.Button as Button
+import Support.View.Control as Control
+import Support.View.Frame as Frame
 import Task.CircleDrawer.Data.Circle as Circle exposing (Circle)
 import Task.CircleDrawer.Data.Diameter as Diameter exposing (Diameter)
 import Task.CircleDrawer.Data.Position as Position exposing (Position)
@@ -371,86 +374,97 @@ view { circles, selection, undoManager } =
                             Just
                                 { htmlId = "menu"
                                 , block =
-                                    H.button
-                                        [ HE.onClick ClickedAdjustDiameter ]
-                                        [ H.text "Adjust Diameter" ]
+                                    Button.view
+                                        { type_ = Button.Button ClickedAdjustDiameter
+                                        , text = "Adjust Diameter"
+                                        }
                                 , position = position
                                 }
 
                         AdjustDiameter _ diameter ->
                             Just
-                                { htmlId = "adjustDiameter"
+                                { htmlId = "adjust-diameter"
                                 , block =
-                                    H.div []
-                                        [ H.p [] [ H.text <| "Adjust Diameter of circle at " ++ Position.toString position ]
-                                        , H.input
-                                            [ HA.type_ "range"
-                                            , HA.min <| Diameter.toString Diameter.min
-                                            , HA.max <| Diameter.toString Diameter.max
-                                            , HA.value <| Diameter.toString diameter
-                                            , HE.onInputDiameter InputDiameter
-                                            , HE.onMouseUp MouseUpAfterInputDiameter
-                                            ]
-                                            []
-                                        ]
+                                    Frame.view
+                                        { modifier = Frame.Default
+                                        , title = "Adjust Diameter"
+                                        , body =
+                                            H.div [ HA.class "adjust-diameter" ]
+                                                [ Control.viewLabel
+                                                    { for = "diameter"
+                                                    , text = "Adjust diameter of circle at " ++ Position.toString position ++ "."
+                                                    }
+                                                , H.input
+                                                    [ HA.type_ "range"
+                                                    , HA.step "1"
+                                                    , HA.min <| Diameter.toString Diameter.min
+                                                    , HA.max <| Diameter.toString Diameter.max
+                                                    , HA.value <| Diameter.toString diameter
+                                                    , HE.onInputDiameter InputDiameter
+                                                    , HE.onMouseUp MouseUpAfterInputDiameter
+                                                    ]
+                                                    []
+                                                ]
+                                        }
                                 , position = position
                                 }
                     )
     in
-    H.div []
-        [ viewUndoRedo isEnabled undoManager
-        , H.div
-            [ HA.class "canvas" ]
-            [ Dialog.view
-                { viewport = viewCanvasLayer activeId circles
-                , handlers = dialogHandlers
-                }
-                maybeDialog
-            ]
-        ]
+    Frame.view
+        { modifier = Frame.Default
+        , title = "Circle Drawer"
+        , body =
+            H.div [ HA.class "circle-drawer" ]
+                [ viewUndoRedo isEnabled undoManager
+                , H.div [ HA.class "canvas" ]
+                    [ Dialog.view
+                        { viewport = viewCanvasLayer activeId circles
+                        , handlers = dialogHandlers
+                        , maybeDialog = maybeDialog
+                        }
+                    ]
+                ]
+        }
 
 
 viewUndoRedo : Bool -> UndoManager -> H.Html Msg
 viewUndoRedo isEnabled undoManager =
-    H.div []
+    H.div [ HA.class "circle-drawer__undoredo" ]
         [ viewButton
             { isEnabled = isEnabled && UndoManager.canUndo undoManager
-            , text = "Undo"
             , onClick = ClickedUndo
+            , text = "Undo"
             }
         , viewButton
             { isEnabled = isEnabled && UndoManager.canRedo undoManager
-            , text = "Redo"
             , onClick = ClickedRedo
+            , text = "Redo"
             }
         ]
 
 
 viewButton :
     { isEnabled : Bool
-    , text : String
     , onClick : msg
+    , text : String
     }
     -> H.Html msg
-viewButton options =
-    let
-        attrs =
-            HA.attrList
-                [ ( HA.type_ "button", True )
-                , ( HA.disabled isDisabled, True )
-                , ( HE.onClick options.onClick, options.isEnabled )
-                ]
+viewButton { isEnabled, onClick, text } =
+    Button.view
+        { type_ =
+            if isEnabled then
+                Button.Button onClick
 
-        isDisabled =
-            not options.isEnabled
-    in
-    H.button attrs [ H.text options.text ]
+            else
+                Button.Disabled
+        , text = text
+        }
 
 
 viewCanvasLayer : Maybe Int -> List Circle -> H.Html Msg
 viewCanvasLayer activeId =
-    List.reverse
-        >> List.map (viewCircle activeId)
+    List.map (viewCircle activeId)
+        >> List.reverse
         >> H.div
             [ HA.class "canvas__layer"
             , HE.onMainButtonClick MainButtonClicked

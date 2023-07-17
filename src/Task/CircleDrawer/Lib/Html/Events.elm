@@ -75,18 +75,6 @@ buttonDecoder =
 
 positionDecoder : JD.Decoder Position
 positionDecoder =
-    JD.map4
-        (\pageX pageY offsetLeft offsetTop ->
-            let
-                x =
-                    pageX - offsetLeft
-
-                y =
-                    pageY - offsetTop
-            in
-            Position x y
-        )
-        (JD.field "pageX" JD.int)
-        (JD.field "pageY" JD.int)
-        (JD.at [ "currentTarget", "offsetLeft" ] JD.int)
-        (JD.at [ "currentTarget", "offsetTop" ] JD.int)
+    JD.map2 Position
+        (JD.field "offsetX" JD.int)
+        (JD.field "offsetY" JD.int)
