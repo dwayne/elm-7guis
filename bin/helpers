@@ -5,6 +5,7 @@ set -e
 src_dir="$project"
 web_root="${web_root%/}"
 dest_dir="$build$web_root"
+optimize="${optimize:-0}"
 
 clean () {
   rm -rf "$build"
@@ -31,11 +32,75 @@ build_js () {
 
   mkdir -p "$js_dest_dir"
 
-  elm make "$src_dir/src/Counter.elm" --debug --output "$js_dest_dir/counter.js"
-  elm make "$src_dir/src/TemperatureConverter.elm" --debug --output "$js_dest_dir/temperature-converter.js"
-  elm make "$src_dir/src/FlightBooker.elm" --debug --output "$js_dest_dir/flight-booker.js"
-  elm make "$src_dir/src/Timer.elm" --debug --output "$js_dest_dir/timer.js"
-  elm make "$src_dir/src/Crud.elm" --debug --output "$js_dest_dir/crud.js"
-  elm make "$src_dir/src/CircleDrawer.elm" --debug --output "$js_dest_dir/circle-drawer.js"
-  elm make "$src_dir/src/Cells.elm" --debug --output "$js_dest_dir/cells.js"
+  # TODO: Simplify the code even more.
+
+  case "$optimize" in
+    1)
+      build_js_optimize_1 "$src_dir/src/Counter.elm" "$js_dest_dir/counter.js"
+      build_js_optimize_1 "$src_dir/src/TemperatureConverter.elm" "$js_dest_dir/temperature-converter.js"
+      build_js_optimize_1 "$src_dir/src/FlightBooker.elm" "$js_dest_dir/flight-booker.js"
+      build_js_optimize_1 "$src_dir/src/Timer.elm" "$js_dest_dir/timer.js"
+      build_js_optimize_1 "$src_dir/src/Crud.elm" "$js_dest_dir/crud.js"
+      build_js_optimize_1 "$src_dir/src/CircleDrawer.elm" "$js_dest_dir/circle-drawer.js"
+      build_js_optimize_1 "$src_dir/src/Cells.elm" "$js_dest_dir/cells.js"
+      ;;
+    2)
+      build_js_optimize_2 "$src_dir/src/Counter.elm" "$js_dest_dir/counter.js"
+      build_js_optimize_2 "$src_dir/src/TemperatureConverter.elm" "$js_dest_dir/temperature-converter.js"
+      build_js_optimize_2 "$src_dir/src/FlightBooker.elm" "$js_dest_dir/flight-booker.js"
+      build_js_optimize_2 "$src_dir/src/Timer.elm" "$js_dest_dir/timer.js"
+      build_js_optimize_2 "$src_dir/src/Crud.elm" "$js_dest_dir/crud.js"
+      build_js_optimize_2 "$src_dir/src/CircleDrawer.elm" "$js_dest_dir/circle-drawer.js"
+      build_js_optimize_2 "$src_dir/src/Cells.elm" "$js_dest_dir/cells.js"
+      ;;
+    3)
+      build_js_optimize_3 "$src_dir/src/Counter.elm" "$js_dest_dir/counter.js"
+      build_js_optimize_3 "$src_dir/src/TemperatureConverter.elm" "$js_dest_dir/temperature-converter.js"
+      build_js_optimize_3 "$src_dir/src/FlightBooker.elm" "$js_dest_dir/flight-booker.js"
+      build_js_optimize_3 "$src_dir/src/Timer.elm" "$js_dest_dir/timer.js"
+      build_js_optimize_3 "$src_dir/src/Crud.elm" "$js_dest_dir/crud.js"
+      build_js_optimize_3 "$src_dir/src/CircleDrawer.elm" "$js_dest_dir/circle-drawer.js"
+      build_js_optimize_3 "$src_dir/src/Cells.elm" "$js_dest_dir/cells.js"
+      ;;
+    *)
+      build_js_debug "$src_dir/src/Counter.elm" "$js_dest_dir/counter.js"
+      build_js_debug "$src_dir/src/TemperatureConverter.elm" "$js_dest_dir/temperature-converter.js"
+      build_js_debug "$src_dir/src/FlightBooker.elm" "$js_dest_dir/flight-booker.js"
+      build_js_debug "$src_dir/src/Timer.elm" "$js_dest_dir/timer.js"
+      build_js_debug "$src_dir/src/Crud.elm" "$js_dest_dir/crud.js"
+      build_js_debug "$src_dir/src/CircleDrawer.elm" "$js_dest_dir/circle-drawer.js"
+      build_js_debug "$src_dir/src/Cells.elm" "$js_dest_dir/cells.js"
+      ;;
+  esac
+}
+
+build_js_debug () {
+  elm make "$1" --debug --output "$2"
+}
+
+build_js_optimize_1 () {
+  elm make "$1" --optimize --output "$2"
+  minify "$2"
+}
+
+build_js_optimize_2 () {
+  elm-optimize-level-2 "$1" --output "$2"
+  minify "$2"
+}
+
+build_js_optimize_3 () {
+  elm-optimize-level-2 "$1" --optimize-speed --output "$2"
+  minify "$2"
+}
+
+minify () {
+  js="$1"
+  min="${js%.js}.min.js"
+
+  terser "$js" --compress 'pure_funcs="F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9",pure_getters,keep_fargs=false,unsafe_comps,unsafe' | terser --mangle --output "$min"
+  mv "$min" "$js"
+}
+
+clean_build_all () {
+  clean && prepare_dest_dir && build_html && build_css && build_images && build_js
 }

@@ -6,8 +6,10 @@ pkgs.mkShell {
     pkgs.caddy
     pkgs.elmPackages.elm
     pkgs.elmPackages.elm-format
+    pkgs.elmPackages.elm-optimize-level-2
     pkgs.elmPackages.elm-review
     pkgs.elmPackages.elm-test
+    pkgs.nodePackages.terser
   ];
 
   shellHook =
