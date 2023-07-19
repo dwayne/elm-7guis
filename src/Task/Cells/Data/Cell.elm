@@ -3,6 +3,7 @@ module Task.Cells.Data.Cell exposing
     , Env
     , empty
     , fromString
+    , hasError
     , references
     , refresh
     , toEditableString
@@ -45,6 +46,16 @@ fromString env rawInput =
             { rawInput = rawInput
             , answer = E.evalString (env >> toFloat) rawInput
             }
+
+
+hasError : Cell -> Bool
+hasError =
+    map
+        { onEmpty = False
+        , onFormula = always False
+        , onRuntimeError = always True
+        , onSyntaxError = always True
+        }
 
 
 references : Cell -> Set String
@@ -172,8 +183,8 @@ toString =
 
                     AST.Expr _ ->
                         String.fromFloat value
-        , onRuntimeError = always "#RuntimeError"
-        , onSyntaxError = always "#SyntaxError#"
+        , onRuntimeError = always "Runtime Error"
+        , onSyntaxError = always "Syntax Error"
         }
 
 

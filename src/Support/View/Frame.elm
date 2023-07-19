@@ -14,6 +14,7 @@ type alias Options msg =
 type Modifier
     = Default
     | FlightBooker
+    | Cells
 
 
 view : Options msg -> H.Html msg
@@ -27,6 +28,9 @@ view { modifier, title, body } =
 
                 FlightBooker ->
                     "frame--flight-booker"
+
+                Cells ->
+                    "frame--cells"
         ]
         [ H.h2 [ HA.class "frame__title" ] [ H.text title ]
         , H.div [ HA.class "frame__body" ] [ body ]

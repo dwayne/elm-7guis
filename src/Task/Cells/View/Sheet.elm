@@ -138,11 +138,9 @@ type alias ViewOptions msg =
 
 view : ViewOptions msg -> Model -> H.Html msg
 view options (Model state) =
-    H.div [ HA.class "sheet" ]
-        [ H.table [ HA.class "sheet__table" ]
-            [ viewColumnHeaders
-            , viewRows options state
-            ]
+    H.table [ HA.class "sheet" ]
+        [ viewColumnHeaders
+        , viewRows options state
         ]
 
 
@@ -209,8 +207,9 @@ viewCell { handlers, sheet } { maybeEdit } coord =
                     [ HA.class "sheet__td sheet__cell" ]
                     [ H.input
                         [ HA.id <| inputId coord
-                        , HA.class "sheet__input"
+                        , HA.class "sheet__cell-input"
                         , HA.type_ "text"
+                        , HA.spellcheck False
                         , HA.value edit.rawInput
                         , HE.onInput Input
                         , HE.onBlur BlurredInput
@@ -227,7 +226,21 @@ viewCell { handlers, sheet } { maybeEdit } coord =
                     [ HA.class "sheet__td sheet__cell"
                     , HE.onDoubleClick <| DoubleClickedCell coord
                     ]
-                    [ H.text <| Cell.toString <| Sheet.get coord sheet ]
+                    [ let
+                        cell =
+                            Sheet.get coord sheet
+                      in
+                      H.div
+                        [ HA.class "sheet__cell-value"
+                        , HA.classList
+                            [ ( "sheet__cell-value--has-error"
+                              , Cell.hasError cell
+                              )
+                            ]
+                        ]
+                        [ H.text <| Cell.toString cell
+                        ]
+                    ]
 
 
 inputId : Coord -> String

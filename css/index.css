@@ -17,9 +17,5 @@
 @import "./flight-booker.css";
 @import "./timer.css";
 @import "./crud.css";
-
-@import "./circle.css";
-@import "./canvas.css";
 @import "./circle-drawer.css";
-
-@import "./sheet.css";
+@import "./cells.css";

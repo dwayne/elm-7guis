@@ -48,14 +48,12 @@
 
 .sheet__thead .sheet__th {
   position: sticky;
-  z-index: 2;
   top: 0;
   background: var(--background-color);
 }
 
 .sheet__tbody .sheet__th {
   position: sticky;
-  z-index: 2;
   left: 0;
   background: var(--background-color);
 }
