@@ -5,7 +5,7 @@ set -e
 src_dir="$project"
 web_root="${web_root%/}"
 dest_dir="$build$web_root"
-optimize="${optimize:-0}"
+optimize_js="${optimize_js:-0}"
 
 clean () {
   rm -rf "$build"
@@ -32,46 +32,27 @@ build_js () {
 
   mkdir -p "$js_dest_dir"
 
-  # TODO: Simplify the code even more.
-
-  case "$optimize" in
-    1)
-      build_js_optimize_1 "$src_dir/src/Counter.elm" "$js_dest_dir/counter.js"
-      build_js_optimize_1 "$src_dir/src/TemperatureConverter.elm" "$js_dest_dir/temperature-converter.js"
-      build_js_optimize_1 "$src_dir/src/FlightBooker.elm" "$js_dest_dir/flight-booker.js"
-      build_js_optimize_1 "$src_dir/src/Timer.elm" "$js_dest_dir/timer.js"
-      build_js_optimize_1 "$src_dir/src/Crud.elm" "$js_dest_dir/crud.js"
-      build_js_optimize_1 "$src_dir/src/CircleDrawer.elm" "$js_dest_dir/circle-drawer.js"
-      build_js_optimize_1 "$src_dir/src/Cells.elm" "$js_dest_dir/cells.js"
-      ;;
-    2)
-      build_js_optimize_2 "$src_dir/src/Counter.elm" "$js_dest_dir/counter.js"
-      build_js_optimize_2 "$src_dir/src/TemperatureConverter.elm" "$js_dest_dir/temperature-converter.js"
-      build_js_optimize_2 "$src_dir/src/FlightBooker.elm" "$js_dest_dir/flight-booker.js"
-      build_js_optimize_2 "$src_dir/src/Timer.elm" "$js_dest_dir/timer.js"
-      build_js_optimize_2 "$src_dir/src/Crud.elm" "$js_dest_dir/crud.js"
-      build_js_optimize_2 "$src_dir/src/CircleDrawer.elm" "$js_dest_dir/circle-drawer.js"
-      build_js_optimize_2 "$src_dir/src/Cells.elm" "$js_dest_dir/cells.js"
-      ;;
-    3)
-      build_js_optimize_3 "$src_dir/src/Counter.elm" "$js_dest_dir/counter.js"
-      build_js_optimize_3 "$src_dir/src/TemperatureConverter.elm" "$js_dest_dir/temperature-converter.js"
-      build_js_optimize_3 "$src_dir/src/FlightBooker.elm" "$js_dest_dir/flight-booker.js"
-      build_js_optimize_3 "$src_dir/src/Timer.elm" "$js_dest_dir/timer.js"
-      build_js_optimize_3 "$src_dir/src/Crud.elm" "$js_dest_dir/crud.js"
-      build_js_optimize_3 "$src_dir/src/CircleDrawer.elm" "$js_dest_dir/circle-drawer.js"
-      build_js_optimize_3 "$src_dir/src/Cells.elm" "$js_dest_dir/cells.js"
+  case "$optimize_js" in
+    1|2|3)
+      func=build_js_optimize_"$optimize_js"
       ;;
     *)
-      build_js_debug "$src_dir/src/Counter.elm" "$js_dest_dir/counter.js"
-      build_js_debug "$src_dir/src/TemperatureConverter.elm" "$js_dest_dir/temperature-converter.js"
-      build_js_debug "$src_dir/src/FlightBooker.elm" "$js_dest_dir/flight-booker.js"
-      build_js_debug "$src_dir/src/Timer.elm" "$js_dest_dir/timer.js"
-      build_js_debug "$src_dir/src/Crud.elm" "$js_dest_dir/crud.js"
-      build_js_debug "$src_dir/src/CircleDrawer.elm" "$js_dest_dir/circle-drawer.js"
-      build_js_debug "$src_dir/src/Cells.elm" "$js_dest_dir/cells.js"
+      func=build_js_debug
       ;;
   esac
+
+  for elm_file in "$src_dir"/src/*.elm; do
+    name="${elm_file##*/}"                 # /path/to/src/CircleDrawer.elm -> CircleDrawer.elm
+    name=`to_js_filename $name`            # CircleDrawer.elm -> circle-drawer.elm
+    js_file="$js_dest_dir/${name%.elm}.js" # circle-drawer.elm -> /path/to/js/circle-drawer.js
+
+    "$func" "$elm_file" "$js_file"
+  done
+}
+
+to_js_filename () {
+  sed -e 's/\([A-Z]\)/-\L\1/g' -e 's/^-//g' <<< "$1"
+  # ref: https://stackoverflow.com/a/8503127/391924
 }
 
 build_js_debug () {
