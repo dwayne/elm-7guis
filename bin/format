@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+project="${project:?}"
+
 elm-format \
     "$project/src" \
     "$project/tests" \

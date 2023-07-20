@@ -10,6 +10,7 @@ pkgs.mkShell {
     pkgs.elmPackages.elm-review
     pkgs.elmPackages.elm-test
     pkgs.nodejs_18
+    pkgs.shellcheck
   ];
 
   shellHook =
