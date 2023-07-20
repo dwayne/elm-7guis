@@ -5,7 +5,6 @@ set -e
 src_dir="$project"
 web_root="${web_root%/}"
 dest_dir="$build$web_root"
-optimize_js="${optimize_js:-0}"
 
 clean () {
   rm -rf "$build"
@@ -20,7 +19,14 @@ build_html () {
 }
 
 build_css () {
-  cp -r "$src_dir/css" "$dest_dir"
+  npx stylelint "$project/css/*.css"
+  [ $? -ne 0 ] && exit 1
+
+  if [ -n "$optimize_css" ]; then
+    npx postcss "$project/css/index.css" --dir "$dest_dir/css"
+  else
+    cp -r "$src_dir/css" "$dest_dir"
+  fi
 }
 
 build_images () {
@@ -78,7 +84,7 @@ minify () {
   js="$1"
   min="${js%.js}.min.js"
 
-  terser "$js" --compress 'pure_funcs="F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9",pure_getters,keep_fargs=false,unsafe_comps,unsafe' | terser --mangle --output "$min"
+  npx terser "$js" --compress 'pure_funcs="F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9",pure_getters,keep_fargs=false,unsafe_comps,unsafe' | npx terser --mangle --output "$min"
   mv "$min" "$js"
 }
 

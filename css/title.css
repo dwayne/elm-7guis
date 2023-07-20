@@ -13,7 +13,7 @@
   white-space: nowrap;
 }
 
-@media (min-width: 250px) {
+@media (width >= 250px) {
   .title {
     flex-direction: row;
     align-items: baseline;

@@ -12,18 +12,15 @@
 
 .octocat__arm {
   transform-origin: 130px 106px;
-}
-
-.octocat:hover .octocat__arm {
   animation: octocat-wave 560ms ease-in-out;
 }
 
-@media (max-width: 500px) {
-  .octocat:hover .octocat__arm {
+@media (width > 500px) {
+  .octocat__arm {
     animation: none;
   }
 
-  .octocat__arm {
+  .octocat:hover .octocat__arm {
     animation: octocat-wave 560ms ease-in-out;
   }
 }

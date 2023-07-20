@@ -1,9 +1,9 @@
 :root {
-  --text-color: hsl(0 0% 13%);
-  --link-color: hsl(216 85% 34%);
-  --background-color: hsl(0 0% 97%);
-  --border-color: hsl(0 0% 13%);
-  --box-shadow: 0 3px 6px hsl(0 0% 0% / 0.16), 0 3px 6px hsl(0 0% 0% / 0.23);
+  --text-color: hsl(0deg 0% 13%);
+  --link-color: hsl(216deg 85% 34%);
+  --background-color: hsl(0deg 0% 97%);
+  --border-color: hsl(0deg 0% 13%);
+  --box-shadow: 0 3px 6px hsl(0deg 0% 0% / 16%), 0 3px 6px hsl(0deg 0% 0% / 23%);
 }
 
 body {

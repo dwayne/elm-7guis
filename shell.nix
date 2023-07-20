@@ -1,5 +1,5 @@
 let
-  pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/c4434c7ac529d3e69617766daaaca101fe8cecc0.tar.gz") {};
+  pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/7f256d7da238cb627ef189d56ed590739f42f13b.tar.gz") {};
 in
 pkgs.mkShell {
   packages = [
@@ -9,7 +9,7 @@ pkgs.mkShell {
     pkgs.elmPackages.elm-optimize-level-2
     pkgs.elmPackages.elm-review
     pkgs.elmPackages.elm-test
-    pkgs.nodePackages.terser
+    pkgs.nodejs_18
   ];
 
   shellHook =
