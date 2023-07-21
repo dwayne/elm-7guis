@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Cells | 7GUIs</title>
+
+    <link rel="icon" href="./images/favicon.ico">
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="./">Back</a>
+          </nav>
+          <header class="title task__title">
+            <h1 class="title__text">Cells</h1>
+          </header>
+          <div class="line task__line">===================================================================================================================================================================</div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
+
+              <p class="p">Change propagation, widget customization, implementing a more authentic/involved GUI application.</p>
+
+              <h2 class="h2">Criteria</h2>
+
+              <ul class="ul">
+                <li>Create a simple but usable spreadsheet application.</li>
+                <li>The spreadsheet should be scrollable.</li>
+                <li>The rows should be numbered from 0 to 99 and the columns from A to Z.</li>
+                <li>Double-clicking a cell <em>C</em> lets the user change <em>C</em>'s formula.</li>
+                <li>When editing is finished, the formula is parsed and evaluated and its updated value is shown in <em>C</em>. In addition, all cells which depend on <em>C</em> must be reevaluated. This process repeats until there are no more changes in the values of any cell (change propagation). Note that one should not just recompute the value of every cell but only of those cells that depend on another cell's changed value.</li>
+                <li>If there is an already provided spreadsheet widget it should not be used. Instead, another similar widget (like JTable in Swing) should be customized to become a reusable spreadsheet widget.</li>
+              </ul>
+
+              <p class="p">Cells is a more authentic and involved task that tests if a particular approach also scales to a somewhat bigger application. The two primary GUI-related challenges are intelligent propagation of changes and widget customization. Admittedly, there is a substantial part that is not necessarily very GUI-related but that is just the nature of a more authentic challenge. A good solution's change propagation will not involve much effort and the customization of a widget should not prove too difficult. The domain-specific code is clearly separated from the GUI-specific code. The resulting spreadsheet widget is reusable.</p>
+
+              <p class="p p--mb-large">Cells is directly inspired by the <a href="https://www.artima.com/pins1ed/the-scells-spreadsheet.html" target="_blank" rel="noopener noreferrer">SCells spreadsheet example</a> from the book Programming in Scala. Please refer to the book (or the implementations in this repository) for more details especially with respect to the not directly GUI-related concerns like parsing and evaluating formulas and the precise syntax and semantics of the spreadsheet language.</p>
+
+              <div class="task__screenshot">
+                <img src="./images/cells.png" alt="A spreadsheet." />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app">
+                <div id="app"></div>
+                <script src="./js/cells.js"></script>
+                <script>Elm.Cells.init({ node: document.getElementById("app") });</script>
+              </div>
+
+              <h2 class="h2">Assumptions</h2>
+              <ul class="ul ul--alt">
+                <li>A formula is either an equal sign followed by an expression or text.</li>
+                <li>An expression is either a number (<em>5</em>), a cell (<em>A0</em>), a range (<em>A0:B5</em>), or a function call (<em>add(A0, 1)</em>).</li>
+                <li>The available functions are:
+                  <ul>
+                    <li><em>add(a, b)</em>, <em>sub(a, b)</em>, <em>mul(a, b)</em>.</li>
+                    <li><em>div(a, b)</em>, <em>mod(a, b)</em>. It is a runtime error if <em>b</em> evaluates to <em>0</em>.</li>
+                    <li><em>sum(*)</em>, <em>prod(*)</em>. For e.g. <em>sum()</em>, <em>sum(A0)</em>, <em>sum(A0:B5)</em>, <em>sum(A0:B5, 1, C6)</em>, or <em>prod(1, 2, 3, 4, 5)</em>.</li>
+                  </ul>
+                </li>
+                <li>A cell reference must be of the form <em>[A-Z][0-99]</em>. For e.g. the following are valid: <em>A0</em>, <em>B10</em>, <em>Z99</em>, whereas the following are invalid: <em>a0</em>, <em>B01</em>, <em>Z100</em>.</li>
+                <li>Empty cells, cells with text, and cells with syntax/runtime errors all evaluate to <em>0</em> when referenced in an expression.</li>
+                <li>Cycles are detected and are not allowed. Try entering "=B8" in <em>A8</em> and "=A8" in <em>B8</em>.</li>
+              </ul>
+
+              <h2 class="h2">Code</h2>
+              <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/html/cells.html" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/css/cells.css" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Cells.elm" rel="noreferrer" target="_blank">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class="github" href="https://github.com/dwayne/elm-7guis" rel="noreferrer" target="_blank">
+      <svg class="octocat" width="80" height="80" viewBox="0 0 250 250">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" class="octocat__arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor"></path>
+      </svg>
+    </a>
+  </body>
+</html>

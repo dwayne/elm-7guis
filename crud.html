@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CRUD | 7GUIs</title>
+
+    <link rel="icon" href="./images/favicon.ico">
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="./">Back</a>
+          </nav>
+          <div class="task__title">
+            <header class="title">
+              <h1 class="title__text">CRUD</h1>
+            </header>
+          </div>
+          <div class="task__line">
+            <div class="line">===================================================================================================================================================================</div>
+          </div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
+
+              <p class="p">Separating the domain and presentation logic, managing mutation, building a non-trivial layout.</p>
+
+              <h2 class="h2">Criteria</h2>
+
+              <ul class="ul">
+                <li>Build a frame containing:
+                  <ul>
+                    <li>A textfield <em>T<sub>prefix</sub></em>, with the label "Filter prefix:".</li>
+                    <li>A pair of textfields <em>T<sub>name</sub></em> and <em>T<sub>surname</sub></em>, with the labels "Name:" and "Surname:" respectively.</li>
+                    <li>A listbox <em>L</em>.</li>
+                    <li>The create, update, and delete buttons <em>B<sub>C</sub></em>, <em>B<sub>U</sub></em>, and <em>B<sub>D</sub></em> respectively.</li>
+                  </ul>
+                </li>
+                <li><em>L</em> presents a view of the data in the database that consists of a list of names.</li>
+                <li>At most one entry can be selected in <em>L</em> at a time.</li>
+                <li>By entering a string into <em>T<sub>prefix</sub></em> the user can filter the names whose surname start with the entered prefix&mdash;this should happen immediately without having to submit the prefix with enter.</li>
+                <li>Clicking <em>B<sub>C</sub></em> will append the resulting name from concatenating the strings in <em>T<sub>name</sub></em> and <em>T<sub>surname</sub></em> to <em>L</em>.</li>
+                <li><em>B<sub>U</sub></em> and <em>B<sub>D</sub></em> are enabled iff an entry in <em>L</em> is selected.</li>
+                <li>Clicking <em>B<sub>U</sub></em> will replace the selected entry with the new name.</li>
+                <li>Clicking <em>B<sub>D</sub></em> will remove the selected entry.</li>
+                <li>The layout is to be done like suggested in the screenshot. In particular, <em>L</em> must occupy all the remaining space.</li>
+              </ul>
+
+              <p class="p">CRUD (Create, Read, Update and Delete) represents a typical graphical business application. The primary challenge is the separation of domain and presentation logic in the source code that is more or less forced on the implementer due to the ability to filter the view by a prefix. Traditionally, some form of MVC pattern is used to achieve the separation of domain and presentation logic. Also, the approach to managing the mutation of the list of names is tested. A good solution will have a good separation between the domain and presentation logic without much overhead (e.g. in the form of toolkit specific concepts or language/paradigm concepts), a mutation management that is fast but not error-prone and a natural representation of the layout (layout builders are allowed, of course, but would increase the overhead).</p>
+
+              <p class="p p--mb-large">CRUD is directly inspired by the crud example in the blog post <a href="http://apfelmus.nfshost.com/blog/2012/03/29-frp-three-principles-bidirectional-gui.html" target="_blank" rel="noopener noreferrer">FRP - Three principles for GUI elements with bidirectional data flow</a>.</p>
+
+              <div class="task__screenshot">
+                <img src="./images/crud.png" alt='A frame with the title "CRUD", containing a listbox with a list of names, a textfield to filter the names, a pair of textfields for the first name and surname, and three buttons labelled "Create", "Update", and "Delete".' />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app container">
+                <div id="app"></div>
+                <script src="./js/crud.js"></script>
+                <script>Elm.Crud.init({ node: document.getElementById("app") });</script>
+              </div>
+
+              <h2 class="h2">Assumptions</h2>
+              <ul class="ul ul--alt">
+                <li><em>T<sub>name</sub></em> and <em>T<sub>surname</sub></em> are cleared when a name is created, updated, or deleted.</li>
+                <li>Leading and trailing whitespace is removed from names.</li>
+                <li>Names must be unqiue.</li>
+                <li>Names are added to the top of the list.</li>
+              </ul>
+
+              <h2 class="h2">Code</h2>
+              <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/html/crud.html">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/css/crud.css">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Crud.elm">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class="github" href="https://github.com/dwayne/elm-7guis" rel="noreferrer" target="_blank">
+      <svg class="octocat" width="80" height="80" viewBox="0 0 250 250">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" class="octocat__arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor"></path>
+      </svg>
+    </a>
+  </body>
+</html>

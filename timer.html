@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Timer | 7GUIs</title>
+
+    <link rel="icon" href="./images/favicon.ico">
+    <link rel="stylesheet" href="./css/index.css">
+  </head>
+  <body>
+    <div class="layout">
+      <div class="layout__content">
+        <div class="task">
+          <nav class="task__nav">
+            <a href="./">Back</a>
+          </nav>
+          <header class="title task__title">
+            <h1 class="title__text">Timer</h1>
+          </header>
+          <div class="line task__line">===================================================================================================================================================================</div>
+          <div class="task__body">
+            <div class="task__description">
+              <h2 class="h2">Challenge</h2>
+
+              <p class="p">Concurrency, competing user/signal interactions, responsiveness.</p>
+
+              <h2 class="h2">Criteria</h2>
+
+              <ul class="ul">
+                <li>Build a frame containing:
+                  <ul>
+                    <li>A gauge <em>G</em> for the elapsed time <em>e</em>.</li>
+                    <li>A label which shows the elapsed time as a numerical value.</li>
+                    <li>A slider <em>S</em> by which the duration <em>d</em> of the timer can be adjusted while the timer is running.</li>
+                    <li>A reset button <em>R</em>.</li>
+                  </ul>
+                </li>
+                <li>Adjusting <em>S</em> must immediately reflect on <em>d</em> and not only when <em>S</em> is released.</li>
+                <li>When <em>e</em> &ge; <em>d</em> is true then the timer stops (and <em>G</em> will be full). If, thereafter, <em>d</em> is increased such that <em>d</em> &gt; <em>e</em> will be true then the timer restarts to tick until <em>e</em> &ge; <em>d</em> is true again.</li>
+                <li>Clicking <em>R</em> will reset <em>e</em> to zero.</li>
+              </ul>
+
+              <p class="p">Timer deals with concurrency in the sense that a timer process that updates the elapsed time runs concurrently to the user's interactions with the GUI application. This also means that the solution to competing user and signal interactions is tested. The fact that slider adjustments must be reflected immediately moreover tests the responsiveness of the solution. A good solution will make it clear that the signal is a timer tick and, as always, has not much scaffolding.</p>
+
+              <p class="p p--mb-large">Timer is directly inspired by the timer example in the paper <a href="http://cs.brown.edu/~sk/Publications/Papers/Published/ick-adapt-oo-fwk-frp/paper.pdf" target="_blank" rel="noopener noreferrer">Crossing State Lines: Adapting Object-Oriented Frameworks to Functional Reactive Languages</a>.</p>
+
+              <div class="task__screenshot">
+                <img src="./images/timer.png" alt='A frame with the title "Timer", containing a guage for the elapsed time, a label which shows the elapsed time as a numerical value, a slider to adjust the duration of the timer, and a button labelled "Reset".' />
+              </div>
+            </div>
+            <div class="task__gui">
+              <div class="task__app">
+                <div id="app"></div>
+                <script src="./js/timer.js"></script>
+                <script>Elm.Timer.init({ node: document.getElementById("app") });</script>
+              </div>
+
+              <h2 class="h2">Assumptions</h2>
+              <ul class="ul ul--alt">
+                <li>Elapsed time is displayed to the nearest 1/10 of a second.</li>
+                <li>Duration can be adjusted by at least 1/1000 of a second (i.e. 1&nbsp;millisecond).</li>
+                <li>Initial duration is 15 seconds.</li>
+                <li>Maximum duration is 30 seconds.</li>
+              </ul>
+
+              <h2 class="h2">Code</h2>
+              <p class="p p--mb-small">After opening a code link below, hit the '.' key to open GitHub's browser editor for an improved reading experience.</p>
+              <ul class="src-links">
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/html/timer.html" rel="noreferrer" target="_blank">HTML</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/css/timer.css" rel="noreferrer" target="_blank">CSS</a></li>
+                <li><a href="https://github.com/dwayne/elm-7guis/blob/master/src/Task/Timer.elm" rel="noreferrer" target="_blank">Elm</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
