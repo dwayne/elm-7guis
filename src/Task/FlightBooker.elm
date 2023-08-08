@@ -39,29 +39,31 @@ type Field
 
 isBookable : Booking -> Bool
 isBookable =
-    mapBooking
+    withBooking
         { onOneWay = always True
-        , onReturn =
-            \startDate endDate ->
-                endDate |> Date.isLaterThan startDate
+        , onReturn = always (always True)
         , default = False
         }
 
 
-mapBooking :
+withBooking :
     { onOneWay : Date -> a
     , onReturn : Date -> Date -> a
     , default : a
     }
     -> Booking
     -> a
-mapBooking { onOneWay, onReturn, default } { flight, start, end } =
+withBooking { onOneWay, onReturn, default } { flight, start, end } =
     case ( flight, start, end ) of
         ( OneWay, Valid startDate, _ ) ->
             onOneWay startDate
 
         ( Return, Valid startDate, Valid endDate ) ->
-            onReturn startDate endDate
+            if endDate |> Date.isLaterThan startDate then
+                onReturn startDate endDate
+
+            else
+                default
 
         _ ->
             default
@@ -171,7 +173,7 @@ updateLoaded msg booking =
 
         Submitted ->
             ( Loaded booking
-            , mapBooking
+            , withBooking
                 { onOneWay =
                     \startDate ->
                         Port.alert <| "You have booked a one-way flight for " ++ Date.toString startDate ++ "."
