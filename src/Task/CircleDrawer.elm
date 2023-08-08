@@ -39,23 +39,35 @@ type Mode
 
 
 isSelected : Selection -> Bool
-isSelected selection =
-    case selection of
-        Selected _ _ _ ->
-            True
-
-        _ ->
-            False
+isSelected =
+    withSelected
+        { selected = always <| always <| always True
+        , other = False
+        }
 
 
-mapSelection :
+withSelected :
+    { selected : Int -> Position -> Mode -> a
+    , other : a
+    }
+    -> Selection
+    -> a
+withSelected { selected, other } =
+    withSelection
+        { none = other
+        , hovered = always other
+        , selected = selected
+        }
+
+
+withSelection :
     { none : a
     , hovered : Int -> a
     , selected : Int -> Position -> Mode -> a
     }
     -> Selection
     -> a
-mapSelection { none, hovered, selected } selection =
+withSelection { none, hovered, selected } selection =
     case selection of
         None ->
             none
@@ -65,20 +77,6 @@ mapSelection { none, hovered, selected } selection =
 
         Selected id position mode ->
             selected id position mode
-
-
-mapSelected :
-    { selected : Int -> Position -> Mode -> a
-    , other : a
-    }
-    -> Selection
-    -> a
-mapSelected { selected, other } =
-    mapSelection
-        { none = other
-        , hovered = always other
-        , selected = selected
-        }
 
 
 type alias UndoManager =
@@ -138,7 +136,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         MainButtonClicked position ->
-            mapSelection
+            withSelection
                 { none =
                     let
                         circle =
@@ -174,7 +172,7 @@ update msg model =
                 model.selection
 
         SecondaryButtonClicked position ->
-            mapSelection
+            withSelection
                 { none =
                     ( model
                     , Cmd.none
@@ -216,7 +214,7 @@ update msg model =
             )
 
         ClickedAdjustDiameter ->
-            ( mapSelected
+            ( withSelected
                 { selected =
                     \id position mode ->
                         case mode of
@@ -239,7 +237,7 @@ update msg model =
             )
 
         InputDiameter newDiameter ->
-            ( mapSelected
+            ( withSelected
                 { selected =
                     \id position mode ->
                         case mode of
@@ -267,7 +265,7 @@ update msg model =
             )
 
         MouseUpAfterInputDiameter ->
-            ( mapSelected
+            ( withSelected
                 { selected =
                     \id position mode ->
                         case mode of
