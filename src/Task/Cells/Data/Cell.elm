@@ -50,7 +50,7 @@ fromString env rawInput =
 
 hasError : Cell -> Bool
 hasError =
-    map
+    withCell
         { onEmpty = False
         , onFormula = always False
         , onRuntimeError = always True
@@ -60,7 +60,7 @@ hasError =
 
 references : Cell -> Set String
 references =
-    map
+    withCell
         { onEmpty = Set.empty
         , onFormula = referencesForFormula << .formula
         , onRuntimeError = referencesForFormula << .formula
@@ -109,7 +109,7 @@ refresh env cell =
                     , answer = E.evalFormula (env >> toFloat) formula
                     }
     in
-    map
+    withCell
         { onEmpty = cell
         , onFormula = refreshedCell
         , onRuntimeError = refreshedCell
@@ -120,7 +120,7 @@ refresh env cell =
 
 toFloat : Cell -> Float
 toFloat =
-    map
+    withCell
         { onEmpty = 0
         , onFormula = .value
         , onRuntimeError = always 0
@@ -130,7 +130,7 @@ toFloat =
 
 toEditableString : Cell -> String
 toEditableString =
-    map
+    withCell
         { onEmpty = ""
         , onFormula = formulaToString << .formula
         , onRuntimeError = formulaToString << .formula
@@ -173,7 +173,7 @@ exprToString expr =
 
 toString : Cell -> String
 toString =
-    map
+    withCell
         { onEmpty = ""
         , onFormula =
             \{ formula, value } ->
@@ -188,7 +188,7 @@ toString =
         }
 
 
-map :
+withCell :
     { onEmpty : a
     , onFormula :
         { rawInput : String
@@ -210,7 +210,7 @@ map :
     }
     -> Cell
     -> a
-map { onEmpty, onFormula, onSyntaxError, onRuntimeError } (Cell content) =
+withCell { onEmpty, onFormula, onSyntaxError, onRuntimeError } (Cell content) =
     case content of
         Empty ->
             onEmpty
