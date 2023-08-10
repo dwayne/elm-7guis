@@ -8,8 +8,8 @@
   top: var(--circle-y);
   transform: translate(-50%, -50%);
 
-  inline-size: var(--circle-diameter);
-  aspect-ratio: 1;
+  width: var(--circle-diameter);
+  height: var(--circle-diameter);
   border-radius: 50%;
 
   border: 1px solid var(--border-color);
