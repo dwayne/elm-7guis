@@ -17,12 +17,7 @@ import Task.Cells.Data.Row as Row exposing (Row)
 
 text : Parser String
 text =
-    P.getChompedString chompAny
-
-
-chompAny : Parser ()
-chompAny =
-    P.chompWhile (always True)
+    P.getChompedString chompAll
 
 
 decimal : Parser Float
@@ -35,38 +30,15 @@ decimal =
 chompDecimal : Parser ()
 chompDecimal =
     let
-        minusSign =
-            P.chompIf ((==) '-')
-
         decimalPart =
             P.succeed ()
                 |. P.chompIf ((==) '.')
-                |. chompZeroOrMoreDigits
+                |. P.chompWhile Char.isDigit
     in
     P.succeed ()
-        |. chompOptional minusSign
-        |. chompOneOrMoreDigits
-        |. chompOptional decimalPart
-
-
-chompOneOrMoreDigits : Parser ()
-chompOneOrMoreDigits =
-    P.succeed ()
-        |. P.chompIf Char.isDigit
-        |. chompZeroOrMoreDigits
-
-
-chompZeroOrMoreDigits : Parser ()
-chompZeroOrMoreDigits =
-    P.chompWhile Char.isDigit
-
-
-chompOptional : Parser () -> Parser ()
-chompOptional p =
-    P.oneOf
-        [ p
-        , P.succeed ()
-        ]
+        |. chompOptional ((==) '-')
+        |. chompOneOrMore Char.isDigit
+        |. chompZeroOrOne decimalPart
 
 
 coord : Parser Coord
@@ -95,13 +67,8 @@ chompRow =
         [ P.chompIf ((==) '0')
         , P.succeed ()
             |. P.chompIf isNonZeroDigit
-            |. chompOptional (P.chompIf Char.isDigit)
+            |. chompOptional Char.isDigit
         ]
-
-
-isNonZeroDigit : Char -> Bool
-isNonZeroDigit c =
-    Char.isDigit c && c /= '0'
 
 
 identifier : Parser String
@@ -116,16 +83,6 @@ chompIdentifier =
     P.succeed ()
         |. P.chompIf isLetterOrUnderscore
         |. P.chompWhile isLetterOrDigitOrUnderscore
-
-
-isLetterOrUnderscore : Char -> Bool
-isLetterOrUnderscore c =
-    Char.isAlpha c || c == '_'
-
-
-isLetterOrDigitOrUnderscore : Char -> Bool
-isLetterOrDigitOrUnderscore c =
-    Char.isAlphaNum c || c == '_'
 
 
 parens : Parser a -> Parser (List a)
@@ -161,3 +118,54 @@ lexeme p =
 spaces : Parser ()
 spaces =
     P.spaces
+
+
+
+-- CHARACTER PREDICATES
+
+
+isNonZeroDigit : Char -> Bool
+isNonZeroDigit c =
+    Char.isDigit c && c /= '0'
+
+
+isLetterOrUnderscore : Char -> Bool
+isLetterOrUnderscore c =
+    Char.isAlpha c || c == '_'
+
+
+isLetterOrDigitOrUnderscore : Char -> Bool
+isLetterOrDigitOrUnderscore c =
+    Char.isAlphaNum c || c == '_'
+
+
+
+-- CHOMPERS
+
+
+chompAll : Parser ()
+chompAll =
+    P.chompWhile (always True)
+
+
+chompOptional : (Char -> Bool) -> Parser ()
+chompOptional isGood =
+    P.oneOf
+        [ P.chompIf isGood
+        , P.succeed ()
+        ]
+
+
+chompZeroOrOne : Parser () -> Parser ()
+chompZeroOrOne p =
+    P.oneOf
+        [ p
+        , P.succeed ()
+        ]
+
+
+chompOneOrMore : (Char -> Bool) -> Parser ()
+chompOneOrMore isGood =
+    P.succeed ()
+        |. P.chompIf isGood
+        |. P.chompWhile isGood
