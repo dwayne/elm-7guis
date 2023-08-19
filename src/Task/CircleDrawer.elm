@@ -398,7 +398,7 @@ view { circles, selection, undoManager } =
                                                     , HA.min <| Diameter.toString Diameter.min
                                                     , HA.max <| Diameter.toString Diameter.max
                                                     , HA.value <| Diameter.toString diameter
-                                                    , HE.onInputDiameter InputDiameter
+                                                    , HE.onDiameterInput InputDiameter
                                                     , HE.onMouseUp MouseUpAfterInputDiameter
                                                     ]
                                                     []

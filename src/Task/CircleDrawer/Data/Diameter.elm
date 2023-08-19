@@ -2,6 +2,7 @@ module Task.CircleDrawer.Data.Diameter exposing
     ( Diameter
     , fromInt
     , fromSafeInt
+    , fromString
     , max
     , min
     , toFloat
@@ -45,6 +46,11 @@ fromInt n =
 
     else
         Nothing
+
+
+fromString : String -> Maybe Diameter
+fromString =
+    String.toInt >> Maybe.andThen fromInt
 
 
 toFloat : Diameter -> Float

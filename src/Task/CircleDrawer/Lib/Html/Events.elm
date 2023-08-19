@@ -1,5 +1,5 @@
 module Task.CircleDrawer.Lib.Html.Events exposing
-    ( onInputDiameter
+    ( onDiameterInput
     , onMainButtonClick
     , onMouseMove
     , onSecondaryButtonClick
@@ -53,16 +53,19 @@ onMouseMove toMsg =
     HE.on "mousemove" (JD.map toMsg positionDecoder)
 
 
-onInputDiameter : (Diameter -> msg) -> H.Attribute msg
-onInputDiameter toMsg =
+onDiameterInput : (Diameter -> msg) -> H.Attribute msg
+onDiameterInput onDiameter =
     let
         decoder =
             HE.targetValue
                 |> JD.andThen
-                    (String.toInt
-                        >> Maybe.andThen Diameter.fromInt
-                        >> Maybe.map (JD.succeed << toMsg)
-                        >> Maybe.withDefault (JD.fail "ignored")
+                    (\s ->
+                        case Diameter.fromString s of
+                            Just diameter ->
+                                JD.succeed <| onDiameter diameter
+
+                            Nothing ->
+                                JD.fail "ignored"
                     )
     in
     HE.on "input" decoder
