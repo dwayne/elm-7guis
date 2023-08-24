@@ -77,7 +77,7 @@ update msg model =
                     (\( person, roster ) ->
                         let
                             { firstName, lastName } =
-                                Person.toFirstAndLastName person
+                                Person.getFirstAndLastName person
                         in
                         { model
                             | roster = roster
@@ -225,7 +225,7 @@ viewRoster prefix roster =
 
         viewPerson ( isSelected, person ) =
             H.option
-                [ HA.value <| String.fromInt <| Person.toId person
+                [ HA.value <| String.fromInt <| Person.getId person
                 , HA.selected isSelected
                 ]
                 [ H.text <| Person.toString person ]

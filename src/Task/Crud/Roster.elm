@@ -3,7 +3,6 @@ module Task.Crud.Roster exposing
     , add
     , delete
     , deselect
-    , empty
     , filter
     , fromList
     , select
@@ -84,37 +83,26 @@ isMember : Person -> Selection Person -> Bool
 isMember person people =
     let
         newFirstAndLastName =
-            Person.toFirstAndLastName person
+            Person.getFirstAndLastName person
 
         firstAndLastNames =
             people
                 |> Selection.toList
-                |> List.map Person.toFirstAndLastName
+                |> List.map Person.getFirstAndLastName
     in
     List.member newFirstAndLastName firstAndLastNames
 
 
 delete : Roster -> Roster
 delete (Roster r) =
-    Roster
-        { r
-            | people =
-                r.people
-                    |> Selection.mapSelected
-                        { selected = always Nothing
-                        , rest = Just
-                        }
-                    |> Selection.toList
-                    |> List.filterMap identity
-                    |> Selection.fromList
-        }
+    Roster { r | people = Selection.removeSelected r.people }
 
 
 select : Int -> Roster -> Maybe ( Person, Roster )
 select id (Roster r) =
     let
         people =
-            Selection.selectBy (Person.toId >> (==) id) r.people
+            Selection.selectBy (Person.getId >> (==) id) r.people
     in
     people
         |> Selection.selected
@@ -140,15 +128,5 @@ filter rawPrefix (Roster { people }) =
                 |> String.toLower
     in
     people
-        |> Selection.mapSelected
-            { selected = Tuple.pair True
-            , rest = Tuple.pair False
-            }
-        |> Selection.toList
-        |> List.filter
-            (\( _, person ) ->
-                person
-                    |> Person.toLastName
-                    |> String.toLower
-                    |> String.startsWith prefix
-            )
+        |> Selection.filter (Person.getLastName >> String.toLower >> String.startsWith prefix)
+        |> Selection.toListWithSelection

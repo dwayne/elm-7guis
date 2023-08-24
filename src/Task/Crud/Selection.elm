@@ -3,11 +3,13 @@ module Task.Crud.Selection exposing
     , cons
     , deselect
     , empty
-    , fromList
+    , filter
     , mapSelected
+    , removeSelected
     , selectBy
     , selected
     , toList
+    , toListWithSelection
     )
 
 
@@ -18,11 +20,6 @@ type Selection a
 empty : Selection a
 empty =
     Selection [] Nothing []
-
-
-fromList : List a -> Selection a
-fromList list =
-    Selection list Nothing []
 
 
 cons : a -> Selection a -> Selection a
@@ -64,12 +61,37 @@ deselect ((Selection front maybeSel back) as selection) =
             selection
 
 
+removeSelected : Selection a -> Selection a
+removeSelected (Selection front _ back) =
+    Selection front Nothing back
+
+
 mapSelected : { selected : a -> b, rest : a -> b } -> Selection a -> Selection b
 mapSelected mappers (Selection front maybeSel back) =
     Selection
         (List.map mappers.rest front)
         (Maybe.map mappers.selected maybeSel)
         (List.map mappers.rest back)
+
+
+filter : (a -> Bool) -> Selection a -> Selection a
+filter isGood (Selection front maybeSel back) =
+    let
+        newMaybeSel =
+            maybeSel
+                |> Maybe.andThen
+                    (\sel ->
+                        if isGood sel then
+                            maybeSel
+
+                        else
+                            Nothing
+                    )
+    in
+    Selection
+        (List.filter isGood front)
+        newMaybeSel
+        (List.filter isGood back)
 
 
 toList : Selection a -> List a
@@ -84,3 +106,12 @@ toList (Selection front maybeSel back) =
                 []
         , back
         ]
+
+
+toListWithSelection : Selection a -> List ( Bool, a )
+toListWithSelection =
+    mapSelected
+        { selected = Tuple.pair True
+        , rest = Tuple.pair False
+        }
+        >> toList

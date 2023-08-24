@@ -1,9 +1,9 @@
 module Task.Crud.Person exposing
     ( Person
+    , getFirstAndLastName
+    , getId
+    , getLastName
     , new
-    , toFirstAndLastName
-    , toId
-    , toLastName
     , toString
     , update
     )
@@ -40,20 +40,20 @@ update rawFirstName rawLastName (Person { id }) =
     new id rawFirstName rawLastName
 
 
-toId : Person -> Int
-toId (Person { id }) =
+getId : Person -> Int
+getId (Person { id }) =
     id
 
 
-toFirstAndLastName : Person -> { firstName : String, lastName : String }
-toFirstAndLastName (Person { firstName, lastName }) =
+getFirstAndLastName : Person -> { firstName : String, lastName : String }
+getFirstAndLastName (Person { firstName, lastName }) =
     { firstName = firstName
     , lastName = lastName
     }
 
 
-toLastName : Person -> String
-toLastName (Person { lastName }) =
+getLastName : Person -> String
+getLastName (Person { lastName }) =
     lastName
 
 
