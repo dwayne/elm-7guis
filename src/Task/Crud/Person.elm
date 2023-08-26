@@ -1,20 +1,25 @@
 module Task.Crud.Person exposing
-    ( Person
+    ( Data
+    , Person
+    , getData
     , getFirstAndLastName
     , getId
-    , getLastName
     , new
+    , toSearchTerm
     , toString
     , update
     )
 
 
 type Person
-    = Person
-        { id : Int
-        , firstName : String
-        , lastName : String
-        }
+    = Person Data
+
+
+type alias Data =
+    { id : Int
+    , firstName : String
+    , lastName : String
+    }
 
 
 new : Int -> String -> String -> Maybe Person
@@ -40,6 +45,11 @@ update rawFirstName rawLastName (Person { id }) =
     new id rawFirstName rawLastName
 
 
+getData : Person -> Data
+getData (Person data) =
+    data
+
+
 getId : Person -> Int
 getId (Person { id }) =
     id
@@ -52,9 +62,9 @@ getFirstAndLastName (Person { firstName, lastName }) =
     }
 
 
-getLastName : Person -> String
-getLastName (Person { lastName }) =
-    lastName
+toSearchTerm : Person -> String
+toSearchTerm (Person { firstName, lastName }) =
+    String.toLower <| lastName ++ firstName
 
 
 toString : Person -> String

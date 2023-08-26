@@ -128,5 +128,5 @@ filter rawPrefix (Roster { people }) =
                 |> String.toLower
     in
     people
-        |> Selection.filter (Person.getLastName >> String.toLower >> String.startsWith prefix)
+        |> Selection.filter (Person.toSearchTerm >> String.startsWith prefix)
         |> Selection.toListWithSelection
