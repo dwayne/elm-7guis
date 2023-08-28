@@ -4,8 +4,10 @@ module Task.Crud.Selection exposing
     , deselect
     , empty
     , filter
+    , fromList
     , mapSelected
     , removeSelected
+    , select
     , selectBy
     , selected
     , toList
@@ -27,23 +29,33 @@ cons a (Selection front maybeSel back) =
     Selection (a :: front) maybeSel back
 
 
+fromList : List a -> Selection a
+fromList list =
+    Selection list Nothing []
+
+
+select : a -> Selection a -> Selection a
+select x =
+    selectBy ((==) x)
+
+
 selectBy : (a -> Bool) -> Selection a -> Selection a
-selectBy isSelected =
-    toList >> selectHelper [] isSelected
+selectBy isGood =
+    toList >> selectByHelper isGood []
 
 
-selectHelper : List a -> (a -> Bool) -> List a -> Selection a
-selectHelper front isSelected list =
+selectByHelper : (a -> Bool) -> List a -> List a -> Selection a
+selectByHelper isGood front list =
     case list of
         [] ->
             Selection (List.reverse front) Nothing []
 
-        a :: restList ->
-            if isSelected a then
-                Selection (List.reverse front) (Just a) restList
+        x :: restList ->
+            if isGood x then
+                Selection (List.reverse front) (Just x) restList
 
             else
-                selectHelper (a :: front) isSelected restList
+                selectByHelper isGood (x :: front) restList
 
 
 selected : Selection a -> Maybe a
