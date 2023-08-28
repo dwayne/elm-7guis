@@ -7,6 +7,7 @@ module Task.Crud.Selection exposing
     , fromList
     , mapSelected
     , removeSelected
+    , reverse
     , select
     , selectBy
     , selected
@@ -104,6 +105,14 @@ filter isGood (Selection front maybeSel back) =
         (List.filter isGood front)
         newMaybeSel
         (List.filter isGood back)
+
+
+reverse : Selection a -> Selection a
+reverse (Selection front maybeSel back) =
+    Selection
+        (List.reverse back)
+        maybeSel
+        (List.reverse front)
 
 
 toList : Selection a -> List a

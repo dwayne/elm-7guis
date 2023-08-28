@@ -221,7 +221,7 @@ viewRoster : String -> Roster -> H.Html Msg
 viewRoster prefix roster =
     let
         people =
-            Roster.filter prefix roster
+            Roster.toFilteredListWithSelection prefix roster
 
         viewPerson ( isSelected, person ) =
             H.option

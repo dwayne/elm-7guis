@@ -11,6 +11,7 @@ suite =
         [ miscSuite
         , mapSelectedSuite
         , filterSuite
+        , reverseSuite
         ]
 
 
@@ -106,4 +107,51 @@ filterSuite =
                     |> Selection.filter (\n -> modBy 2 n == 1)
                     |> Selection.toListWithSelection
                     |> Expect.equal [ ( False, 1 ), ( True, 3 ), ( False, 3 ), ( False, 3 ) ]
+        ]
+
+
+reverseSuite : Test
+reverseSuite =
+    describe "reverse"
+        [ test "example 1" <|
+            \_ ->
+                Selection.fromList [ 1, 2, 3, 4, 5 ]
+                    |> Selection.reverse
+                    |> Selection.toList
+                    |> Expect.equal [ 5, 4, 3, 2, 1 ]
+        , test "example 2" <|
+            \_ ->
+                Selection.fromList [ 1, 2, 3, 4, 5 ]
+                    |> Selection.select 1
+                    |> Selection.reverse
+                    |> Selection.toListWithSelection
+                    |> Expect.equal [ ( False, 5 ), ( False, 4 ), ( False, 3 ), ( False, 2 ), ( True, 1 ) ]
+        , test "example 3" <|
+            \_ ->
+                Selection.fromList [ 1, 2, 3, 4, 5 ]
+                    |> Selection.select 2
+                    |> Selection.reverse
+                    |> Selection.toListWithSelection
+                    |> Expect.equal [ ( False, 5 ), ( False, 4 ), ( False, 3 ), ( True, 2 ), ( False, 1 ) ]
+        , test "example 4" <|
+            \_ ->
+                Selection.fromList [ 1, 2, 3, 4, 5 ]
+                    |> Selection.select 3
+                    |> Selection.reverse
+                    |> Selection.toListWithSelection
+                    |> Expect.equal [ ( False, 5 ), ( False, 4 ), ( True, 3 ), ( False, 2 ), ( False, 1 ) ]
+        , test "example 5" <|
+            \_ ->
+                Selection.fromList [ 1, 2, 3, 4, 5 ]
+                    |> Selection.select 4
+                    |> Selection.reverse
+                    |> Selection.toListWithSelection
+                    |> Expect.equal [ ( False, 5 ), ( True, 4 ), ( False, 3 ), ( False, 2 ), ( False, 1 ) ]
+        , test "example 6" <|
+            \_ ->
+                Selection.fromList [ 1, 2, 3, 4, 5 ]
+                    |> Selection.select 5
+                    |> Selection.reverse
+                    |> Selection.toListWithSelection
+                    |> Expect.equal [ ( True, 5 ), ( False, 4 ), ( False, 3 ), ( False, 2 ), ( False, 1 ) ]
         ]

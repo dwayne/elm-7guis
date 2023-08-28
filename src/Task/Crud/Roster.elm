@@ -3,10 +3,10 @@ module Task.Crud.Roster exposing
     , add
     , delete
     , deselect
-    , filter
     , fromList
     , select
     , selected
+    , toFilteredListWithSelection
     , update
     )
 
@@ -21,38 +21,67 @@ type Roster
         }
 
 
+firstId : Int
+firstId =
+    1
+
+
 empty : Roster
 empty =
     Roster
-        { nextId = 1
+        { nextId = firstId
         , people = Selection.empty
         }
 
 
 fromList : List ( String, String ) -> Roster
 fromList =
-    List.foldr
-        (\( rawFirstName, rawLastName ) roster ->
-            add rawFirstName rawLastName roster
-                |> Maybe.withDefault roster
-        )
-        empty
+    fromListHelper firstId Selection.empty
+
+
+fromListHelper : Int -> Selection Person -> List ( String, String ) -> Roster
+fromListHelper nextId people names =
+    case names of
+        [] ->
+            Roster
+                { nextId = nextId
+                , people = Selection.reverse people
+                }
+
+        ( rawFirstName, rawLastName ) :: restNames ->
+            case addHelper rawFirstName rawLastName nextId people of
+                Just ( newNextId, newPeople ) ->
+                    fromListHelper newNextId newPeople restNames
+
+                Nothing ->
+                    fromListHelper nextId people restNames
 
 
 add : String -> String -> Roster -> Maybe Roster
 add rawFirstName rawLastName (Roster { nextId, people }) =
-    Person.new nextId rawFirstName rawLastName
+    addHelper rawFirstName rawLastName nextId people
+        |> Maybe.map
+            (\( newNextId, newPeople ) ->
+                Roster
+                    { nextId = newNextId
+                    , people = newPeople
+                    }
+            )
+
+
+addHelper : String -> String -> Int -> Selection Person -> Maybe ( Int, Selection Person )
+addHelper rawFirstName rawLastName id people =
+    Person.new id rawFirstName rawLastName
         |> Maybe.andThen
             (\person ->
                 if isMember person people then
                     Nothing
 
                 else
-                    Just <|
-                        Roster
-                            { nextId = nextId + 1
-                            , people = Selection.cons person people
-                            }
+                    Just
+                        ( id + 1
+                        , Selection.cons person people
+                        )
             )
 
 
@@ -80,17 +109,15 @@ update rawFirstName rawLastName (Roster r) =
 
 
 isMember : Person -> Selection Person -> Bool
-isMember person people =
+isMember person =
     let
         newFirstAndLastName =
             Person.getFirstAndLastName person
 
-        firstAndLastNames =
-            people
-                |> Selection.toList
-                |> List.map Person.getFirstAndLastName
+        isSamePerson otherPerson =
+            newFirstAndLastName == Person.getFirstAndLastName otherPerson
     in
-    List.member newFirstAndLastName firstAndLastNames
+    Selection.toList >> List.any isSamePerson
 
 
 delete : Roster -> Roster
@@ -119,8 +146,8 @@ deselect (Roster r) =
     Roster { r | people = Selection.deselect r.people }
 
 
-filter : String -> Roster -> List ( Bool, Person )
-filter rawPrefix (Roster { people }) =
+toFilteredListWithSelection : String -> Roster -> List ( Bool, Person )
+toFilteredListWithSelection rawPrefix (Roster { people }) =
     let
         prefix =
             rawPrefix
