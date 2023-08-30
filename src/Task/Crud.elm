@@ -104,11 +104,8 @@ update msg model =
                 |> Maybe.withDefault model
 
         ClickedDelete ->
-            { model
-                | roster = Roster.delete model.roster
-                , firstName = ""
-                , lastName = ""
-            }
+            Roster.delete model.roster
+                |> clear model
 
 
 clear : Model -> Roster -> Model
