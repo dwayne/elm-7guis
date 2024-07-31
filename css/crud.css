@@ -59,8 +59,7 @@
   .crud__names {
     display: grid;
     grid-template-columns: auto 1fr;
-    column-gap: 8px;
-    row-gap: 16px;
+    gap: 16px 8px;
   }
 
   .crud__names > .input {
