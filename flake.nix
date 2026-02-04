@@ -33,6 +33,16 @@
             export PROJECT_ROOT="$PWD"
             export PS1="($name)\n$PS1"
 
+            build-workshop () {
+              nix build .#workshop "''${@:--L}"
+            }
+            alias bw='build-workshop'
+
+            serve-workshop () {
+              nix run .#workshop "$@"
+            }
+            alias sw='serve-workshop'
+
             f () {
               elm-format "$PROJECT_ROOT/src" "''${@:---yes}"
             }
@@ -45,7 +55,10 @@
               elm-test "$@"
             }
 
-            echo "Elm development environment loaded"
+            echo "Development environment loaded"
+            echo ""
+            echo "Type 'bw' to build the workshop"
+            echo "Type 'sw' to serve the workshop"
             echo ""
             echo "Type 'f' to run elm-format"
             echo "Type 'r' to run elm-review"
