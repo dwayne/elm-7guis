@@ -3,6 +3,17 @@
     flake-utils.lib.eachDefaultSystem(system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+
+        workshop = pkgs.callPackage ./nix/workshop.nix {};
+        serveWorkshop = pkgs.writeShellScript "serve-elm-7guis-workshop" ''
+          "${pkgs.caddy}/bin/caddy" file-server --browse --root "${workshop}" --listen :8001
+        '';
+
+        mkApp = { drv, description }: {
+          type = "app";
+          program = "${drv}";
+          meta.description = description;
+        };
       in
       {
         devShells.default = pkgs.mkShell {
@@ -41,6 +52,17 @@
             echo "Type 't' to run elm-test"
             echo ""
           '';
+        };
+
+        packages = {
+          inherit workshop;
+        };
+
+        apps = {
+          workshop = mkApp {
+            drv = serveWorkshop;
+            description = "Serve the 7GUIs workshop";
+          };
         };
       }
     );
