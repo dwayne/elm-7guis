@@ -106,12 +106,12 @@
             build-prod () {
               nix build .#prod "''${@:--L}"
             }
-            alias bp='build'
+            alias bp='build-prod'
 
             serve-prod () {
               nix run .#prod "$@"
             }
-            alias sp='serve'
+            alias sp='serve-prod'
 
             clean () {
               rm -rf "$PROJECT_ROOT"/{elm-stuff,result}
