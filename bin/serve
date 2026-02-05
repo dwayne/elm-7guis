@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-build="${build:?}"
-port="${1:-8000}"
-
-caddy file-server --browse --root "$build" --listen :"$port"

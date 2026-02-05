@@ -1,13 +1,57 @@
 {
-  outputs = { self, nixpkgs, flake-utils }:
+  inputs = {
+    elm2nix = {
+      url = "github:dwayne/elm2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+  };
+
+  outputs = { self, nixpkgs, flake-utils, elm2nix }:
     flake-utils.lib.eachDefaultSystem(system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        inherit (elm2nix.lib.elm2nix pkgs) buildElmApplication;
 
         workshop = pkgs.callPackage ./nix/workshop.nix {};
-        serveWorkshop = pkgs.writeShellScript "serve-elm-7guis-workshop" ''
-          "${pkgs.caddy}/bin/caddy" file-server --browse --root "${workshop}" --listen :8001
-        '';
+
+        build = pkgs.callPackage ./nix/build.nix { inherit buildElmApplication; };
+
+        dev = build {
+          name = "elm-7guis-dev";
+          elmOptions.doElmReview = false;
+        };
+
+        prod = build {
+          name = "elm-7guis-prod";
+          elmOptions = {
+            enableOptimizations = true;
+            optimizeLevel = 1;
+
+            doMinification = true;
+            useTerser = true;
+
+            doElmReview = false;
+          };
+        };
+
+        serve = pkgs.callPackage ./nix/serve.nix {};
+
+        serveWorkshop = serve {
+          name = "serve-elm-7guis-workshop";
+          root = workshop;
+          port = 8001;
+        };
+
+        serveDev = serve {
+          name = "serve-elm-7guis-dev";
+          root = dev;
+        };
+
+        serveProd = serve {
+          name = "serve-elm-7guis-prod";
+          root = prod;
+        };
 
         mkApp = { drv, description }: {
           type = "app";
@@ -20,6 +64,7 @@
           name = "elm-7guis";
 
           packages = [
+            elm2nix.packages.${system}.default
             pkgs.caddy
             pkgs.elmPackages.elm
             pkgs.elmPackages.elm-format
@@ -68,14 +113,31 @@
         };
 
         packages = {
-          inherit workshop;
+          inherit workshop dev prod;
+          default = dev;
         };
 
         apps = {
+          default = self.apps.${system}.dev;
+
           workshop = mkApp {
             drv = serveWorkshop;
             description = "Serve the 7GUIs workshop";
           };
+
+          dev = mkApp {
+            drv = serveDev;
+            description = "Serve the development version of the 7GUIs web application";
+          };
+
+          prod = mkApp {
+            drv = serveProd;
+            description = "Serve the production version of the 7GUIs web application";
+          };
+        };
+
+        checks = {
+          inherit workshop dev prod serveDev serveProd;
         };
       }
     );
