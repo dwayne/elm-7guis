@@ -27,6 +27,7 @@
 
         prod = build {
           name = "elm-7guis-prod";
+          noJekyll = true;
           elmOptions = {
             enableOptimizations = true;
             optimizeLevel = 1;

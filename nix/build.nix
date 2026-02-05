@@ -4,6 +4,7 @@
 }:
 
 { name
+, noJekyll ? false
 , elmOptions ? { enableDebugger = true; }
 }:
 
@@ -72,4 +73,8 @@ runCommand name {
   cp -r "$src/images" "$out"
 
   cp "$js/app.js" "$out/js/app.js"
+
+  ${lib.optionalString noJekyll ''
+    touch "$out/.nojekyll"
+  ''}
 ''
