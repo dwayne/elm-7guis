@@ -17,10 +17,7 @@
 
         build = pkgs.callPackage ./nix/build.nix { inherit buildElmApplication; };
 
-        dev = build {
-          name = "elm-7guis-dev";
-          elmOptions.doElmReview = false;
-        };
+        dev = build { name = "elm-7guis-dev"; };
 
         prod = build {
           name = "elm-7guis-prod";
@@ -30,8 +27,6 @@
 
             doMinification = true;
             useTerser = true;
-
-            doElmReview = false;
           };
         };
 

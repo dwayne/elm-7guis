@@ -1,4 +1,14 @@
-module Task.CircleDrawer exposing (Model, Msg, init, update, view)
+module Task.CircleDrawer exposing
+    ( Model
+    , Msg
+    , Redo
+    , Selection
+    , Undo
+    , UndoManager
+    , init
+    , update
+    , view
+    )
 
 import Html as H
 import Html.Attributes as HA

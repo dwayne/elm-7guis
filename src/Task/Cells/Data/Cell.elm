@@ -165,8 +165,7 @@ exprToString expr =
                 commaSepExprs =
                     exprs
                         |> List.map exprToString
-                        |> List.intersperse ", "
-                        |> String.concat
+                        |> String.join ", "
             in
             identifier ++ "(" ++ commaSepExprs ++ ")"
 

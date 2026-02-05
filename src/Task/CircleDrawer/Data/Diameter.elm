@@ -1,6 +1,5 @@
 module Task.CircleDrawer.Data.Diameter exposing
     ( Diameter
-    , fromInt
     , fromSafeInt
     , fromString
     , max

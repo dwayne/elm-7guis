@@ -6,7 +6,6 @@ module Task.FlightBooker.Date exposing
     , today
     )
 
-import Char
 import Date as JDate
 import Parser as P exposing ((|.), (|=))
 import Task

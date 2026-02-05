@@ -26,14 +26,6 @@ firstId =
     1
 
 
-empty : Roster
-empty =
-    Roster
-        { nextId = firstId
-        , people = Selection.empty
-        }
-
-
 fromList : List ( String, String ) -> Roster
 fromList =
     fromListHelper firstId Selection.empty

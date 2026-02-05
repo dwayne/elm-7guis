@@ -1,6 +1,6 @@
 module Test.Task.Crud.Roster exposing (suite)
 
-import Expect exposing (Expectation)
+import Expect
 import Task.Crud.Person as Person
 import Task.Crud.Roster as Roster exposing (Roster)
 import Test exposing (Test, describe, test)

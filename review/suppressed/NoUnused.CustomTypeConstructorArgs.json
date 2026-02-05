@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "automatically created by": "elm-review suppress",
+  "learn more": "elm-review suppress --help",
+  "suppressions": [
+    { "count": 4, "filePath": "src/Task/Cells/Data/Formula/Evaluator.elm" },
+    { "count": 1, "filePath": "tests/Test/Task/Cells/Data/Formula/Evaluator.elm" }
+  ]
+}

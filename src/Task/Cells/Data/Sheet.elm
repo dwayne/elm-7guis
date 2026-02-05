@@ -1,4 +1,4 @@
-module Task.Cells.Data.Sheet exposing (Sheet, build, empty, get, set)
+module Task.Cells.Data.Sheet exposing (Sheet, build, get, set)
 
 import Set
 import Task.Cells.Data.Cell as Cell exposing (Cell)

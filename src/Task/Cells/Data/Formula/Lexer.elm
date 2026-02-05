@@ -8,7 +8,6 @@ module Task.Cells.Data.Formula.Lexer exposing
     , text
     )
 
-import Char
 import Parser as P exposing ((|.), (|=), Parser)
 import Task.Cells.Data.Column as Column exposing (Column)
 import Task.Cells.Data.Coord exposing (Coord)

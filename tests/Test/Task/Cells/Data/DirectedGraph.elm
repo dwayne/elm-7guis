@@ -49,8 +49,7 @@ edgesToString edges =
         contents =
             edges
                 |> List.map edgeToString
-                |> List.intersperse ", "
-                |> String.concat
+                |> String.join ", "
 
         edgeToString ( u, v ) =
             "(" ++ u ++ ", " ++ v ++ ")"
