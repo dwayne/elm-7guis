@@ -1,0 +1,11 @@
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.counter > output {
+  min-width: 6ch;
+  text-align: center;
+  font-weight: bold;
+}

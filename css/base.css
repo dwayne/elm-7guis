@@ -1,0 +1,30 @@
+:root {
+  --text-color: hsl(0deg 0% 13%);
+  --link-color: hsl(216deg 85% 34%);
+  --background-color: hsl(0deg 0% 97%);
+  --border-color: hsl(0deg 0% 13%);
+  --box-shadow: 0 3px 6px hsl(0deg 0% 0% / 16%), 0 3px 6px hsl(0deg 0% 0% / 23%);
+}
+
+body {
+  margin: 0;
+
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+
+  color: var(--text-color);
+  background: var(--background-color);
+}
+
+a {
+  color: var(--link-color);
+}
+
+img {
+  max-width: 100%;
+}
+
+.container {
+  container-type: inline-size;
+}

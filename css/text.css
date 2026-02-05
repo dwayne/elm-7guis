@@ -1,0 +1,57 @@
+.h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+
+  font-size: 14px;
+}
+
+.h2::after {
+  content: ":";
+}
+
+.p {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.p--mb-small {
+  margin-bottom: 8px;
+}
+
+.p--mb-large {
+  margin-bottom: 56px;
+}
+
+.ul {
+  padding-left: 24px;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.ul ul {
+  padding-left: 24px;
+  margin: 0;
+}
+
+.ul--alt,
+.ul--alt ul {
+  list-style: none;
+  font-style: italic;
+}
+
+.ul--alt li::before {
+  content: "\2014";
+  position: absolute;
+  margin-left: -14px;
+}
+
+.src-links {
+  list-style: none;
+
+  display: flex;
+  gap: 24px;
+
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 24px;
+}

@@ -1,0 +1,22 @@
+.title {
+  display: flex;
+  flex-direction: column;
+}
+
+.title__text,
+.title__attribution {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.title__attribution {
+  white-space: nowrap;
+}
+
+@media (width >= 250px) {
+  .title {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+  }
+}

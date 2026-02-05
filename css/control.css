@@ -1,0 +1,39 @@
+.input,
+.select {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-width: 170px;
+
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+
+  font: inherit;
+
+  background: transparent;
+}
+
+.select[size="2"] {
+  min-height: 150px;
+
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.select[size="2"] > option {
+  padding: 8px;
+  overflow-x: auto;
+}
+
+.input:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.input--has-warning {
+  background: lightgray;
+}
+
+.input--has-error {
+  background: tomato;
+}
