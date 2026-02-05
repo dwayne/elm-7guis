@@ -92,6 +92,31 @@
             }
             alias sw='serve-workshop'
 
+            build () {
+              nix build "''${@:--L}"
+            }
+            alias b='build'
+
+            serve () {
+              nix run "$@"
+            }
+            alias s='serve'
+
+            build-prod () {
+              nix build .#prod "''${@:--L}"
+            }
+            alias bp='build'
+
+            serve-prod () {
+              nix run .#prod "$@"
+            }
+            alias sp='serve'
+
+            clean () {
+              rm -rf "$PROJECT_ROOT"/{elm-stuff,result}
+            }
+            alias c='clean'
+
             f () {
               elm-format "$PROJECT_ROOT/src" "''${@:---yes}"
             }
@@ -104,15 +129,27 @@
               elm-test "$@"
             }
 
+            d () {
+              nix run .#deploy "$@"
+            }
+
             echo "Development environment loaded"
             echo ""
             echo "Type 'bw' to build the workshop"
             echo "Type 'sw' to serve the workshop"
             echo ""
+            echo "Type 'b' to build the development version of the application"
+            echo "Type 's' to serve the development version of the application"
+            echo ""
+            echo "Type 'bp' to build the production version of the application"
+            echo "Type 'sp' to serve the production version of the application"
+            echo ""
+            echo "Type 'c' to remove build artifacts"
             echo "Type 'f' to run elm-format"
             echo "Type 'r' to run elm-review"
             echo "Type 't' to run elm-test"
             echo ""
+            echo "Type 'd' to deploy the production version of the application to GitHub Pages"
           '';
         };
 
