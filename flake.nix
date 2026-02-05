@@ -1,5 +1,11 @@
 {
   inputs = {
+    deploy = {
+      url = "github:dwayne/deploy";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+
     elm2nix = {
       url = "github:dwayne/elm2nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -7,7 +13,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, elm2nix }:
+  outputs = { self, nixpkgs, flake-utils, deploy, elm2nix }:
     flake-utils.lib.eachDefaultSystem(system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -48,6 +54,10 @@
           root = prod;
         };
 
+        deployProd = pkgs.writeShellScript "deploy-elm-7guis-prod" ''
+          ${deploy.packages.${system}.default}/bin/deploy "$@" ${prod} gh-pages
+        '';
+
         mkApp = { drv, description }: {
           type = "app";
           program = "${drv}";
@@ -59,14 +69,13 @@
           name = "elm-7guis";
 
           packages = [
+            deploy.packages.${system}.default
             elm2nix.packages.${system}.default
-            pkgs.caddy
             pkgs.elmPackages.elm
             pkgs.elmPackages.elm-format
             pkgs.elmPackages.elm-json
             pkgs.elmPackages.elm-review
             pkgs.elmPackages.elm-test
-            pkgs.nodejs_24
           ];
 
           shellHook = ''
@@ -129,10 +138,15 @@
             drv = serveProd;
             description = "Serve the production version of the 7GUIs web application";
           };
+
+          deploy = mkApp {
+            drv = deployProd;
+            description = "Deploy the production version of the 7GUIs web application";
+          };
         };
 
         checks = {
-          inherit workshop dev prod serveDev serveProd;
+          inherit workshop dev prod serveDev serveProd deployProd;
         };
       }
     );
